@@ -1,16 +1,18 @@
-# yt_stream Dashboard v9 — Repository Dispatch Version
+# yt_stream Dashboard v10 — Cloudflare Worker Proxy Edition
 
-Architecture:
-- Browser sends `repository_dispatch` event with event_type `stream_trigger`.
-- Proxy workflow listens to this repository_dispatch event.
-- Proxy workflow runs a composite action that uses `GH_PAT` from Secrets to dispatch the actual `stream.yml` workflow.
-- `stream.yml` runs FFmpeg on GitHub Actions runner to stream to YouTube.
+## Alur:
+Browser → Cloudflare Worker → GitHub API (dengan GH_PAT) → repository_dispatch → proxy.yml → stream.yml → FFmpeg stream.
 
-Install:
-1. Upload files to repo root (maintain structure).
-2. Add Secrets in repository: GH_PAT, YT_STREAM_KEY
-3. Ensure repo is public.
-4. From browser use index.html to send repository_dispatch.
+## Cara Setup Cloudflare Worker:
+1. Buka https://dash.cloudflare.com
+2. Pilih Workers & Pages → Create Worker
+3. Hapus semua kode default → paste isi worker.js
+4. Klik Deploy
+5. Masuk menu Worker → Settings → Variables
+6. Tambahkan Variable:
+   GH_PAT = <isi token GitHub kamu>
 
-Notes:
-- Some GitHub API endpoints still require auth; repository_dispatch for public repositories can be accepted without auth in many setups, but if your repo or org enforces stricter policies you may need to allow it.
+## Dashboard:
+Isi input URL Worker seperti:
+https://stream-proxy.<akun>.workers.dev
+
