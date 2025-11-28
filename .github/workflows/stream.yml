@@ -1,4 +1,4 @@
-name: Stream to YouTube (FFmpeg)
+name: Stream to YouTube (FFmpeg Seamless Loop)
 
 on:
   workflow_dispatch:
@@ -9,20 +9,25 @@ on:
         required: true
       duration_seconds:
         required: true
-      looping:
+      seamless:
         required: false
 
 jobs:
   stream:
     runs-on: ubuntu-latest
+
     steps:
-      - run: |
+      - name: Show inputs
+        run: |
           echo "Video: ${{ github.event.inputs.video_url }}"
           echo "Start: ${{ github.event.inputs.start_time }}"
           echo "Durasi: ${{ github.event.inputs.duration_seconds }}"
-          echo "Looping: ${{ github.event.inputs.looping }}"
+          echo "Seamless: ${{ github.event.inputs.seamless }}"
 
-      - run: sudo apt-get update -y && sudo apt-get install -y ffmpeg
+      - name: Install FFmpeg
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y ffmpeg
 
       - name: Wait until start time
         env:
@@ -36,20 +41,10 @@ jobs:
             sleep $wait_seconds
           fi
 
-      - name: Stream (with looping support)
+      - name: Seamless Loop Stream
         env:
           YTKEY: ${{ secrets.YT_STREAM_KEY }}
           VIDEO_URL: "${{ github.event.inputs.video_url }}"
           DURATION: "${{ github.event.inputs.duration_seconds }}"
-          LOOPING: "${{ github.event.inputs.looping }}"
         run: |
-          if [ "$LOOPING" = "true" ]; then
-            end=$((SECONDS + DURATION))
-            while [ $SECONDS -lt $end ]; do
-              echo "Looping stream..."
-              ffmpeg -re -i "$VIDEO_URL" -c:v libx264 -preset veryfast -b:v 2500k                 -c:a aac -b:a 128k -f flv "rtmp://a.rtmp.youtube.com/live2/$YTKEY"
-              sleep 5
-            done
-          else
-            ffmpeg -re -i "$VIDEO_URL" -c:v libx264 -preset veryfast -b:v 2500k               -c:a aac -b:a 128k -f flv "rtmp://a.rtmp.youtube.com/live2/$YTKEY" -t "$DURATION"
-          fi
+          ffmpeg -re -stream_loop -1 -i "$VIDEO_URL"             -c:v libx264 -preset veryfast -b:v 2500k             -c:a aac -b:a 128k -f flv             "rtmp://a.rtmp.youtube.com/live2/$YTKEY"             -t "$DURATION"
