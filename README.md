@@ -1,21 +1,15 @@
-YT Stream — v16 (Dashboard + Cloudflare Worker + GitHub Actions)
-===============================================================
 
-Struktur project ini:
+YT Stream v17 Premium - Professional SaaS style
 
-- index.html                (Dashboard UI — use with static hosting)
-- worker/worker.js          (Cloudflare Worker: proxy that triggers GitHub dispatch)
-- .github/workflows/stream.yml  (GitHub Actions workflow that runs FFmpeg)
-- .github/workflows/proxy.yml   (listener workflow to call the composite action)
-- README.md
+What's included:
+- index.html (premium professional UI)
+- worker/worker.js (Cloudflare Worker proxy; set GH_PAT variable)
+- .github/workflows/stream.yml (prints payload and runs ffmpeg using rtmp_url + stream_key)
+- .github/workflows/proxy.yml (listener dispatch)
+- README instructions
 
-Cara pakai singkat:
-1. Deploy Cloudflare Worker 'worker/worker.js', set variable GH_PAT (Plaintext)
-   - Worker reads GH_PAT from Worker variables to trigger GitHub dispatch safely.
-2. Serve index.html (GitHub Pages / Vercel / static host). Masukkan Worker URL.
-3. Isi video, tanggal, duration, title, stream_key lalu tekan Trigger.
-4. Worker meneruskan payload ke repository_dispatch. GitHub Actions akan mengeksekusi FFmpeg.
-
-NOTE:
-- This project intentionally uses stream_key passed from the dashboard (payload).
-- Do not store stream_key in repo secrets if you want to change keys on the fly.
+Deploy steps:
+1. Deploy worker/worker.js to Cloudflare Workers and set variable GH_PAT with a classic GitHub PAT (repo + workflow scopes).
+2. Upload .github folder and index.html to repo rigusapp/yt_stream (branch main).
+3. Open index.html (hosted or local), fill fields including worker URL and stream key, then click Trigger Stream.
+4. Check Actions -> Stream to YouTube to see payload and ffmpeg logs.
