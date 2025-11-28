@@ -2,49 +2,23 @@ name: Stream to YouTube (FFmpeg Seamless Loop)
 
 on:
   workflow_dispatch:
-    inputs:
-      video_url:
-        required: true
-      start_time:
-        required: true
-      duration_seconds:
-        required: true
-      seamless:
-        required: false
+  repository_dispatch:
+    types: [stream_trigger]
 
 jobs:
   stream:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Show inputs
-        run: |
-          echo "Video: ${{ github.event.inputs.video_url }}"
-          echo "Start: ${{ github.event.inputs.start_time }}"
-          echo "Durasi: ${{ github.event.inputs.duration_seconds }}"
-          echo "Seamless: ${{ github.event.inputs.seamless }}"
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - name: Install FFmpeg
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y ffmpeg
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
 
-      - name: Wait until start time
-        env:
-          START_ISO: "${{ github.event.inputs.start_time }}"
+      - name: Start Stream
         run: |
-          start_epoch=$(date -d "$START_ISO" +%s)
-          now_epoch=$(date +%s)
-          wait_seconds=$((start_epoch - now_epoch))
-          if [ $wait_seconds -gt 0 ]; then
-            [ $wait_seconds -gt 21600 ] && wait_seconds=21600
-            sleep $wait_seconds
-          fi
-
-      - name: Seamless Loop Stream
-        env:
-          YTKEY: ${{ secrets.YT_STREAM_KEY }}
-          VIDEO_URL: "${{ github.event.inputs.video_url }}"
-          DURATION: "${{ github.event.inputs.duration_seconds }}"
-        run: |
-          ffmpeg -re -stream_loop -1 -i "$VIDEO_URL"             -c:v libx264 -preset veryfast -b:v 2500k             -c:a aac -b:a 128k -f flv             "rtmp://a.rtmp.youtube.com/live2/$YTKEY"             -t "$DURATION"
+          ffmpeg -re -stream_loop -1 \
+            -i "${{ github.event.client_payload.video_url }}" \
+            -c:v libx264 -preset veryfast -maxrate 3000k -bufsize 6000k -pix_fmt yuv420p -g 50 \
+            -c:a aac -b:a 128k -ar 44100 \
+            -f flv "rtmp://a.rtmp.youtube.com/live2/${{ secrets.YT_STREAM_KEY }}"
