@@ -1,6 +1,6 @@
 export default {
   async fetch(request, env) {
-    // Allow preflight CORS
+    // CORS preflight
     if (request.method === "OPTIONS") {
       return new Response(null, {
         status: 204,
@@ -38,7 +38,6 @@ export default {
 
     const githubUrl = `https://api.github.com/repos/${data.repo}/dispatches`;
 
-    // Send request to GitHub API with required headers (including User-Agent)
     const res = await fetch(githubUrl, {
       method: "POST",
       headers: {
@@ -51,7 +50,6 @@ export default {
     });
 
     const text = await res.text();
-    // Return GitHub response back to the browser with CORS header
     return new Response(text, {
       status: res.status,
       headers: { "Access-Control-Allow-Origin": "*" }

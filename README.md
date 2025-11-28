@@ -1,20 +1,22 @@
-# yt_stream Dashboard v11 — Cloudflare Worker (User-Agent + CORS)
+# yt_stream Dashboard v12 (Complete)
 
-This package contains:
-- index.html (client UI)
-- worker/worker.js (Cloudflare Worker proxy with User-Agent + CORS)
-- .github/workflows/proxy.yml (listener)
-- .github/workflows/stream.yml (ffmpeg stream)
-- .github/actions/trigger/action.yml (composite dispatch)
+Files:
+- index.html (dashboard)
+- worker/worker.js (Cloudflare Worker proxy)
+- .github/actions/trigger/action.yml (composite action)
+- .github/workflows/proxy.yml (repository_dispatch listener)
+- .github/workflows/stream.yml (FFmpeg streaming workflow)
 
-Install:
-1. Deploy worker/worker.js to your Cloudflare Worker (or paste into your current worker and Deploy).
-2. Add GH_PAT as a Worker secret/variable (env name GH_PAT).
-3. Upload the `.github` folder and index.html to your GitHub repo (rigusapp/yt_stream).
-4. Ensure repo is public, add repo secret YT_STREAM_KEY, and add GH_PAT to repo secrets as well (used by composite action).
-5. Open index.html (via GitHub Pages or local) and set Worker URL (default prefilled).
-6. Trigger stream from dashboard.
+Instructions:
+1. Deploy worker/worker.js inside your Cloudflare Worker (ytstream-proxy) and Deploy.
+2. Add variable GH_PAT in Worker (value = classic GitHub PAT with repo+workflow scopes).
+3. In GitHub repo rigusapp/yt_stream upload `.github` folder and index.html to root, commit to main.
+4. Add repository secret `YT_STREAM_KEY` (YouTube stream key) in repo settings > Secrets and variables > Actions.
+5. Ensure Actions permissions are Read & Write in repo settings.
+6. Open index.html (locally or via GitHub Pages), fill form and press "Kirim ke Worker".
+7. Check GitHub Actions: Proxy Listener will run, then Stream to YouTube will run and ffmpeg will stream to YouTube.
 
 Notes:
-- Worker now sends User-Agent and accepts CORS; this fixes 403 and 401 issues.
-- GH_PAT must be a token with workflow permissions (classic token recommended).
+- Worker returns GitHub's response; 204 means dispatch accepted.
+- GH_PAT must be classic token with repo + workflow permissions.
+- If streaming fails because of ffmpeg input error, check VIDEO_URL accessibility from runner.
