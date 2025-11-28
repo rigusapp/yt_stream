@@ -14,7 +14,9 @@ export default {
       return new Response("Worker ready. Use POST.", { status: 200, headers: { "Access-Control-Allow-Origin": "*" } });
     }
     let data;
-    try { data = await request.json(); } catch(e){ return new Response("Invalid JSON", { status: 400, headers: { "Access-Control-Allow-Origin": "*" } }); }
+    try { data = await request.json(); } catch(e){ 
+      return new Response("Invalid JSON", { status: 400, headers: { "Access-Control-Allow-Origin": "*" } }); 
+    }
     const payload = {
       event_type: "stream_trigger",
       client_payload: {

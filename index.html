@@ -9,16 +9,12 @@ h1{font-size:24px;margin-bottom:6px}
 label{display:block;margin-top:12px;font-weight:600}
 input, select, button{width:100%;padding:10px;margin-top:6px;font-size:15px;box-sizing:border-box}
 button{cursor:pointer;background:#2563eb;color:#fff;border:none;border-radius:6px}
-.note{font-size:13px;color:#444;margin-top:8px}
 pre{background:#f6f6f6;padding:10px;border-radius:6px;overflow:auto}
 </style>
 </head>
 <body>
 
 <h1>YT Stream</h1>
-
-<label>URL Cloudflare Worker</label>
-<input id="worker" value="https://ytstream-proxy.rigus-apps.workers.dev/" />
 
 <label>Video URL</label>
 <input id="video" placeholder="https://.../video.mp4"/>
@@ -43,28 +39,29 @@ pre{background:#f6f6f6;padding:10px;border-radius:6px;overflow:auto}
   <option value="43200">12 Jam</option>
 </select>
 
-<label><input type="checkbox" id="seamless"/> Seamless Loop (tanpa putus)</label>
+<label><input type="checkbox" id="seamless"/> Seamless Loop</label>
 
-<button id="startBtn">Kirim ke Worker</button>
+<button id="startBtn">Kirim</button>
 
 <div id="log" style="margin-top:14px"></div>
 <pre id="resp" style="display:none"></pre>
 
 <script>
+const WORKER_URL = "https://ytstream-proxy.rigus-apps.workers.dev/";
+
 function convertWIBToUTC(datetimeLocal){
     const local = new Date(datetimeLocal);
-    const utc = new Date(local.getTime() - (7*60*60*1000));
+    const utc = new Date(local.getTime() - 7*60*60*1000);
     return utc.toISOString().split('.')[0] + "Z";
 }
 
 async function call(url, opts){
     const res = await fetch(url, opts);
     const text = await res.text();
-    return {ok: res.ok, status: res.status, text};
+    return {ok:res.ok, status:res.status, text};
 }
 
 document.getElementById("startBtn").onclick = async ()=>{
-    const worker = document.getElementById("worker").value.trim();
     const video = document.getElementById("video").value.trim();
     const datetime = document.getElementById("datetime").value.trim();
     const duration = document.getElementById("duration").value;
@@ -72,8 +69,8 @@ document.getElementById("startBtn").onclick = async ()=>{
     const log = document.getElementById("log");
     const resp = document.getElementById("resp");
 
-    if(!worker || !video || !datetime){
-        alert("Lengkapi semua data!");
+    if(!video || !datetime){
+        alert("Lengkapi data!");
         return;
     }
 
@@ -87,30 +84,23 @@ document.getElementById("startBtn").onclick = async ()=>{
         seamless: seamless ? "true" : "false"
     };
 
-    log.innerHTML="Mengirim ke Worker…";
+    log.innerHTML="Mengirim...";
     resp.style.display="none";
 
-    try{
-      const r = await call(worker, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "User-Agent": "dashboard-v13-client"
+    const r = await call(WORKER_URL, {
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+            "User-Agent":"dashboard-v14-client"
         },
         body: JSON.stringify(payload)
-      });
+    });
 
-      if(r.ok){
-        log.innerHTML = "<p style='color:green'>Berhasil: status "+r.status+"</p>";
-      } else {
-        log.innerHTML = "<p style='color:#b00020'>Gagal: status "+r.status+"</p>";
-      }
-      resp.style.display="block";
-      resp.textContent = "Response body:\n" + r.text;
+    if(r.ok) log.innerHTML="<p style='color:green'>OK "+r.status+"</p>";
+    else log.innerHTML="<p style='color:red'>Error "+r.status+"</p>";
 
-    } catch(e){
-      log.innerHTML = "<p style='color:#b00020'>Fetch error: "+e.message+"</p>";
-    }
+    resp.style.display="block";
+    resp.textContent = r.text;
 };
 </script>
 
