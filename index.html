@@ -2,16 +2,11 @@
 <html lang="id">
 <head>
 <meta charset="utf-8"/>
-<title>Dashboard Stream v7.1 FIX</title>
+<title>Dashboard Stream v7.2 FIX FINAL</title>
 
-<!-- Air Datepicker CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/air-datepicker@3.4.0/air-datepicker.css">
-
-<!-- Air Datepicker JS -->
-<script src="https://cdn.jsdelivr.net/npm/air-datepicker@3.4.0/air-datepicker.js"></script>
-
-<!-- Locale Indonesia -->
-<script src="https://cdn.jsdelivr.net/npm/air-datepicker@3.4.0/locale/id.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/air-datepicker@2.2.3/dist/css/datepicker.min.css">
+<script src="https://cdn.jsdelivr.net/npm/air-datepicker@2.2.3/dist/js/datepicker.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/air-datepicker@2.2.3/dist/js/i18n/datepicker.id.js"></script>
 
 <style>
 body{font-family:Arial;margin:24px;max-width:760px}
@@ -22,7 +17,7 @@ button{margin-top:12px;padding:10px 14px;width:100%}
 </head>
 <body>
 
-<h2>Dashboard Stream v7.1 (Datetime Picker Indonesia + Seamless Loop)</h2>
+<h2>Dashboard Stream v7.2 (Datetime Picker Indonesia + Seamless Loop)</h2>
 
 <label>GitHub Token (PAT)
 <input id="pat" placeholder="Masukkan token"/>
@@ -62,15 +57,12 @@ button{margin-top:12px;padding:10px 14px;width:100%}
 <div id="log"></div>
 
 <script>
-// INIT DATETIME PICKER (Indonesia)
-document.addEventListener("DOMContentLoaded", function(){
-    new AirDatepicker('#datetime', {
-        timepicker: true,
-        locale: AirDatepicker.locales.id,
-        dateFormat: 'dd/MM/yyyy HH:mm',
-        timeFormat: 'HH:mm',
-        minutesStep: 1
-    });
+// Init Air Datepicker v2
+new Datepicker(document.getElementById('datetime'), {
+    language: 'id',
+    timepicker: true,
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: 'HH:mm',
 });
 
 // Convert WIB → UTC

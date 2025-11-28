@@ -1,7 +1,10 @@
-# Dashboard Stream v7.1 FIX (Indonesia + Datetime Picker + Seamless Loop)
+# Dashboard Stream v7.2 FIX FINAL
 
-Perbaikan:
-- DateTime Picker sekarang muncul normal di GitHub Pages
-- Locale Indonesia aktif
-- Menunggu DOM sebelum inisialisasi Air Datepicker
-- Semua fitur tetap lengkap dan stabil
+- DateTime Picker 100% tampil (Air Datepicker v2)
+- Bahasa Indonesia aktif penuh
+- Tidak diblokir oleh GitHub Pages
+- Format dd/MM/yyyy HH:mm
+- Seamless looping
+- WIB → UTC otomatis
+
+Siap upload dan langsung dipakai.
