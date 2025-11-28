@@ -1,18 +1,20 @@
-# yt_stream Dashboard v10 — Cloudflare Worker Proxy Edition
+# yt_stream Dashboard v11 — Cloudflare Worker (User-Agent + CORS)
 
-## Alur:
-Browser → Cloudflare Worker → GitHub API (dengan GH_PAT) → repository_dispatch → proxy.yml → stream.yml → FFmpeg stream.
+This package contains:
+- index.html (client UI)
+- worker/worker.js (Cloudflare Worker proxy with User-Agent + CORS)
+- .github/workflows/proxy.yml (listener)
+- .github/workflows/stream.yml (ffmpeg stream)
+- .github/actions/trigger/action.yml (composite dispatch)
 
-## Cara Setup Cloudflare Worker:
-1. Buka https://dash.cloudflare.com
-2. Pilih Workers & Pages → Create Worker
-3. Hapus semua kode default → paste isi worker.js
-4. Klik Deploy
-5. Masuk menu Worker → Settings → Variables
-6. Tambahkan Variable:
-   GH_PAT = <isi token GitHub kamu>
+Install:
+1. Deploy worker/worker.js to your Cloudflare Worker (or paste into your current worker and Deploy).
+2. Add GH_PAT as a Worker secret/variable (env name GH_PAT).
+3. Upload the `.github` folder and index.html to your GitHub repo (rigusapp/yt_stream).
+4. Ensure repo is public, add repo secret YT_STREAM_KEY, and add GH_PAT to repo secrets as well (used by composite action).
+5. Open index.html (via GitHub Pages or local) and set Worker URL (default prefilled).
+6. Trigger stream from dashboard.
 
-## Dashboard:
-Isi input URL Worker seperti:
-https://stream-proxy.<akun>.workers.dev
-
+Notes:
+- Worker now sends User-Agent and accepts CORS; this fixes 403 and 401 issues.
+- GH_PAT must be a token with workflow permissions (classic token recommended).
