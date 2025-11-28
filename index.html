@@ -2,10 +2,15 @@
 <html lang="id">
 <head>
 <meta charset="utf-8"/>
-<title>Dashboard Stream v7</title>
+<title>Dashboard Stream v7.1 FIX</title>
 
+<!-- Air Datepicker CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/air-datepicker@3.4.0/air-datepicker.css">
+
+<!-- Air Datepicker JS -->
 <script src="https://cdn.jsdelivr.net/npm/air-datepicker@3.4.0/air-datepicker.js"></script>
+
+<!-- Locale Indonesia -->
 <script src="https://cdn.jsdelivr.net/npm/air-datepicker@3.4.0/locale/id.js"></script>
 
 <style>
@@ -16,7 +21,8 @@ button{margin-top:12px;padding:10px 14px;width:100%}
 </style>
 </head>
 <body>
-<h2>Dashboard Stream v7 (Datetime Picker Indonesia + Seamless Loop)</h2>
+
+<h2>Dashboard Stream v7.1 (Datetime Picker Indonesia + Seamless Loop)</h2>
 
 <label>GitHub Token (PAT)
 <input id="pat" placeholder="Masukkan token"/>
@@ -56,15 +62,18 @@ button{margin-top:12px;padding:10px 14px;width:100%}
 <div id="log"></div>
 
 <script>
-// Init Air Datepicker with Indonesian locale
-new AirDatepicker('#datetime', {
-    timepicker: true,
-    locale: AirDatepicker.locales.id,
-    dateFormat: 'dd/MM/yyyy HH:mm',
-    timeFormat: 'HH:mm'
+// INIT DATETIME PICKER (Indonesia)
+document.addEventListener("DOMContentLoaded", function(){
+    new AirDatepicker('#datetime', {
+        timepicker: true,
+        locale: AirDatepicker.locales.id,
+        dateFormat: 'dd/MM/yyyy HH:mm',
+        timeFormat: 'HH:mm',
+        minutesStep: 1
+    });
 });
 
-// Convert dd/MM/yyyy HH:mm WIB → UTC
+// Convert WIB → UTC
 function convertWIBToUTC(datetime){
     const [date, time] = datetime.split(" ");
     const [day, month, year] = date.split("/");
