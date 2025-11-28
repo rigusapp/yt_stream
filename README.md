@@ -1,4 +1,7 @@
-# Dashboard Stream v4 (WIB → UTC + Looping + Durasi Live)
+# Dashboard Stream v5 (SEAMLESS LOOP)
 
-- index.html: UI dengan date picker, time picker, jam/menit durasi, dan opsi looping.
-- stream.yml: workflow dengan fitur looping dan durasi live.
+Fitur:
+- Looping video tanpa jeda (seamless)
+- Date picker + time picker
+- Durasi live (jam + menit)
+- Konversi WIB → UTC otomatis

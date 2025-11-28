@@ -47,7 +47,7 @@ button{margin-top:12px;padding:10px 14px;width:100%}
 </label>
 
 <label>
-<input type="checkbox" id="loop"> Looping (ulangi video hingga durasi habis)
+<input type="checkbox" id="loop"> Looping Seamless (tanpa putus)
 </label>
 
 <button id="startBtn">Trigger Stream</button>
@@ -98,7 +98,7 @@ document.getElementById("startBtn").onclick = async()=>{
       video_url: video,
       start_time: utcTime,
       duration_seconds: String(duration),
-      looping: looping ? "true" : "false"
+      seamless: looping ? "true" : "false"
     }
   };
 
