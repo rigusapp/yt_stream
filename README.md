@@ -1,7 +1,7 @@
-# Dashboard Stream v5 (SEAMLESS LOOP)
+# Dashboard Stream v6 (SEAMLESS LOOP + DATETIME PICKER)
 
 Fitur:
-- Looping video tanpa jeda (seamless)
-- Date picker + time picker
+- Air Datepicker (dd/MM/yyyy HH:mm)
+- WIB → UTC otomatis
+- Seamless looping tanpa jeda
 - Durasi live (jam + menit)
-- Konversi WIB → UTC otomatis

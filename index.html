@@ -2,16 +2,18 @@
 <html lang="id">
 <head>
 <meta charset="utf-8"/>
-<title>Dashboard Stream v4</title>
+<title>Dashboard Stream v6</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/air-datepicker@3.4.0/air-datepicker.css">
+<script src="https://cdn.jsdelivr.net/npm/air-datepicker@3.4.0/air-datepicker.js"></script>
 <style>
 body{font-family:Arial;margin:24px;max-width:760px}
 label{display:block;margin-top:12px}
-input, select{width:100%;padding:8px;margin-top:6px}
+input{width:100%;padding:8px;margin-top:6px}
 button{margin-top:12px;padding:10px 14px;width:100%}
 </style>
 </head>
 <body>
-<h2>Dashboard Stream v4 (WIB → UTC • Durasi Live • Looping)</h2>
+<h2>Dashboard Stream v6 (Datetime Picker + Seamless Loop)</h2>
 
 <label>GitHub Token (PAT)
 <input id="pat" placeholder="Masukkan token"/>
@@ -29,12 +31,8 @@ button{margin-top:12px;padding:10px 14px;width:100%}
 <input id="video" placeholder="https://.../video.mp4"/>
 </label>
 
-<label>Pilih Tanggal (WIB)
-<input id="date" type="date">
-</label>
-
-<label>Pilih Waktu (WIB)
-<input id="time" type="time">
+<label>Tanggal & Jam Live (WIB)
+<input id="datetime" placeholder="dd/MM/yyyy HH:mm">
 </label>
 
 <h3>Durasi Live</h3>
@@ -47,18 +45,26 @@ button{margin-top:12px;padding:10px 14px;width:100%}
 </label>
 
 <label>
-<input type="checkbox" id="loop"> Looping Seamless (tanpa putus)
+<input type="checkbox" id="loop"> Seamless Loop (tanpa putus)
 </label>
 
 <button id="startBtn">Trigger Stream</button>
 <div id="log"></div>
 
 <script>
-function wibToUTC(dateVal, timeVal){
-    const full = dateVal + "T" + timeVal + ":00";
+// init datepicker
+new AirDatepicker('#datetime', {
+    timepicker: true,
+    dateFormat: 'dd/MM/yyyy HH:mm'
+});
+
+function convertWIBToUTC(datetime){
+    const [date, time] = datetime.split(" ");
+    const [day, month, year] = date.split("/");
+    const full = `${year}-${month}-${day}T${time}:00`;
     const local = new Date(full);
     const utc = new Date(local.getTime() - (7*60*60*1000));
-    return utc.toISOString().split('.')[0] + "Z";
+    return utc.toISOString().split('.')[0]+"Z";
 }
 
 async function callAPI(url, opts){
@@ -73,23 +79,21 @@ document.getElementById("startBtn").onclick = async()=>{
   const repo=document.getElementById("repo").value.trim();
   const wf=document.getElementById("workflow").value.trim();
   const video=document.getElementById("video").value.trim();
-  const date=document.getElementById("date").value.trim();
-  const time=document.getElementById("time").value.trim();
+  const datetime=document.getElementById("datetime").value.trim();
 
   const hour=parseInt(document.getElementById("dur_hour").value);
   const min=parseInt(document.getElementById("dur_min").value);
-  const looping=document.getElementById("loop").checked;
+  const seamless=document.getElementById("loop").checked;
 
   const log=document.getElementById("log");
 
-  if(!token||!repo||!wf||!video||!date||!time){
+  if(!token||!repo||!wf||!video||!datetime){
     alert("Lengkapi semua data!");
     return;
   }
 
   const duration = (hour * 3600) + (min * 60);
-  const utcTime = wibToUTC(date, time);
-
+  const utcTime = convertWIBToUTC(datetime);
   const [owner, name] = repo.split("/");
 
   const body = {
@@ -98,7 +102,7 @@ document.getElementById("startBtn").onclick = async()=>{
       video_url: video,
       start_time: utcTime,
       duration_seconds: String(duration),
-      seamless: looping ? "true" : "false"
+      seamless: seamless ? "true" : "false"
     }
   };
 
