@@ -1,6 +1,5 @@
 export default {
   async fetch(request, env) {
-    // CORS preflight
     if (request.method === "OPTIONS") {
       return new Response(null, {
         status: 204,
@@ -11,21 +10,11 @@ export default {
         }
       });
     }
-
     if (request.method !== "POST") {
-      return new Response("Cloudflare Worker Online. Use POST.", {
-        status: 200,
-        headers: { "Access-Control-Allow-Origin": "*" }
-      });
+      return new Response("Worker ready. Use POST.", { status: 200, headers: { "Access-Control-Allow-Origin": "*" } });
     }
-
     let data;
-    try {
-      data = await request.json();
-    } catch (e) {
-      return new Response("Invalid JSON", { status: 400, headers: { "Access-Control-Allow-Origin": "*" }});
-    }
-
+    try { data = await request.json(); } catch(e){ return new Response("Invalid JSON", { status: 400, headers: { "Access-Control-Allow-Origin": "*" } }); }
     const payload = {
       event_type: "stream_trigger",
       client_payload: {
@@ -35,9 +24,7 @@ export default {
         seamless: data.seamless
       }
     };
-
     const githubUrl = `https://api.github.com/repos/${data.repo}/dispatches`;
-
     const res = await fetch(githubUrl, {
       method: "POST",
       headers: {
@@ -48,11 +35,7 @@ export default {
       },
       body: JSON.stringify(payload)
     });
-
     const text = await res.text();
-    return new Response(text, {
-      status: res.status,
-      headers: { "Access-Control-Allow-Origin": "*" }
-    });
+    return new Response(text, { status: res.status, headers: { "Access-Control-Allow-Origin": "*" } });
   }
 };

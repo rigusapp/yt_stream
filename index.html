@@ -2,25 +2,20 @@
 <html lang="id">
 <head>
 <meta charset="utf-8"/>
-<title>Dashboard Stream v12 — Cloudflare Worker Proxy</title>
+<title>YT Stream</title>
 <style>
-body{font-family:Arial,system-ui;margin:20px auto;max-width:880px;padding:12px}
-h2{margin-bottom:6px}
+body{font-family:Inter,Arial,system-ui;margin:20px auto;max-width:900px;padding:12px}
+h1{font-size:24px;margin-bottom:6px}
 label{display:block;margin-top:12px;font-weight:600}
 input, select, button{width:100%;padding:10px;margin-top:6px;font-size:15px;box-sizing:border-box}
-button{cursor:pointer}
+button{cursor:pointer;background:#2563eb;color:#fff;border:none;border-radius:6px}
 .note{font-size:13px;color:#444;margin-top:8px}
-.success{color:green}
-.error{color:#b00020;white-space:pre-wrap}
 pre{background:#f6f6f6;padding:10px;border-radius:6px;overflow:auto}
-.row{display:flex;gap:10px}
-.col{flex:1}
-.small{max-width:220px}
 </style>
 </head>
 <body>
-<h2>Dashboard Stream v12 — Cloudflare Worker Proxy</h2>
-<p class="note">Pastikan Worker sudah dideploy dan GH_PAT tersimpan di Worker variables. Masukkan URL Worker di bawah.</p>
+
+<h1>YT Stream</h1>
 
 <label>URL Cloudflare Worker</label>
 <input id="worker" value="https://ytstream-proxy.rigus-apps.workers.dev/" />
@@ -94,26 +89,30 @@ document.getElementById("startBtn").onclick = async ()=>{
 
     log.innerHTML="Mengirim ke Worker…";
     resp.style.display="none";
+
     try{
       const r = await call(worker, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "User-Agent": "dashboard-v12-client"
+          "User-Agent": "dashboard-v13-client"
         },
         body: JSON.stringify(payload)
       });
+
       if(r.ok){
-        log.innerHTML = "<p class='success'>Berhasil: status "+r.status+"</p>";
+        log.innerHTML = "<p style='color:green'>Berhasil: status "+r.status+"</p>";
       } else {
-        log.innerHTML = "<p class='error'>Gagal: status "+r.status+"</p>";
+        log.innerHTML = "<p style='color:#b00020'>Gagal: status "+r.status+"</p>";
       }
       resp.style.display="block";
       resp.textContent = "Response body:\n" + r.text;
+
     } catch(e){
-      log.innerHTML = "<p class='error'>Fetch error: "+e.message+"</p>";
+      log.innerHTML = "<p style='color:#b00020'>Fetch error: "+e.message+"</p>";
     }
 };
 </script>
+
 </body>
 </html>
