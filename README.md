@@ -1,18 +1,16 @@
-# yt_stream Dashboard v8 — Proxy GH_PAT Secure Edition
+# yt_stream Dashboard v9 — Repository Dispatch Version
 
-How to use:
-1. Upload these files to your repository root.
-2. Create repository Secrets:
-   - `GH_PAT` : a Personal Access Token with scopes `repo` (if needed) and `workflow`
-   - `YT_STREAM_KEY` : YouTube stream key
-3. Ensure your repository is **public**.
-4. Open `index.html` (via GitHub Pages or raw) and fill repo, video url, date/time (WIB), duration, seamless option.
-5. Click "Trigger Stream (via Proxy)". The dashboard will call the `proxy.yml` workflow (no PAT needed in browser).
-6. `proxy.yml` will run a composite action that uses `GH_PAT` (from Secrets) to dispatch `stream.yml` which runs ffmpeg on a GitHub Actions runner.
+Architecture:
+- Browser sends `repository_dispatch` event with event_type `stream_trigger`.
+- Proxy workflow listens to this repository_dispatch event.
+- Proxy workflow runs a composite action that uses `GH_PAT` from Secrets to dispatch the actual `stream.yml` workflow.
+- `stream.yml` runs FFmpeg on GitHub Actions runner to stream to YouTube.
 
-Security:
-- GH_PAT never exposed to browser; it's stored as a GitHub Actions secret.
-- Dashboard does not include any token or secret.
+Install:
+1. Upload files to repo root (maintain structure).
+2. Add Secrets in repository: GH_PAT, YT_STREAM_KEY
+3. Ensure repo is public.
+4. From browser use index.html to send repository_dispatch.
 
 Notes:
-- For private repos a different approach is needed; this flow assumes a public repo.
+- Some GitHub API endpoints still require auth; repository_dispatch for public repositories can be accepted without auth in many setups, but if your repo or org enforces stricter policies you may need to allow it.

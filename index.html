@@ -2,12 +2,12 @@
 <html lang="id">
 <head>
 <meta charset="utf-8"/>
-<title>Dashboard Stream v8 (Proxy GH_PAT)</title>
+<title>Dashboard Stream v9 — Repository Dispatch (No Auth from Browser)</title>
 <style>
 body{font-family:Arial,system-ui;margin:20px auto;max-width:820px;padding:12px}
 h2{margin-bottom:6px}
 label{display:block;margin-top:12px;font-weight:600}
-input, select, button, textarea{width:100%;padding:10px;margin-top:6px;font-size:15px}
+input, select, button{width:100%;padding:10px;margin-top:6px;font-size:15px}
 button{cursor:pointer}
 .note{font-size:13px;color:#444;margin-top:8px}
 .success{color:green}
@@ -15,8 +15,8 @@ button{cursor:pointer}
 </style>
 </head>
 <body>
-<h2>Dashboard Stream v8 — Secure (Proxy GH_PAT)</h2>
-<p class="note">Dashboard ini <strong>tidak</strong> meminta token. Pastikan repo bersifat <strong>public</strong> dan secret <code>GH_PAT</code> sudah disimpan di Settings → Secrets → Actions.</p>
+<h2>Dashboard Stream v9 — Repository Dispatch</h2>
+<p class="note">Arsitektur: browser mengirim <code>repository_dispatch</code> (event_type: <strong>stream_trigger</strong>). Proxy workflow yang mendengarkan event ini akan dijalankan (menggunakan <code>GH_PAT</code> yang tersimpan di Secrets) dan akan memicu stream.</p>
 
 <label>Repository (owner/repo)</label>
 <input id="repo" placeholder="contoh: rigusapp/yt_stream" value="rigusapp/yt_stream"/>
@@ -46,14 +46,12 @@ button{cursor:pointer}
 
 <label><input type="checkbox" id="seamless"/> Seamless Loop (tanpa putus)</label>
 
-<button id="startBtn">Trigger Stream (via Proxy)</button>
+<button id="startBtn">Trigger Stream (repository_dispatch)</button>
 
 <div id="log" style="margin-top:14px"></div>
 
 <script>
-// Convert datetime-local (local browser) interpreted as local WIB by user -> convert to UTC by subtracting 7 hours
 function convertWIBToUTC(datetimeLocal){
-    // datetimeLocal is like "2025-12-01T21:30"
     const local = new Date(datetimeLocal);
     const utc = new Date(local.getTime() - (7*60*60*1000));
     return utc.toISOString().split('.')[0] + "Z";
@@ -62,10 +60,9 @@ function convertWIBToUTC(datetimeLocal){
 async function callAPI(url, opts){
   const res = await fetch(url, opts);
   const text = await res.text();
-  let ok = res.ok;
   let json = null;
   try{ json = JSON.parse(text); } catch(e){}
-  return {ok, status: res.status, text, json};
+  return {ok: res.ok, status: res.status, text, json};
 }
 
 document.getElementById('startBtn').addEventListener('click', async ()=>{
@@ -81,9 +78,11 @@ document.getElementById('startBtn').addEventListener('click', async ()=>{
     return;
   }
   const utc = convertWIBToUTC(datetime);
+
+  // repository_dispatch payload (event_type: stream_trigger)
   const body = {
-    ref: "main",
-    inputs: {
+    event_type: "stream_trigger",
+    client_payload: {
       video_url: video,
       start_time: utc,
       duration_seconds: String(duration),
@@ -91,20 +90,19 @@ document.getElementById('startBtn').addEventListener('click', async ()=>{
     }
   };
 
-  // dispatch proxy workflow (no auth required for public repo)
-  const url = `https://api.github.com/repos/${repo}/actions/workflows/proxy.yml/dispatches`;
-  log.innerHTML = '<p>Memanggil proxy workflow…</p>';
+  const url = `https://api.github.com/repos/${repo}/dispatches`;
+  log.innerHTML = '<p>Memanggil repository_dispatch…</p>';
 
   const r = await callAPI(url, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/vnd.github.v3+json' },
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/vnd.github.everest-preview+json' },
     body: JSON.stringify(body)
   });
 
   if(r.ok || r.status===204){
-    log.innerHTML = '<p class="success">Proxy dispatched — workflow akan memicu streaming. Cek tab Actions di GitHub.</p>';
+    log.innerHTML = '<p class="success">Event sent — cek Actions (Proxy listener will handle it).</p>';
   } else {
-    log.innerHTML = '<div class="error">Gagal dispatch proxy. Status: '+r.status+'\nResponse: '+r.text+'</div>';
+    log.innerHTML = '<div class="error">Gagal mengirim event. Status: '+r.status+'\n'+r.text+'</div>';
   }
 });
 </script>
