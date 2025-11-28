@@ -1,0 +1,53 @@
+name: Stream to YouTube (FFmpeg)
+
+on:
+  workflow_dispatch:
+    inputs:
+      video_url:
+        description: 'Direct URL to MP4 file or raw file URL'
+        required: true
+      start_time:
+        description: 'ISO start time (YYYY-MM-DDThh:mm:ss)'
+        required: true
+      duration_seconds:
+        description: 'Duration in seconds'
+        required: true
+
+jobs:
+  stream:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show inputs
+        run: |
+          echo "video_url=${{ github.event.inputs.video_url }}"
+          echo "start_time=${{ github.event.inputs.start_time }}"
+          echo "duration_seconds=${{ github.event.inputs.duration_seconds }}"
+
+      - name: Install ffmpeg
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y ffmpeg
+
+      - name: Wait until start time
+        env:
+          START_ISO: "${{ github.event.inputs.start_time }}"
+        run: |
+          start_epoch=$(date -d "$START_ISO" +%s)
+          now_epoch=$(date +%s)
+          wait_seconds=$((start_epoch - now_epoch))
+          if [ $wait_seconds -gt 0 ]; then
+            if [ $wait_seconds -gt 21600 ]; then wait_seconds=21600; fi
+            sleep $wait_seconds
+          fi
+
+      - name: Stream with ffmpeg
+        env:
+          YTKEY: ${{ secrets.YT_STREAM_KEY }}
+          VIDEO_URL: "${{ github.event.inputs.video_url }}"
+          DURATION: "${{ github.event.inputs.duration_seconds }}"
+        run: |
+          if [ -z "$YTKEY" ]; then
+            echo "ERROR: Set secret YT_STREAM_KEY"
+            exit 1
+          fi
+          ffmpeg -re -i "$VIDEO_URL" -c:v copy -c:a aac -b:a 128k -f flv "rtmp://a.rtmp.youtube.com/live2/$YTKEY" -t "$DURATION"
