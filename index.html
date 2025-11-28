@@ -2,16 +2,16 @@
 <html lang="id">
 <head>
 <meta charset="utf-8"/>
-<title>Dashboard Stream v3</title>
+<title>Dashboard Stream v4</title>
 <style>
 body{font-family:Arial;margin:24px;max-width:760px}
 label{display:block;margin-top:12px}
-input{width:100%;padding:8px;margin-top:6px}
-button{margin-top:12px;padding:10px 14px}
+input, select{width:100%;padding:8px;margin-top:6px}
+button{margin-top:12px;padding:10px 14px;width:100%}
 </style>
 </head>
 <body>
-<h2>Dashboard Stream v3 (Date Picker + Time Picker | WIB → UTC)</h2>
+<h2>Dashboard Stream v4 (WIB → UTC • Durasi Live • Looping)</h2>
 
 <label>GitHub Token (PAT)
 <input id="pat" placeholder="Masukkan token"/>
@@ -37,8 +37,17 @@ button{margin-top:12px;padding:10px 14px}
 <input id="time" type="time">
 </label>
 
-<label>Durasi (detik)
-<input id="duration" value="3600" type="number"/>
+<h3>Durasi Live</h3>
+<label>Jam
+<input id="dur_hour" type="number" min="0" value="1">
+</label>
+
+<label>Menit
+<input id="dur_min" type="number" min="0" value="0">
+</label>
+
+<label>
+<input type="checkbox" id="loop"> Looping (ulangi video hingga durasi habis)
 </label>
 
 <button id="startBtn">Trigger Stream</button>
@@ -58,28 +67,39 @@ async function callAPI(url, opts){
   try { return {ok:res.ok, json:JSON.parse(txt), text:txt}; } catch(e){ return {ok:res.ok, text:txt}; }
 }
 
-document.getElementById('startBtn').onclick = async ()=>{
+document.getElementById("startBtn").onclick = async()=>{
 
-  const token=document.getElementById('pat').value.trim();
-  const repo=document.getElementById('repo').value.trim();
-  const wf=document.getElementById('workflow').value.trim();
-  const video=document.getElementById('video').value.trim();
-  const date=document.getElementById('date').value.trim();
-  const time=document.getElementById('time').value.trim();
-  const duration=document.getElementById('duration').value.trim();
-  const log=document.getElementById('log');
+  const token=document.getElementById("pat").value.trim();
+  const repo=document.getElementById("repo").value.trim();
+  const wf=document.getElementById("workflow").value.trim();
+  const video=document.getElementById("video").value.trim();
+  const date=document.getElementById("date").value.trim();
+  const time=document.getElementById("time").value.trim();
+
+  const hour=parseInt(document.getElementById("dur_hour").value);
+  const min=parseInt(document.getElementById("dur_min").value);
+  const looping=document.getElementById("loop").checked;
+
+  const log=document.getElementById("log");
 
   if(!token||!repo||!wf||!video||!date||!time){
     alert("Lengkapi semua data!");
     return;
   }
 
+  const duration = (hour * 3600) + (min * 60);
   const utcTime = wibToUTC(date, time);
-  const [owner,name]=repo.split('/');
 
-  const body={
+  const [owner, name] = repo.split("/");
+
+  const body = {
     ref:"main",
-    inputs:{ video_url:video, start_time:utcTime, duration_seconds:duration }
+    inputs:{
+      video_url: video,
+      start_time: utcTime,
+      duration_seconds: String(duration),
+      looping: looping ? "true" : "false"
+    }
   };
 
   const url=`https://api.github.com/repos/${owner}/${name}/actions/workflows/${wf}/dispatches`;
@@ -91,11 +111,11 @@ document.getElementById('startBtn').onclick = async ()=>{
       Accept:"application/vnd.github.v3+json",
       "Content-Type":"application/json"
     },
-    body:JSON.stringify(body)
+    body: JSON.stringify(body)
   });
 
-  log.innerHTML = r.ok 
-    ? "<p style='color:green'>Workflow dijalankan dengan sukses.</p>"
+  log.innerHTML = r.ok
+    ? "<p style='color:green'>Workflow dijalankan.</p>"
     : "<pre style='color:red'>"+r.text+"</pre>";
 };
 </script>
