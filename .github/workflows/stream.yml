@@ -15,6 +15,20 @@ jobs:
       - name: Install ffmpeg
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
 
+      - name: Show Payload
+        run: |
+          echo "=== VIDEO_URL ==="
+          echo "${{ github.event.client_payload.video_url }}"
+          echo "=== STREAM_KEY ==="
+          echo "${{ github.event.client_payload.stream_key }}"
+          echo "=== TITLE ==="
+          echo "${{ github.event.client_payload.title }}"
+          echo "=== DESC ==="
+          echo "${{ github.event.client_payload.description }}"
+          echo "===== RAW PAYLOAD ====="
+          echo '${{ toJson(github.event.client_payload) }}'
+
+
       - name: Start Stream
         run: |
           ffmpeg -re -stream_loop -1 \
