@@ -2,77 +2,65 @@
 <html lang="id">
 <head>
 <meta charset="utf-8"/>
-<title>Dashboard Stream v7.2 FIX FINAL</title>
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/air-datepicker@2.2.3/dist/css/datepicker.min.css">
-<script src="https://cdn.jsdelivr.net/npm/air-datepicker@2.2.3/dist/js/datepicker.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/air-datepicker@2.2.3/dist/js/i18n/datepicker.id.js"></script>
+<title>Dashboard Stream — Versi Minimal + Durasi List</title>
 
 <style>
 body{font-family:Arial;margin:24px;max-width:760px}
-label{display:block;margin-top:12px}
-input{width:100%;padding:8px;margin-top:6px}
-button{margin-top:12px;padding:10px 14px;width:100%}
+label{display:block;margin-top:12px;font-weight:bold}
+input, select{width:100%;padding:10px;margin-top:6px;font-size:16px}
+button{margin-top:20px;padding:12px 16px;width:100%;font-size:18px;cursor:pointer}
 </style>
 </head>
+
 <body>
 
-<h2>Dashboard Stream v7.2 (Datetime Picker Indonesia + Seamless Loop)</h2>
+<h2>Dashboard Stream — Minimal + Durasi List</h2>
 
-<label>GitHub Token (PAT)
+<label>GitHub Token (PAT)</label>
 <input id="pat" placeholder="Masukkan token"/>
-</label>
 
-<label>Repository (owner/repo)
+<label>Repository (owner/repo)</label>
 <input id="repo" placeholder="rigusapp/yt_stream"/>
-</label>
 
-<label>Workflow file
+<label>Workflow file</label>
 <input id="workflow" value="stream.yml"/>
-</label>
 
-<label>Video URL
+<label>Video URL</label>
 <input id="video" placeholder="https://.../video.mp4"/>
-</label>
 
-<label>Tanggal & Jam Live (WIB)
-<input id="datetime" placeholder="dd/MM/yyyy HH:mm">
-</label>
+<label>Tanggal & Jam Live (WIB)</label>
+<input id="datetime" type="datetime-local">
 
-<h3>Durasi Live</h3>
-
-<label>Jam
-<input id="dur_hour" type="number" min="0" value="1">
-</label>
-
-<label>Menit
-<input id="dur_min" type="number" min="0" value="0">
-</label>
+<label>Durasi Live</label>
+<select id="duration">
+  <option value="1800">30 Menit</option>
+  <option value="3600">1 Jam</option>
+  <option value="7200">2 Jam</option>
+  <option value="10800">3 Jam</option>
+  <option value="14400">4 Jam</option>
+  <option value="18000">5 Jam</option>
+  <option value="21600">6 Jam</option>
+  <option value="25200">7 Jam</option>
+  <option value="28800">8 Jam</option>
+  <option value="32400">9 Jam</option>
+  <option value="36000">10 Jam</option>
+  <option value="39600">11 Jam</option>
+  <option value="43200">12 Jam</option>
+</select>
 
 <label>
 <input type="checkbox" id="loop"> Seamless Loop (tanpa putus)
 </label>
 
 <button id="startBtn">Trigger Stream</button>
-<div id="log"></div>
+<div id="log" style="margin-top:20px;"></div>
 
 <script>
-// Init Air Datepicker v2
-new Datepicker(document.getElementById('datetime'), {
-    language: 'id',
-    timepicker: true,
-    dateFormat: 'dd/MM/yyyy',
-    timeFormat: 'HH:mm',
-});
-
-// Convert WIB → UTC
-function convertWIBToUTC(datetime){
-    const [date, time] = datetime.split(" ");
-    const [day, month, year] = date.split("/");
-    const full = `${year}-${month}-${day}T${time}:00`;
-    const local = new Date(full);
+// Convert datetime-local WIB → UTC
+function convertWIBToUTC(datetimeLocal){
+    const local = new Date(datetimeLocal);
     const utc = new Date(local.getTime() - (7*60*60*1000));
-    return utc.toISOString().split('.')[0]+"Z";
+    return utc.toISOString().split('.')[0] + "Z";
 }
 
 async function callAPI(url, opts){
@@ -81,16 +69,14 @@ async function callAPI(url, opts){
   try { return {ok:res.ok, json:JSON.parse(txt), text:txt}; } catch(e){ return {ok:res.ok, text:txt}; }
 }
 
-document.getElementById("startBtn").onclick = async()=>{
+document.getElementById("startBtn").onclick = async ()=>{
 
   const token=document.getElementById("pat").value.trim();
   const repo=document.getElementById("repo").value.trim();
   const wf=document.getElementById("workflow").value.trim();
   const video=document.getElementById("video").value.trim();
   const datetime=document.getElementById("datetime").value.trim();
-
-  const hour=parseInt(document.getElementById("dur_hour").value);
-  const min=parseInt(document.getElementById("dur_min").value);
+  const duration=parseInt(document.getElementById("duration").value);
   const seamless=document.getElementById("loop").checked;
 
   const log=document.getElementById("log");
@@ -100,9 +86,8 @@ document.getElementById("startBtn").onclick = async()=>{
     return;
   }
 
-  const duration = (hour * 3600) + (min * 60);
   const utcTime = convertWIBToUTC(datetime);
-  const [owner, name] = repo.split("/");
+  const [owner,name]=repo.split("/");
 
   const body = {
     ref:"main",
@@ -123,7 +108,7 @@ document.getElementById("startBtn").onclick = async()=>{
       Accept:"application/vnd.github.v3+json",
       "Content-Type":"application/json"
     },
-    body: JSON.stringify(body)
+    body:JSON.stringify(body)
   });
 
   log.innerHTML = r.ok
