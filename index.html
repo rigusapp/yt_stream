@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Dashboard Stream (HTML)</title>
+  <style>
+    body{font-family:system-ui,Arial;margin:24px;max-width:760px}
+    label{display:block;margin-top:12px}
+    input,textarea,select{width:100%;padding:8px;margin-top:6px}
+    button{margin-top:12px;padding:10px 14px}
+    .note{font-size:13px;color:#555}
+  </style>
+</head>
+<body>
+  <h1>Dashboard Stream — Simple HTML</h1>
+  <p class="note">Isi token GitHub PAT, repo, video, waktu start dan durasi lalu tekan Trigger.</p>
+
+  <label>GitHub Token (PAT)
+    <input id="pat" placeholder="Paste GitHub Personal Access Token (repo, workflow)"/>
+  </label>
+
+  <label>Repository (owner/repo)
+    <input id="repo" placeholder="contoh: username/my-stream-repo"/>
+  </label>
+
+  <label>Nama workflow file
+    <input id="workflow" value="stream.yml"/>
+  </label>
+
+  <label>Video URL (direct link)
+    <input id="video" placeholder="https://.../video.mp4"/>
+  </label>
+
+  <label>Waktu mulai (ISO 8601)
+    <input id="start" placeholder="2025-12-01T15:30:00"/>
+  </label>
+
+  <label>Durasi streaming (detik)
+    <input id="duration" value="3600" type="number"/>
+  </label>
+
+  <label>Branch
+    <input id="branch" value="main"/>
+  </label>
+
+  <button id="startBtn">Trigger Stream</button>
+  <div id="log"></div>
+
+<script>
+async function callAPI(url, opts){
+  const res = await fetch(url, opts);
+  const txt = await res.text();
+  try { return {ok:res.ok, json: JSON.parse(txt), text: txt}; } catch(e){ return {ok:res.ok, text:txt}; }
+}
+
+document.getElementById('startBtn').addEventListener('click', async()=>{
+  const token = document.getElementById('pat').value.trim();
+  if(!token){ alert('Masukkan GitHub Token (PAT).'); return; }
+  sessionStorage.setItem('gh_pat', token);
+
+  const repo = document.getElementById('repo').value.trim();
+  const wf = document.getElementById('workflow').value.trim();
+  const video = document.getElementById('video').value.trim();
+  const start = document.getElementById('start').value.trim();
+  const duration = document.getElementById('duration').value.trim() || '3600';
+  const branch = document.getElementById('branch').value.trim() || 'main';
+  if(!repo || !video || !start){ alert('Isi semua data.'); return; }
+
+  const parts = repo.split('/');
+  if(parts.length!==2){ alert('Format repo harus owner/repo'); return; }
+  const [owner,name] = parts;
+
+  const body = {
+    ref: branch,
+    inputs: { video_url: video, start_time: start, duration_seconds: duration }
+  };
+
+  const url = `https://api.github.com/repos/${owner}/${name}/actions/workflows/${wf}/dispatches`;
+  const r = await callAPI(url, {
+    method:'POST',
+    headers: {
+      Authorization: 'token '+token,
+      Accept: 'application/vnd.github.v3+json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  });
+
+  const log = document.getElementById('log');
+  if(r.ok){
+    log.innerHTML = '<p style="color:green">Workflow dispatched. Cek tab Actions.</p>';
+  } else {
+    log.innerHTML = '<pre style="color:red">'+r.text+'</pre>';
+  }
+});
+</script>
+</body>
+</html>
