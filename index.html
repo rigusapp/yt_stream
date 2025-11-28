@@ -29,8 +29,12 @@ button{margin-top:12px;padding:10px 14px}
 <input id="video" placeholder="https://.../video.mp4"/>
 </label>
 
-<label>Waktu Mulai (WIB)
-<input id="start" type="datetime-local"/>
+<label>Pilih Tanggal (WIB)
+<input id="date" type="date">
+</label>
+
+<label>Pilih Waktu (WIB)
+<input id="time" type="time">
 </label>
 
 <label>Durasi (detik)
@@ -41,9 +45,11 @@ button{margin-top:12px;padding:10px 14px}
 <div id="log"></div>
 
 <script>
-function toUTC(wibString){
-    const local = new Date(wibString);
-    const utc = new Date(local.getTime() - (7*60*60*1000));
+// Menggabungkan tanggal + waktu → konversi WIB → UTC
+function wibToUTC(dateVal, timeVal){
+    const full = dateVal + "T" + timeVal + ":00"; // WIB tanpa offset
+    const local = new Date(full);
+    const utc = new Date(local.getTime() - (7*60*60*1000)); // WIB → UTC
     return utc.toISOString().split('.')[0] + "Z";
 }
 
@@ -54,17 +60,23 @@ async function callAPI(url, opts){
 }
 
 document.getElementById('startBtn').onclick = async ()=>{
+
   const token=document.getElementById('pat').value.trim();
   const repo=document.getElementById('repo').value.trim();
   const wf=document.getElementById('workflow').value.trim();
   const video=document.getElementById('video').value.trim();
-  const start=document.getElementById('start').value.trim();
+  const date=document.getElementById('date').value.trim();
+  const time=document.getElementById('time').value.trim();
   const duration=document.getElementById('duration').value.trim();
   const log=document.getElementById('log');
 
-  if(!token||!repo||!wf||!video||!start){alert("Lengkapi semua data");return;}
+  if(!token||!repo||!wf||!video||!date||!time){ 
+    alert("Lengkapi semua data!"); 
+    return;
+  }
 
-  const utcTime = toUTC(start);
+  // konversi WIB → UTC
+  const utcTime = wibToUTC(date, time);
   const [owner,name]=repo.split('/');
 
   const body={
@@ -84,8 +96,11 @@ document.getElementById('startBtn').onclick = async ()=>{
     body:JSON.stringify(body)
   });
 
-  log.innerHTML = r.ok ? "<p style='color:green'>Workflow dijalankan.</p>" : "<pre style='color:red'>"+r.text+"</pre>";
+  log.innerHTML = r.ok 
+    ? "<p style='color:green'>Workflow dijalankan.</p>"
+    : "<pre style='color:red'>"+r.text+"</pre>";
 };
 </script>
+
 </body>
 </html>
