@@ -28,28 +28,27 @@ jobs:
           echo "===== RAW PAYLOAD ====="
           echo '${{ toJson(github.event.client_payload) }}'
 
+      - name: Start Stream
+        run: |
+          VIDEO="${{ github.event.client_payload.video_url }}"
+          RTMP="${{ github.event.client_payload.rtmp_url }}"
+          KEY="${{ github.event.client_payload.stream_key }}"
 
-         - name: Start Stream
-      run: |
-        VIDEO="${{ github.event.client_payload.video_url }}"
-        RTMP="${{ github.event.client_payload.rtmp_url }}"
-        KEY="${{ github.event.client_payload.stream_key }}"
+          echo "=== RUN STREAM ==="
+          echo "RTMP: $RTMP"
+          echo "KEY:  $KEY"
 
-        echo "=== RUN STREAM ==="
-        echo "RTMP: $RTMP"
-        echo "KEY:  $KEY"
+          if [ -z "$KEY" ]; then
+            echo "ERROR: Stream key is EMPTY. Aborting."
+            exit 1
+          fi
 
-        if [ -z "$KEY" ]; then
-          echo "ERROR: Stream key is EMPTY. Aborting."
-          exit 1
-        fi
+          FULL_URL="$RTMP/$KEY"
+          echo "FFMPEG OUTPUT: $FULL_URL"
 
-        FULL_URL="$RTMP/$KEY"
-        echo "FFMPEG OUTPUT: $FULL_URL"
-
-        ffmpeg -re -stream_loop -1 \
-          -i "$VIDEO" \
-          -vcodec libx264 -preset veryfast -maxrate 3000k -bufsize 6000k \
-          -pix_fmt yuv420p -g 50 \
-          -c:a aac -b:a 128k -ar 44100 \
-          -f flv "$FULL_URL"
+          ffmpeg -re -stream_loop -1 \
+            -i "$VIDEO" \
+            -vcodec libx264 -preset veryfast -maxrate 3000k -bufsize 6000k \
+            -pix_fmt yuv420p -g 50 \
+            -c:a aac -b:a 128k -ar 44100 \
+            -f flv "$FULL_URL"
