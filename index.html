@@ -1,98 +1,136 @@
 <!doctype html>
 <html lang="id">
 <head>
-<meta charset="utf-8"/>
-<title>YT Stream Premium v15.1</title>
-<style>
-body{font-family:Arial;margin:0;background:#f6f6fb;display:flex;justify-content:center;padding:40px}
-.container{background:white;padding:28px;border-radius:16px;width:100%;max-width:780px;box-shadow:0 8px 26px rgba(0,0,0,0.08)}
-h1{margin:0;font-size:24px;font-weight:700}
-label{margin-top:14px;display:block;font-weight:600}
-input,select,textarea{width:100%;padding:12px;margin-top:6px;border:1px solid #ddd;border-radius:8px;background:#fafafa}
-textarea{min-height:100px}
-button{margin-top:20px;padding:14px;width:100%;background:#e53935;border:none;border-radius:10px;color:white;font-size:17px;font-weight:700;cursor:pointer}
-pre{background:#111;color:#0f0;margin-top:14px;padding:14px;border-radius:8px;display:none;white-space:pre-wrap}
-</style>
+  <meta charset="utf-8"/>
+  <title>YT Stream — Dashboard</title>
+  <style>
+    body{font-family:Inter, Arial, sans-serif;max-width:900px;margin:24px auto;padding:24px}
+    header{display:flex;align-items:center;gap:16px}
+    header img{width:64px;height:64px}
+    h1{margin:0;font-size:28px}
+    label{display:block;margin-top:14px;font-weight:600}
+    input, select, textarea{width:100%;padding:10px;margin-top:6px;border:1px solid #ccc;border-radius:6px}
+    button{margin-top:14px;padding:12px 16px;border-radius:8px;border:0;background:#ff0000;color:#fff;font-weight:700}
+    .muted{color:#666;font-size:13px;margin-top:6px}
+  </style>
 </head>
 <body>
+  <header>
+    <img src="logo.png" alt="YT Stream logo"/>
+    <div>
+      <h1>YT Stream</h1>
+      <div class="muted">Premium dashboard — Proxy + GitHub Actions (v16)</div>
+    </div>
+  </header>
 
-<div class="container">
-<h1>YT Stream Premium v15.1</h1>
+  <p class="muted">Masukkan URL Cloudflare Worker (proxy), lalu isi data stream. Stream key dikirim hanya saat trigger.</p>
 
-<label>Judul Video</label>
-<input id="title">
+  <label>URL Cloudflare Worker
+    <input id="workerUrl" placeholder="https://ytstream-proxy.example.workers.dev/"/>
+  </label>
 
-<label>Visibilitas</label>
-<select id="visibility">
-<option value="public">Public</option>
-<option value="unlisted">Unlisted</option>
-<option value="private">Private</option>
-</select>
+  <label>Video URL
+    <input id="video" placeholder="https://example.com/video.mp4"/>
+  </label>
 
-<label>Deskripsi</label>
-<textarea id="description"></textarea>
+  <label>Tanggal & Jam Live (WIB)
+    <input id="datetime" type="datetime-local"/>
+  </label>
 
-<label>Stream Key (YouTube)</label>
-<input id="streamKey" placeholder="xxxx-xxxx-xxxx-xxxx">
+  <label>Durasi
+    <select id="duration">
+      <option>30 menit</option>
+      <option selected>1 Jam</option>
+      <option>2 Jam</option>
+      <option>3 Jam</option>
+      <option>4 Jam</option>
+      <option>5 Jam</option>
+      <option>6 Jam</option>
+      <option>7 Jam</option>
+      <option>8 Jam</option>
+      <option>9 Jam</option>
+      <option>10 Jam</option>
+      <option>11 Jam</option>
+      <option>12 Jam</option>
+    </select>
+  </label>
 
-<label>Video URL</label>
-<input id="video">
+  <label>Judul Video
+    <input id="title" placeholder="Judul live"/>
+  </label>
 
-<label>Tanggal & Jam Live (WIB)</label>
-<input id="datetime" type="datetime-local">
+  <label>Deskripsi
+    <textarea id="desc" rows="3" placeholder="Deskripsi video"></textarea>
+  </label>
 
-<label>Durasi</label>
-<select id="duration">
-<option value="3600">1 Jam</option>
-<option value="7200">2 Jam</option>
-<option value="10800">3 Jam</option>
-<option value="14400">4 Jam</option>
-</select>
+  <label>Visibilitas
+    <select id="visibility">
+      <option value="public">Publik</option>
+      <option value="unlisted">Unlisted</option>
+      <option value="private">Private</option>
+    </select>
+  </label>
 
-<label>Seamless Loop</label>
-<select id="seamless">
-<option value="false">Tidak</option>
-<option value="true">Ya</option>
-</select>
+  <label>Stream Key (akan dikirim ke Worker, lalu ke GitHub Actions). Disembunyikan setelah dikirim.</label>
+  <input id="streamKey" placeholder="rmfk-xxxxx-xxxxx" />
 
-<button id="startBtn">Mulai Streaming</button>
-<div id="log"></div>
-<pre id="resp"></pre>
-</div>
+  <button id="trigger">Trigger Stream</button>
 
-<script>
-const WORKER_URL = "https://ytstream-proxy.rigus-apps.workers.dev/";
-function convert(datetime){
-  const d=new Date(datetime);
-  const u=new Date(d.getTime()-7*3600*1000);
-  return u.toISOString().split('.')[0]+"Z";
-}
-async function post(url,data){
-  const r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
-  return {ok:r.ok,status:r.status,text:await r.text()};
-}
-document.getElementById("startBtn").onclick=async()=>{
-  const streamKey=document.getElementById("streamKey").value.trim();
-  if(!streamKey){alert("Stream Key wajib diisi!");return;}
-  const payload={
-    repo:"rigusapp/yt_stream",
-    title:document.getElementById("title").value.trim(),
-    visibility:document.getElementById("visibility").value,
-    description:document.getElementById("description").value.trim(),
-    stream_key:streamKey,
-    video_url:document.getElementById("video").value.trim(),
-    start_time:convert(document.getElementById("datetime").value.trim()),
-    duration_seconds:document.getElementById("duration").value,
-    seamless:document.getElementById("seamless").value
-  };
-  const log=document.getElementById("log");
-  const resp=document.getElementById("resp");
-  log.innerHTML="Mengirim...";
-  const r=await post(WORKER_URL,payload);
-  log.innerHTML=r.ok?"Terkirim ✓":"Gagal ✗";
-  resp.style.display="block";
-  resp.textContent=r.text.replace(streamKey,"***** MASKED *****");
-}
-</script>
+  <div id="log" class="muted"></div>
+
+  <script>
+    function wibToUTCISOString(dtLocal) {
+      // dtLocal is like "2025-12-01T15:30"
+      const local = new Date(dtLocal);
+      // WIB is UTC+7, but local input is treated as local timezone in browser.
+      // convert: assume user selected WIB, so subtract 7 hours to get UTC
+      const utc = new Date(local.getTime() - (7*60*60*1000));
+      return utc.toISOString();
+    }
+
+    document.getElementById('trigger').onclick = async () => {
+      const url = document.getElementById('workerUrl').value.trim();
+      const video = document.getElementById('video').value.trim();
+      const dt = document.getElementById('datetime').value.trim();
+      const duration = document.getElementById('duration').value;
+      const title = document.getElementById('title').value.trim();
+      const desc = document.getElementById('desc').value.trim();
+      const visibility = document.getElementById('visibility').value;
+      const streamKey = document.getElementById('streamKey').value.trim();
+      const log = document.getElementById('log');
+
+      if (!url || !video || !dt || !streamKey) {
+        alert('Lengkapi URL Worker, video, tanggal, dan stream key.');
+        return;
+      }
+
+      // duration to seconds (simple mapping)
+      const durMap = {'30 menit':1800,'1 Jam':3600,'2 Jam':7200,'3 Jam':10800,'4 Jam':14400,'5 Jam':18000,
+                      '6 Jam':21600,'7 Jam':25200,'8 Jam':28800,'9 Jam':32400,'10 Jam':36000,'11 Jam':39600,'12 Jam':43200};
+      const durSeconds = durMap[duration] || 3600;
+
+      const payload = {
+        video_url: video,
+        start_time: wibToUTCISOString(dt),
+        duration_seconds: String(durSeconds),
+        stream_key: streamKey,
+        title: title,
+        description: desc,
+        visibility: visibility,
+        seamless: "false"
+      };
+
+      log.textContent = 'Mengirim ke Worker...';
+      try {
+        const res = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)});
+        const txt = await res.text();
+        if (res.ok) {
+          log.textContent = 'Berhasil dikirim. Response: ' + txt;
+        } else {
+          log.textContent = 'Gagal: ' + res.status + ' ' + txt;
+        }
+      } catch(err){ log.textContent = 'Error: '+err.message; }
+    }
+  </script>
 </body>
 </html>
