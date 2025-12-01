@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>YT Stream — Admin Dashboard</title>
+  <style>
+    body{font-family:system-ui,Segoe UI,Roboto,Arial;margin:0;background:#f4f6fb;padding:24px}
+    .container{max-width:900px;margin:24px auto;background:#fff;padding:20px;border-radius:10px;box-shadow:0 6px 18px rgba(32,33,36,0.06)}
+    h1{margin:0 0 18px 0}
+    label{display:block;margin-top:10px;font-weight:600}
+    input{width:100%;padding:10px;margin-top:6px;border-radius:6px;border:1px solid #ddd}
+    button{margin-top:12px;padding:10px 14px;border-radius:8px;border:none;background:#111827;color:#fff;cursor:pointer}
+    .row{display:flex;gap:12px}
+    .col{flex:1}
+    .msg{margin-top:12px;padding:10px;border-radius:6px;background:#eef2ff;color:#1e3a8a;display:none}
+    .error{background:#fee2e2;color:#991b1b;display:none}
+    table{width:100%;border-collapse:collapse;margin-top:18px}
+    th,td{padding:8px;border-bottom:1px solid #eee;text-align:left}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Admin Dashboard</h1>
+    <div>
+      <button id="logoutBtn" style="float:right;margin-top:-48px;background:#ef4444">Logout</button>
+      <p>Gunakan form di bawah untuk menambahkan user baru ke Supabase. Cloudflare Worker yang menjalankan endpoint `POST /create-user` diperlukan dan harus dikonfigurasikan dengan SUPABASE_URL dan SUPABASE_SERVICE_ROLE.</p>
+    </div>
+
+    <form id="createUserForm">
+      <label>Email</label>
+      <input id="email" type="email" placeholder="user@example.com" required />
+      <label>Password (min 6 chars)</label>
+      <input id="password" type="password" placeholder="password" required minlength="6" />
+      <label>Optional - display name</label>
+      <input id="display_name" placeholder="Display name" />
+      <button type="submit">Create user</button>
+    </form>
+
+    <div class="msg" id="msg">User created.</div>
+    <div class="error" id="err">Error!</div>
+
+    <h3>Existing users (from Supabase)</h3>
+    <button id="refreshList">Refresh list</button>
+    <table id="usersTable"><thead><tr><th>Email</th><th>UID</th><th>Created At</th></tr></thead><tbody></tbody></table>
+  </div>
+
+<script>
+// simple auth gate
+if(!sessionStorage.getItem('yt_admin_auth')){
+  window.location.href = 'login.html';
+}
+
+document.getElementById('logoutBtn').addEventListener('click', ()=>{
+  sessionStorage.removeItem('yt_admin_auth');
+  window.location.href = 'login.html';
+});
+
+const createForm = document.getElementById('createUserForm');
+const msg = document.getElementById('msg');
+const err = document.getElementById('err');
+const usersTableBody = document.querySelector('#usersTable tbody');
+const REFRESH_BTN = document.getElementById('refreshList');
+
+// Cloudflare Worker endpoint (adjust to your worker URL)
+const WORKER_BASE = '{{CLOUDFLARE_WORKER_URL}}'; // <-- Replace when deploying the worker
+
+createForm.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  msg.style.display='none'; err.style.display='none';
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const display_name = document.getElementById('display_name').value.trim();
+
+  if(!WORKER_BASE || WORKER_BASE.includes('{{')){
+    err.style.display='block';
+    err.textContent = 'Worker URL not configured. Open README for setup.';
+    return;
+  }
+
+  try{
+    const res = await fetch(WORKER_BASE + '/create-user', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({email,password,display_name})
+    });
+    const json = await res.json();
+    if(res.ok){
+      msg.style.display='block';
+      msg.textContent = 'User created: ' + (json.id || json.user?.id || '');
+      fetchUsers();
+    } else {
+      err.style.display='block';
+      err.textContent = json.error || JSON.stringify(json);
+    }
+  }catch(e){
+    err.style.display='block';
+    err.textContent = e.message;
+  }
+});
+
+async function fetchUsers(){
+  err.style.display='none'; msg.style.display='none';
+  if(!WORKER_BASE || WORKER_BASE.includes('{{')){
+    err.style.display='block';
+    err.textContent = 'Worker URL not configured.';
+    return;
+  }
+  try{
+    const res = await fetch(WORKER_BASE + '/list-users');
+    const json = await res.json();
+    if(res.ok && Array.isArray(json.users)){
+      usersTableBody.innerHTML = '';
+      json.users.forEach(u=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${u.email||''}</td><td>${u.id||u.uid||''}</td><td>${u.created_at||''}</td>`;
+        usersTableBody.appendChild(tr);
+      });
+    } else {
+      err.style.display='block';
+      err.textContent = json.error || JSON.stringify(json);
+    }
+  }catch(e){
+    err.style.display='block';
+    err.textContent = e.message;
+  }
+}
+
+REFRESH_BTN.addEventListener('click', fetchUsers);
+
+if(!WORKER_BASE.includes('{{')){
+  // auto refresh once
+  fetchUsers();
+}
+</script>
+</body>
+</html>
