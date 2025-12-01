@@ -1,120 +1,187 @@
 <!doctype html>
 <html lang="id">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>YT Stream — Dashboard v18 (White)</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<meta charset="utf-8"/>
+<title>YT Stream — Professional</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#ffffff;
-  --card:#f5f7fa;
-  --text:#1a1a1a;
-  --muted:#707070;
-  --accent:#008cff;
-  --accent-2:#00c8ff;
-  font-family: Inter, system-ui;
-}
+:root{--bg:#f4f7fb;--card:#ffffff;--primary:#2563eb;--muted:#6b7280;--accent:#0ea5a0;--danger:#ef4444}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);min-height:100vh}
-.container{max-width:1100px;margin:36px auto;padding:24px}
-header{display:flex;align-items:center;gap:16px;margin-bottom:18px}
-.logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:800;color:white}
-.card{background:var(--card);border-radius:12px;padding:18px;border:1px solid #e2e2e2}
-label{font-size:13px;color:var(--muted);display:block;margin-bottom:8px}
-input, textarea, select{width:100%;padding:10px;border-radius:8px;border:1px solid #d0d0d0;font-size:14px}
-textarea{min-height:100px}
-button.btn{background:var(--accent);border:none;padding:10px 14px;border-radius:10px;color:white;font-weight:700;cursor:pointer}
-button.ghost{background:white;border:1px solid #d0d0d0;padding:8px 12px;border-radius:10px;cursor:pointer;color:var(--muted)}
-.preview{background:#f0f0f0;padding:12px;border-radius:8px;font-family:monospace;font-size:13px;color:#333;max-height:300px;overflow:auto;border:1px solid #d0d0d0}
-.file-drop{border:2px dashed #c0c0c0;padding:14px;border-radius:10px;text-align:center;color:var(--muted);cursor:pointer}
-footer{text-align:center;margin-top:20px;color:var(--muted);font-size:14px}
-footer a{color:var(--accent);text-decoration:none;font-weight:600}
-.grid{display:grid;grid-template-columns:1fr 360px;gap:20px}
-@media(max-width:900px){.grid{grid-template-columns:1fr}}
+body{font-family:'Inter',system-ui,Segoe UI,Arial;background:var(--bg);margin:0;color:#0f172a}
+.container{max-width:980px;margin:36px auto;padding:28px;border-radius:12px;background:var(--card);box-shadow:0 8px 30px rgba(16,24,40,0.06)}
+.header{display:flex;align-items:center;gap:14px}
+.logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--primary),#1e40af);display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:20px}
+h1{margin:0;font-size:20px}
+.lead{margin:6px 0 0;color:var(--muted);font-size:14px}
+.grid{display:grid;grid-template-columns:1fr 320px;gap:18px;margin-top:18px}
+.panel{background:#fbfdff;padding:16px;border-radius:10px;border:1px solid #eef2ff}
+.form-row{display:flex;gap:10px}
+label{display:block;font-weight:600;margin-top:10px;color:#0f172a;font-size:13px}
+.input, select, textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #e6eefc;background:white;font-size:14px}
+textarea{min-height:110px;resize:vertical}
+.small{font-size:13px;color:var(--muted);margin-top:6px}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;background:var(--primary);color:white;border-radius:10px;border:0;cursor:pointer;font-weight:700}
+.btn.ghost{background:transparent;color:var(--primary);border:1px solid #dbeafe}
+.debug{background:#0b1220;color:#bfe7b0;padding:12px;border-radius:8px;font-family:monospace;white-space:pre-wrap;display:none;margin-top:12px}
+.footer{margin-top:12px;color:var(--muted);font-size:13px}
+.meta{font-size:13px;color:var(--muted);margin-top:8px}
 </style>
 </head>
 <body>
 <div class="container">
-<header>
-  <div class="logo">YS</div>
-  <div>
-    <h2 style="margin:0;color:#000">YT Stream — Dashboard v18</h2>
-    <div style="color:var(--muted);font-size:14px">UI White Version — clean & professional</div>
-  </div>
-</header>
-
-<div class="grid">
-  <div class="card">
-    <h3 style="margin-top:0">Konfigurasi Live</h3>
-
-    <label>Judul Video</label>
-    <input id="title" type="text" placeholder="Masukkan judul video">
-    
-    <label style="margin-top:12px">Deskripsi Video</label>
-    <textarea id="description"></textarea>
-
-    <label style="margin-top:12px">Visibilitas</label>
-    <select id="visibility">
-      <option value="public">Public</option>
-      <option value="unlisted">Unlisted</option>
-      <option value="private">Private</option>
-    </select>
-
-    <label style="margin-top:12px">Durasi Live</label>
-    <select id="duration">
-      <option>30 Menit</option><option>1 Jam</option><option>2 Jam</option><option>3 Jam</option>
-      <option>4 Jam</option><option>5 Jam</option><option>6 Jam</option><option>7 Jam</option>
-      <option>8 Jam</option><option>9 Jam</option><option>10 Jam</option>
-      <option>11 Jam</option><option>12 Jam</option>
-    </select>
-
-    <label style="margin-top:12px">Stream Key</label>
-    <input id="streamkey" type="text">
-
-    <label style="margin-top:12px">Sumber Video</label>
-    <select id="sourceType">
-      <option value="storage">Storage (Upload)</option>
-      <option value="link">Link Video</option>
-    </select>
-
-    <div id="sourceStorage" style="margin-top:10px">
-      <div class="file-drop" id="fileDrop">Upload video di sini</div>
-      <input id="fileInput" type="file" accept="video/*" style="display:none">
-      <div id="fileName" style="margin-top:6px;color:var(--muted)"></div>
-    </div>
-
-    <div id="sourceLink" style="display:none;margin-top:10px">
-      <input id="videoLink" type="text" placeholder="https://example.com/video.mp4">
-    </div>
-
-    <label style="margin-top:12px">Tanggal & Waktu</label>
-    <input id="datetime" type="datetime-local">
-
-    <div style="margin-top:16px;display:flex;gap:10px">
-      <button class="btn">Jadwalkan Live</button>
-      <button class="ghost">Preview Payload</button>
-      <button class="ghost">Test Connection</button>
+  <div class="header">
+    <div class="logo">YT</div>
+    <div>
+      <h1>YT Stream — Professional</h1>
+      <div class="lead">Dashboard profesional untuk mengatur livestream YouTube. (RTMP & Stream Key dikirim dari dashboard)</div>
     </div>
   </div>
 
-  <div class="card">
-    <h3 style="margin-top:0">Preview & Log</h3>
-    <pre class="preview">{}</pre>
+  <div class="grid">
+    <div>
+      <div class="panel">
+        <label>Cloudflare Worker URL</label>
+        <input id="workerUrl" class="input" placeholder="https://your-worker.workers.dev/">
 
-    <h4 style="margin-top:20px">Quick actions</h4>
-    <button class="ghost" style="width:100%;margin-top:6px">Test Connection</button>
-    <button class="ghost" style="width:100%;margin-top:6px">Show Last Payload</button>
+        <label>RTMP Server</label>
+        <input id="rtmp" class="input" value="rtmp://a.rtmp.youtube.com/live2">
 
-    <h4 style="margin-top:20px">Last Response:</h4>
-    <pre class="preview">{}</pre>
+        <div class="form-row">
+          <div style="flex:1">
+            <label>Tanggal (WIB)</label>
+            <input id="date" type="date" class="input">
+          </div>
+          <div style="width:160px">
+            <label>Waktu (WIB)</label>
+            <input id="time" type="time" class="input">
+          </div>
+        </div>
+
+        <label>Durasi</label>
+        <select id="duration" class="input">
+          <option value="1800">30 menit</option>
+          <option value="3600" selected>1 Jam</option>
+          <option value="7200">2 Jam</option>
+          <option value="10800">3 Jam</option>
+          <option value="14400">4 Jam</option>
+          <option value="18000">5 Jam</option>
+          <option value="21600">6 Jam</option>
+          <option value="25200">7 Jam</option>
+          <option value="28800">8 Jam</option>
+          <option value="32400">9 Jam</option>
+          <option value="36000">10 Jam</option>
+          <option value="39600">11 Jam</option>
+          <option value="43200">12 Jam</option>
+        </select>
+
+        <label>Video URL</label>
+        <input id="video" class="input" placeholder="https://.../video.mp4">
+
+        <label>Stream Key</label>
+        <input id="streamKey" class="input" placeholder="rmfk-xxxx-xxxx-xxxx">
+
+        <label>Title</label>
+        <input id="title" class="input" placeholder="Judul Live">
+
+        <label>Description</label>
+        <textarea id="description" class="input" placeholder="Deskripsi singkat..."></textarea>
+
+        <label>Visibility</label>
+        <select id="visibility" class="input">
+          <option value="public">Public</option>
+          <option value="unlisted">Unlisted</option>
+          <option value="private">Private</option>
+        </select>
+
+        <div style="display:flex;gap:10px;margin-top:14px">
+          <button id="trigger" class="btn">Trigger Stream</button>
+          <button id="clear" class="btn ghost">Clear</button>
+        </div>
+
+        <div class="meta">Catatan: Stream key dikirim bersama payload ke Worker. Jangan bagikan stream key Anda.</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="panel">
+        <h3 style="margin:0">Preview & Log</h3>
+        <div class="small">Payload yang akan dikirim ke Worker:</div>
+        <pre id="payload" class="debug"></pre>
+        <div id="log" class="debug"></div>
+      </div>
+
+      <div style="height:12px"></div>
+      <div class="panel">
+        <div class="small">Quick actions</div>
+        <button id="test" class="btn ghost" style="width:100%;margin-top:10px">Test connection</button>
+        <div class="small meta">Use Test to verify Worker responds with 204.</div>
+      </div>
+    </div>
   </div>
+
+  <div class="footer">Built for you — Professional SaaS style. Want OAuth integration with YouTube Data API? Ask me.</div>
 </div>
 
-<footer>
-Built with ♥ — YT Stream - Agus Siahaan
-</footer>
+<script>
+function toISO(date,time){
+  if(!date||!time) return '';
+  const local = new Date(date + 'T' + time + ':00');
+  const utc = new Date(local.getTime() - 7*3600*1000);
+  return utc.toISOString().split('.')[0] + 'Z';
+}
 
-</div>
+async function postJSON(url, body){
+  const res = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
+  const text = await res.text().catch(()=>'');
+  return {ok:res.ok,status:res.status,text};
+}
+
+document.getElementById('clear').onclick = ()=>{
+  document.getElementById('video').value='';
+  document.getElementById('streamKey').value='';
+  document.getElementById('title').value='';
+  document.getElementById('description').value='';
+  document.getElementById('visibility').value='public';
+  document.getElementById('payload').style.display='none';
+  document.getElementById('log').style.display='none';
+};
+
+document.getElementById('trigger').onclick = async ()=>{
+  const worker = document.getElementById('workerUrl').value.trim();
+  const payload = {
+    video_url: document.getElementById('video').value.trim(),
+    rtmp_url: document.getElementById('rtmp').value.trim(),
+    start_time: toISO(document.getElementById('date').value, document.getElementById('time').value),
+    duration_seconds: document.getElementById('duration').value,
+    title: document.getElementById('title').value.trim(),
+    description: document.getElementById('description').value.trim(),
+    visibility: document.getElementById('visibility').value,
+    stream_key: document.getElementById('streamKey').value.trim()
+  };
+  document.getElementById('payload').style.display='block';
+  document.getElementById('payload').textContent = JSON.stringify(payload,null,2).replace(payload.stream_key,'*****MASKED*****');
+  document.getElementById('log').style.display='block';
+  document.getElementById('log').textContent = 'Sending...';
+  if(!worker){ alert('Masukkan Cloudflare Worker URL'); return; }
+  try{
+    const r = await postJSON(worker, { event_type:'stream_trigger', client_payload: payload });
+    document.getElementById('log').textContent = 'Worker response: ' + r.status + '\n' + r.text;
+  }catch(e){
+    document.getElementById('log').textContent = 'Error: '+e.message;
+  }
+};
+
+document.getElementById('test').onclick = async ()=>{
+  const worker = document.getElementById('workerUrl').value.trim();
+  if(!worker){ alert('Masukkan Cloudflare Worker URL'); return; }
+  try{
+    const r = await fetch(worker, {method:'OPTIONS'});
+    alert('Worker OPTIONS status: ' + r.status);
+  }catch(e){
+    alert('Worker test failed: ' + e.message);
+  }
+};
+</script>
 </body>
 </html>
