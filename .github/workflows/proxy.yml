@@ -11,12 +11,6 @@ jobs:
       - name: Show payload
         run: echo "Payload: ${{ toJson(github.event.client_payload) }}"
 
-      - name: Trigger stream using composite action
-        uses: ./.github/actions/trigger
-        with:
-          video_url: ${{ github.event.client_payload.video_url }}
-          start_time: ${{ github.event.client_payload.start_time }}
-          duration_seconds: ${{ github.event.client_payload.duration_seconds }}
-          seamless: ${{ github.event.client_payload.seamless }}
-        env:
-          GH_PAT: ${{ secrets.GH_PAT }}
+      - name: Trigger stream using dispatch
+        run: |
+          curl -s -X POST             -H "Authorization: token ${{ secrets.GH_PAT }}"             -H "Accept: application/vnd.github.v3+json"             -H "Content-Type: application/json"             -d "{"event_type":"stream_trigger","client_payload":${{ toJson(github.event.client_payload) }}}"             https://api.github.com/repos/rigusapp/yt_stream/dispatches
