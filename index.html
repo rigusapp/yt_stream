@@ -1,307 +1,121 @@
 <!doctype html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>YT Stream — Dashboard (v18)</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg:#0f1724; --card:#0b1220; --muted:#98a0b3; --accent:#6ee7b7; --accent-2:#60a5fa;
-      --glass: rgba(255,255,255,0.03);
-      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;background:linear-gradient(180deg,#071129 0%, #071527 100%);color:#e6eef8;min-height:100vh}
-    .container{max-width:1100px;margin:36px auto;padding:24px}
-    header{display:flex;align-items:center;gap:16px;margin-bottom:18px}
-    .brand{display:flex;align-items:center;gap:12px}
-    .logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:800;color:#04263b}
-    h1{font-size:20px;margin:0}
-    p.lead{margin:0;color:var(--muted);font-size:13px}
-
-    .grid{display:grid;grid-template-columns:1fr 360px;gap:18px;align-items:start}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:18px;box-shadow:0 6px 18px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.03)}
-    label{font-size:13px;color:var(--muted);display:block;margin-bottom:8px}
-    input[type="text"], input[type="url"], textarea, select, input[type="datetime-local"], input[type="time"], input[type="date"]{
-      width:100%;padding:10px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;font-size:14px;
-      outline:none;
-    }
-    textarea{min-height:110px;resize:vertical}
-    .row{display:flex;gap:12px}
-    .col{flex:1}
-    .muted{color:var(--muted);font-size:13px}
-
-    .actions{display:flex;gap:10px;align-items:center;margin-top:12px}
-    button.btn{background:linear-gradient(90deg,var(--accent),var(--accent-2));border:none;padding:10px 14px;border-radius:10px;color:#052029;font-weight:700;cursor:pointer}
-    button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);padding:8px 12px;border-radius:10px;cursor:pointer}
-    .small{font-size:13px;padding:8px 10px}
-
-    .meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-    .badge{background:var(--glass);padding:8px 10px;border-radius:10px;font-size:13px;color:var(--muted);border:1px solid rgba(255,255,255,0.02)}
-
-    .side{position:sticky;top:28px}
-    .preview{font-family:monospace;background:#041027;padding:12px;border-radius:8px;color:#cfeefd;font-size:13px;overflow:auto;max-height:300px;border:1px solid rgba(255,255,255,0.03)}
-
-    .file-drop{border:2px dashed rgba(255,255,255,0.03);padding:14px;border-radius:10px;text-align:center;color:var(--muted);cursor:pointer}
-    .switch{display:inline-flex;align-items:center;gap:8px}
-    input[type="checkbox"]{width:18px;height:18px}
-
-    footer{margin-top:20px;color:var(--muted);font-size:13px;text-align:center}
-
-    @media (max-width:900px){.grid{grid-template-columns:1fr} .side{position:relative;top:0}}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>YT Stream — Dashboard v18 (White)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ffffff;
+  --card:#f5f7fa;
+  --text:#1a1a1a;
+  --muted:#707070;
+  --accent:#008cff;
+  --accent-2:#00c8ff;
+  font-family: Inter, system-ui;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);min-height:100vh}
+.container{max-width:1100px;margin:36px auto;padding:24px}
+header{display:flex;align-items:center;gap:16px;margin-bottom:18px}
+.logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:800;color:white}
+.card{background:var(--card);border-radius:12px;padding:18px;border:1px solid #e2e2e2}
+label{font-size:13px;color:var(--muted);display:block;margin-bottom:8px}
+input, textarea, select{width:100%;padding:10px;border-radius:8px;border:1px solid #d0d0d0;font-size:14px}
+textarea{min-height:100px}
+button.btn{background:var(--accent);border:none;padding:10px 14px;border-radius:10px;color:white;font-weight:700;cursor:pointer}
+button.ghost{background:white;border:1px solid #d0d0d0;padding:8px 12px;border-radius:10px;cursor:pointer;color:var(--muted)}
+.preview{background:#f0f0f0;padding:12px;border-radius:8px;font-family:monospace;font-size:13px;color:#333;max-height:300px;overflow:auto;border:1px solid #d0d0d0}
+.file-drop{border:2px dashed #c0c0c0;padding:14px;border-radius:10px;text-align:center;color:var(--muted);cursor:pointer}
+footer{text-align:center;margin-top:20px;color:var(--muted);font-size:14px}
+footer a{color:var(--accent);text-decoration:none;font-weight:600}
+.grid{display:grid;grid-template-columns:1fr 360px;gap:20px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div class="brand">
-        <div class="logo">YS</div>
-        <div>
-          <h1>YT Stream — Dashboard <span style="font-weight:600;color:var(--accent);">v18</span></h1>
-          <p class="lead">UI terbaik (ChatGPT design) — jadwalkan dan konfigurasi live YouTube dengan mudah.</p>
-        </div>
-      </div>
-    </header>
+<div class="container">
+<header>
+  <div class="logo">YS</div>
+  <div>
+    <h2 style="margin:0;color:#000">YT Stream — Dashboard v18</h2>
+    <div style="color:var(--muted);font-size:14px">UI White Version — clean & professional</div>
+  </div>
+</header>
 
-    <div class="grid">
-      <main class="card">
-        <h3 style="margin-top:0">Konfigurasi Live</h3>
-        <div style="margin-top:12px">
-          <label>Judul Video</label>
-          <input id="title" type="text" placeholder="Contoh: Live Cooking with Agus" />
+<div class="grid">
+  <div class="card">
+    <h3 style="margin-top:0">Konfigurasi Live</h3>
 
-          <label style="margin-top:12px">Deskripsi Video</label>
-          <textarea id="description" placeholder="Deskripsi singkat"></textarea>
+    <label>Judul Video</label>
+    <input id="title" type="text" placeholder="Masukkan judul video">
+    
+    <label style="margin-top:12px">Deskripsi Video</label>
+    <textarea id="description"></textarea>
 
-          <div class="row" style="margin-top:12px">
-            <div class="col">
-              <label>Visibilitas</label>
-              <select id="visibility">
-                <option value="public">Public</option>
-                <option value="unlisted">Unlisted</option>
-                <option value="private">Private</option>
-              </select>
-            </div>
-            <div style="width:160px">
-              <label>Durasi Live</label>
-              <select id="duration">
-                <option value="30">30 Menit</option>
-                <option value="60">1 Jam</option>
-                <option value="120">2 Jam</option>
-                <option value="180">3 Jam</option>
-                <option value="240">4 Jam</option>
-                <option value="300">5 Jam</option>
-                <option value="360">6 Jam</option>
-                <option value="420">7 Jam</option>
-                <option value="480">8 Jam</option>
-                <option value="540">9 Jam</option>
-                <option value="600">10 Jam</option>
-                <option value="660">11 Jam</option>
-                <option value="720">12 Jam</option>
-              </select>
-            </div>
-          </div>
+    <label style="margin-top:12px">Visibilitas</label>
+    <select id="visibility">
+      <option value="public">Public</option>
+      <option value="unlisted">Unlisted</option>
+      <option value="private">Private</option>
+    </select>
 
-          <div class="row" style="margin-top:12px;align-items:center">
-            <div class="col">
-              <label>Stream Key</label>
-              <input id="streamkey" type="text" placeholder="Masukkan Stream Key YouTube (xxxx-xxxx-...)" />
-            </div>
-            <div style="width:120px">
-              <label>Looping</label>
-              <div class="switch"><input id="loop" type="checkbox" /> <span class="muted">Enable</span></div>
-            </div>
-          </div>
+    <label style="margin-top:12px">Durasi Live</label>
+    <select id="duration">
+      <option>30 Menit</option><option>1 Jam</option><option>2 Jam</option><option>3 Jam</option>
+      <option>4 Jam</option><option>5 Jam</option><option>6 Jam</option><option>7 Jam</option>
+      <option>8 Jam</option><option>9 Jam</option><option>10 Jam</option>
+      <option>11 Jam</option><option>12 Jam</option>
+    </select>
 
-          <div style="margin-top:12px">
-            <label>Sumber Video</label>
-            <select id="sourceType" onchange="onSourceChange()">
-              <option value="storage">Storage (Upload)</option>
-              <option value="link">Link Video (URL)</option>
-            </select>
+    <label style="margin-top:12px">Stream Key</label>
+    <input id="streamkey" type="text">
 
-            <div id="sourceStorage" style="margin-top:10px">
-              <div class="file-drop" id="fileDrop">Klik atau drag & drop file video di sini (mp4, mkv, mov)</div>
-              <input id="fileInput" type="file" accept="video/*" style="display:none" />
-              <div id="fileName" class="muted" style="margin-top:8px"></div>
-            </div>
+    <label style="margin-top:12px">Sumber Video</label>
+    <select id="sourceType">
+      <option value="storage">Storage (Upload)</option>
+      <option value="link">Link Video</option>
+    </select>
 
-            <div id="sourceLink" style="display:none;margin-top:10px">
-              <input id="videoLink" type="url" placeholder="https://example.com/video.mp4" />
-            </div>
-          </div>
-
-          <div style="margin-top:12px" class="row">
-            <div class="col">
-              <label>Tanggal & Waktu</label>
-              <input id="datetime" type="datetime-local" />
-            </div>
-            <div style="width:120px">
-              <label>Zona</label>
-              <select id="tz">
-                <option value="Asia/Jakarta">Asia/Jakarta</option>
-                <option value="UTC">UTC</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="actions">
-            <button class="btn" id="scheduleBtn">Jadwalkan Live</button>
-            <button class="ghost small" id="previewBtn">Preview Payload</button>
-            <button class="ghost small" id="testConnBtn">Test Connection</button>
-            <div style="flex:1"></div>
-            <div class="badge">Worker URL: <span id="workerHidden" style="opacity:0.18">https://ytstream-proxy.rigus-apps.workers.dev/</span></div>
-            <div class="badge">RTMP: <span id="rtmpHidden" style="opacity:0.18">rtmp://a.rtmp.youtube.com/live2</span></div>
-          </div>
-
-          <div id="msg" style="margin-top:12px"></div>
-        </div>
-      </main>
-
-      <aside class="side">
-        <div class="card" style="margin-bottom:12px">
-          <h4 style="margin:0">Preview & Log</h4>
-          <p class="muted" style="margin:6px 0 12px 0">Payload yang akan dikirim ke Worker</p>
-          <pre id="payload" class="preview">{}</pre>
-        </div>
-
-        <div class="card">
-          <h4 style="margin:0">Quick actions</h4>
-          <p class="muted" style="margin:6px 0 12px 0">Test connection dan lihat respons</p>
-          <div style="display:flex;gap:8px;flex-direction:column">
-            <button class="ghost small" id="quickTest">Test Connection</button>
-            <button class="ghost small" id="showLogs">Show Last Payload</button>
-          </div>
-          <div style="margin-top:12px">
-            <div class="muted">Last Response:</div>
-            <pre id="lastResp" class="preview">{}</pre>
-          </div>
-        </div>
-      </aside>
+    <div id="sourceStorage" style="margin-top:10px">
+      <div class="file-drop" id="fileDrop">Upload video di sini</div>
+      <input id="fileInput" type="file" accept="video/*" style="display:none">
+      <div id="fileName" style="margin-top:6px;color:var(--muted)"></div>
     </div>
 
-    <footer>
-      Built with ♥ — YT Stream v18 UI (ChatGPT). Data sensitif disembunyikan dari tampilan frontend.
-    </footer>
+    <div id="sourceLink" style="display:none;margin-top:10px">
+      <input id="videoLink" type="text" placeholder="https://example.com/video.mp4">
+    </div>
+
+    <label style="margin-top:12px">Tanggal & Waktu</label>
+    <input id="datetime" type="datetime-local">
+
+    <div style="margin-top:16px;display:flex;gap:10px">
+      <button class="btn">Jadwalkan Live</button>
+      <button class="ghost">Preview Payload</button>
+      <button class="ghost">Test Connection</button>
+    </div>
   </div>
 
-  <script>
-    // Hidden defaults (used by the app but not shown prominently)
-    const DEFAULTS = {
-      WORKER_URL: "https://ytstream-proxy.rigus-apps.workers.dev/",
-      RTMP: "rtmp://a.rtmp.youtube.com/live2"
-    };
+  <div class="card">
+    <h3 style="margin-top:0">Preview & Log</h3>
+    <pre class="preview">{}</pre>
 
-    // Elements
-    const fileDrop = document.getElementById('fileDrop');
-    const fileInput = document.getElementById('fileInput');
-    const fileName = document.getElementById('fileName');
-    const sourceType = document.getElementById('sourceType');
-    const sourceStorage = document.getElementById('sourceStorage');
-    const sourceLink = document.getElementById('sourceLink');
-    const payloadBox = document.getElementById('payload');
-    const lastResp = document.getElementById('lastResp');
-    const msg = document.getElementById('msg');
+    <h4 style="margin-top:20px">Quick actions</h4>
+    <button class="ghost" style="width:100%;margin-top:6px">Test Connection</button>
+    <button class="ghost" style="width:100%;margin-top:6px">Show Last Payload</button>
 
-    let selectedFile = null;
+    <h4 style="margin-top:20px">Last Response:</h4>
+    <pre class="preview">{}</pre>
+  </div>
+</div>
 
-    function onSourceChange(){
-      const v = sourceType.value;
-      if(v === 'storage'){
-        sourceStorage.style.display = 'block';
-        sourceLink.style.display = 'none';
-      } else {
-        sourceStorage.style.display = 'none';
-        sourceLink.style.display = 'block';
-      }
-    }
+<footer>
+Built with ♥ — YT Stream - Agus Siahaan  
+<a href="https://www.agussiahaan.my.id/" target="_blank">www.agussiahaan.my.id</a>
+</footer>
 
-    fileDrop.addEventListener('click', ()=> fileInput.click());
-    fileDrop.addEventListener('dragover', (e)=>{ e.preventDefault(); fileDrop.style.borderColor = 'rgba(255,255,255,0.12)'; });
-    fileDrop.addEventListener('dragleave', ()=>{ fileDrop.style.borderColor = 'rgba(255,255,255,0.03)'; });
-    fileDrop.addEventListener('drop', (e)=>{ e.preventDefault(); handleFiles(e.dataTransfer.files); });
-
-    fileInput.addEventListener('change', (e)=> handleFiles(e.target.files));
-
-    function handleFiles(files){
-      if(!files || files.length===0) return;
-      selectedFile = files[0];
-      fileName.textContent = selectedFile.name + ' — ' + Math.round(selectedFile.size/1024/1024) + ' MB';
-    }
-
-    function buildPayload(){
-      const title = document.getElementById('title').value.trim();
-      const description = document.getElementById('description').value.trim();
-      const visibility = document.getElementById('visibility').value;
-      const duration = parseInt(document.getElementById('duration').value,10);
-      const streamkey = document.getElementById('streamkey').value.trim();
-      const loop = document.getElementById('loop').checked;
-      const source = sourceType.value;
-      const datetime = document.getElementById('datetime').value;
-      const tz = document.getElementById('tz').value;
-      const payload = {
-        title, description, visibility, duration_minutes: duration, streamkey, loop, source, datetime, tz,
-        defaults: { worker: DEFAULTS.WORKER_URL, rtmp: DEFAULTS.RTMP },
-        file_present: !!selectedFile
-      };
-      return payload;
-    }
-
-    // Update preview on changes periodically
-    setInterval(()=> { payloadBox.textContent = JSON.stringify(buildPayload(), null, 2); }, 500);
-
-    document.getElementById('previewBtn').addEventListener('click', ()=>{
-      payloadBox.textContent = JSON.stringify(buildPayload(), null, 2);
-      msg.innerHTML = '<div class="muted">Preview diperbarui.</div>';
-    });
-
-    document.getElementById('scheduleBtn').addEventListener('click', async ()=>{
-      const payload = buildPayload();
-      // Basic validation
-      if(!payload.title){ alert('Judul wajib diisi'); return; }
-      if(payload.source === 'storage' && !payload.file_present){ alert('Pilih file video untuk diupload'); return; }
-      msg.innerHTML = '<div class="muted">Mengirim jadwal ke Worker…</div>';
-
-      try{
-        // If using storage (upload), in real setup we would upload file to Worker or storage (not implemented here)
-        // Here we only send metadata to Worker as demo / preview.
-        const res = await fetch(DEFAULTS.WORKER_URL + 'dispatch', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        const txt = await res.text();
-        lastResp.textContent = 'Status: ' + res.status + '\\n' + txt;
-        msg.innerHTML = '<div class="muted">Jadwal terkirim (resp ditampilkan di kanan).</div>';
-      }catch(err){
-        lastResp.textContent = 'ERROR: ' + err.message;
-        msg.innerHTML = '<div style="color:#ffb4b4">Gagal mengirim (CORS / Worker / Network). Ini tampilan demo UI saja.</div>';
-      }
-    });
-
-    async function testConnection(){
-      const payload = buildPayload();
-      try{
-        const res = await fetch(DEFAULTS.WORKER_URL + 'ping', { method:'GET' });
-        if(res.ok){
-          lastResp.textContent = 'Ping OK ('+res.status+')';
-        } else {
-          lastResp.textContent = 'Ping failed: ' + res.status;
-        }
-      }catch(err){
-        lastResp.textContent = 'Ping ERROR: ' + err.message;
-      }
-    }
-
-    document.getElementById('testConnBtn').addEventListener('click', testConnection);
-    document.getElementById('quickTest').addEventListener('click', testConnection);
-    document.getElementById('showLogs').addEventListener('click', ()=>{ payloadBox.scrollIntoView(); });
-
-    // Initialize default values
-    document.getElementById('datetime').value = new Date().toISOString().slice(0,16);
-    document.getElementById('tz').value = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Jakarta';
-
-  </script>
+</div>
 </body>
 </html>
