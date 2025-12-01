@@ -1,74 +1,42 @@
-
+// Cloudflare Worker proxy: accepts POST JSON payload and dispatches to GitHub repository_dispatch
 addEventListener('fetch', event => {
   event.respondWith(handle(event.request));
 });
 
 async function handle(req) {
-  if (req.method === 'OPTIONS') {
-    return new Response(null, {
-      status: 204,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "*",
-        "Access-Control-Allow-Methods": "POST,OPTIONS"
-      }
-    });
-  }
-
-  if (req.method !== 'POST') {
-    return new Response("Use POST", { status: 405 });
-  }
-
-  // Parse incoming JSON
-  let body;
+  if (req.method !== 'POST') return new Response('Use POST', {status:405});
+  let data;
   try {
-    body = await req.json();
-  } catch (e) {
-    return new Response("Bad JSON", { status: 400 });
+    data = await req.json();
+  } catch(e){
+    return new Response('Invalid JSON', {status:400});
   }
 
-  // Extract payload
-  const payload = body.client_payload || body;
+  // Read GH_PAT from environment variable (Workers -> Variables)
+  const GH_PAT = __ENV.GH_PAT;
+  if (!GH_PAT) return new Response('GH_PAT missing', {status:500});
 
-  // Validate required fields
-  if (!payload.stream_key) {
-    return new Response("Missing stream_key", { status: 400 });
-  }
-  if (!payload.video_url) {
-    return new Response("Missing video_url", { status: 400 });
-  }
+  // Replace with your owner/repo
+  const repo = 'rigusapp/yt_stream';
+  const workflow = 'stream.yml';
 
-  // GitHub Repo dispatch URL (hard‑coded for safety)
-  const repo = "rigusapp/yt_stream";
-  const apiUrl = `https://api.github.com/repos/${repo}/dispatches`;
+  const payload = {
+    event_type: 'stream_trigger',
+    client_payload: data
+  };
 
-  // Take PAT from Worker vars
-  const token = GH_PAT;
-  if (!token) {
-    return new Response("Missing GH_PAT", { status: 400 });
-  }
+  const url = `https://api.github.com/repos/${repo}/dispatches`;
 
-  // Body sent to GitHub
-  const sendBody = JSON.stringify({
-    event_type: "stream_trigger",
-    client_payload: payload
-  });
-
-  // Execute GitHub Dispatch
-  const gh = await fetch(apiUrl, {
-    method: "POST",
+  const r = await fetch(url, {
+    method: 'POST',
     headers: {
-      "Authorization": "token " + token,
-      "Accept": "application/vnd.github+json",
-      "Content-Type": "application/json"
+      'Authorization': 'token ' + GH_PAT,
+      'Accept': 'application/vnd.github.v3+json',
+      'Content-Type': 'application/json'
     },
-    body: sendBody
+    body: JSON.stringify(payload)
   });
 
-  const text = await gh.text();
-
-  return new Response(text, {
-    status: gh.status,
-    headers: { "Access-Control-Allow-Origin": "*" }
-  });
+  const text = await r.text();
+  return new Response(text, {status: r.status, headers:{'Content-Type':'text/plain'}});
 }

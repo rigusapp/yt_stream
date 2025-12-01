@@ -1,187 +1,136 @@
 <!doctype html>
 <html lang="id">
 <head>
-<meta charset="utf-8"/>
-<title>YT Stream — Professional</title>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#f4f7fb;--card:#ffffff;--primary:#2563eb;--muted:#6b7280;--accent:#0ea5a0;--danger:#ef4444}
-*{box-sizing:border-box}
-body{font-family:'Inter',system-ui,Segoe UI,Arial;background:var(--bg);margin:0;color:#0f172a}
-.container{max-width:980px;margin:36px auto;padding:28px;border-radius:12px;background:var(--card);box-shadow:0 8px 30px rgba(16,24,40,0.06)}
-.header{display:flex;align-items:center;gap:14px}
-.logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--primary),#1e40af);display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:20px}
-h1{margin:0;font-size:20px}
-.lead{margin:6px 0 0;color:var(--muted);font-size:14px}
-.grid{display:grid;grid-template-columns:1fr 320px;gap:18px;margin-top:18px}
-.panel{background:#fbfdff;padding:16px;border-radius:10px;border:1px solid #eef2ff}
-.form-row{display:flex;gap:10px}
-label{display:block;font-weight:600;margin-top:10px;color:#0f172a;font-size:13px}
-.input, select, textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #e6eefc;background:white;font-size:14px}
-textarea{min-height:110px;resize:vertical}
-.small{font-size:13px;color:var(--muted);margin-top:6px}
-.btn{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;background:var(--primary);color:white;border-radius:10px;border:0;cursor:pointer;font-weight:700}
-.btn.ghost{background:transparent;color:var(--primary);border:1px solid #dbeafe}
-.debug{background:#0b1220;color:#bfe7b0;padding:12px;border-radius:8px;font-family:monospace;white-space:pre-wrap;display:none;margin-top:12px}
-.footer{margin-top:12px;color:var(--muted);font-size:13px}
-.meta{font-size:13px;color:var(--muted);margin-top:8px}
-</style>
+  <meta charset="utf-8"/>
+  <title>YT Stream — Dashboard</title>
+  <style>
+    body{font-family:Inter, Arial, sans-serif;max-width:900px;margin:24px auto;padding:24px}
+    header{display:flex;align-items:center;gap:16px}
+    header img{width:64px;height:64px}
+    h1{margin:0;font-size:28px}
+    label{display:block;margin-top:14px;font-weight:600}
+    input, select, textarea{width:100%;padding:10px;margin-top:6px;border:1px solid #ccc;border-radius:6px}
+    button{margin-top:14px;padding:12px 16px;border-radius:8px;border:0;background:#ff0000;color:#fff;font-weight:700}
+    .muted{color:#666;font-size:13px;margin-top:6px}
+  </style>
 </head>
 <body>
-<div class="container">
-  <div class="header">
-    <div class="logo">YT</div>
+  <header>
+    <img src="logo.png" alt="YT Stream logo"/>
     <div>
-      <h1>YT Stream — Professional</h1>
-      <div class="lead">Dashboard profesional untuk mengatur livestream YouTube. (RTMP & Stream Key dikirim dari dashboard)</div>
+      <h1>YT Stream</h1>
+      <div class="muted">Premium dashboard — Proxy + GitHub Actions (v16)</div>
     </div>
-  </div>
+  </header>
 
-  <div class="grid">
-    <div>
-      <div class="panel">
-        <label>Cloudflare Worker URL</label>
-        <input id="workerUrl" class="input" placeholder="https://your-worker.workers.dev/">
+  <p class="muted">Masukkan URL Cloudflare Worker (proxy), lalu isi data stream. Stream key dikirim hanya saat trigger.</p>
 
-        <label>RTMP Server</label>
-        <input id="rtmp" class="input" value="rtmp://a.rtmp.youtube.com/live2">
+  <label>URL Cloudflare Worker
+    <input id="workerUrl" placeholder="https://ytstream-proxy.example.workers.dev/"/>
+  </label>
 
-        <div class="form-row">
-          <div style="flex:1">
-            <label>Tanggal (WIB)</label>
-            <input id="date" type="date" class="input">
-          </div>
-          <div style="width:160px">
-            <label>Waktu (WIB)</label>
-            <input id="time" type="time" class="input">
-          </div>
-        </div>
+  <label>Video URL
+    <input id="video" placeholder="https://example.com/video.mp4"/>
+  </label>
 
-        <label>Durasi</label>
-        <select id="duration" class="input">
-          <option value="1800">30 menit</option>
-          <option value="3600" selected>1 Jam</option>
-          <option value="7200">2 Jam</option>
-          <option value="10800">3 Jam</option>
-          <option value="14400">4 Jam</option>
-          <option value="18000">5 Jam</option>
-          <option value="21600">6 Jam</option>
-          <option value="25200">7 Jam</option>
-          <option value="28800">8 Jam</option>
-          <option value="32400">9 Jam</option>
-          <option value="36000">10 Jam</option>
-          <option value="39600">11 Jam</option>
-          <option value="43200">12 Jam</option>
-        </select>
+  <label>Tanggal & Jam Live (WIB)
+    <input id="datetime" type="datetime-local"/>
+  </label>
 
-        <label>Video URL</label>
-        <input id="video" class="input" placeholder="https://.../video.mp4">
+  <label>Durasi
+    <select id="duration">
+      <option>30 menit</option>
+      <option selected>1 Jam</option>
+      <option>2 Jam</option>
+      <option>3 Jam</option>
+      <option>4 Jam</option>
+      <option>5 Jam</option>
+      <option>6 Jam</option>
+      <option>7 Jam</option>
+      <option>8 Jam</option>
+      <option>9 Jam</option>
+      <option>10 Jam</option>
+      <option>11 Jam</option>
+      <option>12 Jam</option>
+    </select>
+  </label>
 
-        <label>Stream Key</label>
-        <input id="streamKey" class="input" placeholder="rmfk-xxxx-xxxx-xxxx">
+  <label>Judul Video
+    <input id="title" placeholder="Judul live"/>
+  </label>
 
-        <label>Title</label>
-        <input id="title" class="input" placeholder="Judul Live">
+  <label>Deskripsi
+    <textarea id="desc" rows="3" placeholder="Deskripsi video"></textarea>
+  </label>
 
-        <label>Description</label>
-        <textarea id="description" class="input" placeholder="Deskripsi singkat..."></textarea>
+  <label>Visibilitas
+    <select id="visibility">
+      <option value="public">Publik</option>
+      <option value="unlisted">Unlisted</option>
+      <option value="private">Private</option>
+    </select>
+  </label>
 
-        <label>Visibility</label>
-        <select id="visibility" class="input">
-          <option value="public">Public</option>
-          <option value="unlisted">Unlisted</option>
-          <option value="private">Private</option>
-        </select>
+  <label>Stream Key (akan dikirim ke Worker, lalu ke GitHub Actions). Disembunyikan setelah dikirim.</label>
+  <input id="streamKey" placeholder="rmfk-xxxxx-xxxxx" />
 
-        <div style="display:flex;gap:10px;margin-top:14px">
-          <button id="trigger" class="btn">Trigger Stream</button>
-          <button id="clear" class="btn ghost">Clear</button>
-        </div>
+  <button id="trigger">Trigger Stream</button>
 
-        <div class="meta">Catatan: Stream key dikirim bersama payload ke Worker. Jangan bagikan stream key Anda.</div>
-      </div>
-    </div>
+  <div id="log" class="muted"></div>
 
-    <div>
-      <div class="panel">
-        <h3 style="margin:0">Preview & Log</h3>
-        <div class="small">Payload yang akan dikirim ke Worker:</div>
-        <pre id="payload" class="debug"></pre>
-        <div id="log" class="debug"></div>
-      </div>
+  <script>
+    function wibToUTCISOString(dtLocal) {
+      // dtLocal is like "2025-12-01T15:30"
+      const local = new Date(dtLocal);
+      // WIB is UTC+7, but local input is treated as local timezone in browser.
+      // convert: assume user selected WIB, so subtract 7 hours to get UTC
+      const utc = new Date(local.getTime() - (7*60*60*1000));
+      return utc.toISOString();
+    }
 
-      <div style="height:12px"></div>
-      <div class="panel">
-        <div class="small">Quick actions</div>
-        <button id="test" class="btn ghost" style="width:100%;margin-top:10px">Test connection</button>
-        <div class="small meta">Use Test to verify Worker responds with 204.</div>
-      </div>
-    </div>
-  </div>
+    document.getElementById('trigger').onclick = async () => {
+      const url = document.getElementById('workerUrl').value.trim();
+      const video = document.getElementById('video').value.trim();
+      const dt = document.getElementById('datetime').value.trim();
+      const duration = document.getElementById('duration').value;
+      const title = document.getElementById('title').value.trim();
+      const desc = document.getElementById('desc').value.trim();
+      const visibility = document.getElementById('visibility').value;
+      const streamKey = document.getElementById('streamKey').value.trim();
+      const log = document.getElementById('log');
 
-  <div class="footer">Built for you — Professional SaaS style. Want OAuth integration with YouTube Data API? Ask me.</div>
-</div>
+      if (!url || !video || !dt || !streamKey) {
+        alert('Lengkapi URL Worker, video, tanggal, dan stream key.');
+        return;
+      }
 
-<script>
-function toISO(date,time){
-  if(!date||!time) return '';
-  const local = new Date(date + 'T' + time + ':00');
-  const utc = new Date(local.getTime() - 7*3600*1000);
-  return utc.toISOString().split('.')[0] + 'Z';
-}
+      // duration to seconds (simple mapping)
+      const durMap = {'30 menit':1800,'1 Jam':3600,'2 Jam':7200,'3 Jam':10800,'4 Jam':14400,'5 Jam':18000,
+                      '6 Jam':21600,'7 Jam':25200,'8 Jam':28800,'9 Jam':32400,'10 Jam':36000,'11 Jam':39600,'12 Jam':43200};
+      const durSeconds = durMap[duration] || 3600;
 
-async function postJSON(url, body){
-  const res = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
-  const text = await res.text().catch(()=>'');
-  return {ok:res.ok,status:res.status,text};
-}
+      const payload = {
+        video_url: video,
+        start_time: wibToUTCISOString(dt),
+        duration_seconds: String(durSeconds),
+        stream_key: streamKey,
+        title: title,
+        description: desc,
+        visibility: visibility,
+        seamless: "false"
+      };
 
-document.getElementById('clear').onclick = ()=>{
-  document.getElementById('video').value='';
-  document.getElementById('streamKey').value='';
-  document.getElementById('title').value='';
-  document.getElementById('description').value='';
-  document.getElementById('visibility').value='public';
-  document.getElementById('payload').style.display='none';
-  document.getElementById('log').style.display='none';
-};
-
-document.getElementById('trigger').onclick = async ()=>{
-  const worker = document.getElementById('workerUrl').value.trim();
-  const payload = {
-    video_url: document.getElementById('video').value.trim(),
-    rtmp_url: document.getElementById('rtmp').value.trim(),
-    start_time: toISO(document.getElementById('date').value, document.getElementById('time').value),
-    duration_seconds: document.getElementById('duration').value,
-    title: document.getElementById('title').value.trim(),
-    description: document.getElementById('description').value.trim(),
-    visibility: document.getElementById('visibility').value,
-    stream_key: document.getElementById('streamKey').value.trim()
-  };
-  document.getElementById('payload').style.display='block';
-  document.getElementById('payload').textContent = JSON.stringify(payload,null,2).replace(payload.stream_key,'*****MASKED*****');
-  document.getElementById('log').style.display='block';
-  document.getElementById('log').textContent = 'Sending...';
-  if(!worker){ alert('Masukkan Cloudflare Worker URL'); return; }
-  try{
-    const r = await postJSON(worker, { event_type:'stream_trigger', client_payload: payload });
-    document.getElementById('log').textContent = 'Worker response: ' + r.status + '\n' + r.text;
-  }catch(e){
-    document.getElementById('log').textContent = 'Error: '+e.message;
-  }
-};
-
-document.getElementById('test').onclick = async ()=>{
-  const worker = document.getElementById('workerUrl').value.trim();
-  if(!worker){ alert('Masukkan Cloudflare Worker URL'); return; }
-  try{
-    const r = await fetch(worker, {method:'OPTIONS'});
-    alert('Worker OPTIONS status: ' + r.status);
-  }catch(e){
-    alert('Worker test failed: ' + e.message);
-  }
-};
-</script>
+      log.textContent = 'Mengirim ke Worker...';
+      try {
+        const res = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)});
+        const txt = await res.text();
+        if (res.ok) {
+          log.textContent = 'Berhasil dikirim. Response: ' + txt;
+        } else {
+          log.textContent = 'Gagal: ' + res.status + ' ' + txt;
+        }
+      } catch(err){ log.textContent = 'Error: '+err.message; }
+    }
+  </script>
 </body>
 </html>
