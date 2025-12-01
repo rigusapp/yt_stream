@@ -19,11 +19,11 @@
     <img src="logo.png" alt="YT Stream logo"/>
     <div>
       <h1>YT Stream</h1>
-      <div class="muted">Premium dashboard — Proxy + GitHub Actions (v16)</div>
+      <div class="muted">Premium dashboard</div>
     </div>
   </header>
 
-  <p class="muted">Masukkan URL Cloudflare Worker (proxy), lalu isi data stream. Stream key dikirim hanya saat trigger.</p>
+  <p class="muted">Isi data stream dan Masukkan Stream Key (Youtube Anda). Streaming akan Otomatis dijalankan</p>
 
   <label>URL Cloudflare Worker
     <input id="workerUrl" placeholder="https://ytstream-proxy.example.workers.dev/"/>
@@ -71,7 +71,7 @@
     </select>
   </label>
 
-  <label>Stream Key (akan dikirim ke Worker, lalu ke GitHub Actions). Disembunyikan setelah dikirim.</label>
+  <label>Stream Key</label>
   <input id="streamKey" placeholder="rmfk-xxxxx-xxxxx" />
 
   <button id="trigger">Trigger Stream</button>
