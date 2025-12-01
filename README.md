@@ -1,1 +1,0 @@
-YT Stream Dashboard (Dark Premium)\nDefault admin: admin / steve123\nOpen index.html in /dashboard folder.
