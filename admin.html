@@ -63,7 +63,7 @@ const usersTableBody = document.querySelector('#usersTable tbody');
 const REFRESH_BTN = document.getElementById('refreshList');
 
 // Cloudflare Worker endpoint (adjust to your worker URL)
-const WORKER_BASE = '{{CLOUDFLARE_WORKER_URL}}'; // <-- Replace when deploying the worker
+const WORKER_BASE = 'https://ytstream-proxy.rigus-apps.workers.dev'; // <-- Replace when deploying the worker
 
 createForm.addEventListener('submit', async (e)=>{
   e.preventDefault();
