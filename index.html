@@ -167,7 +167,8 @@ document.getElementById('trigger').onclick = async ()=>{
   document.getElementById('log').textContent = 'Sending...';
   if(!worker){ alert('Masukkan Cloudflare Worker URL'); return; }
   try{
-    const r = await postJSON(worker, { event_type:'stream_trigger', client_payload: payload });
+  const r = await postJSON(worker, payload);
+
     document.getElementById('log').textContent = 'Worker response: ' + r.status + '\n' + r.text;
   }catch(e){
     document.getElementById('log').textContent = 'Error: '+e.message;
