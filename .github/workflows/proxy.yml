@@ -4,6 +4,7 @@ on:
   repository_dispatch:
     types: [stream_trigger]
 
+
 jobs:
   proxy:
     runs-on: ubuntu-latest
