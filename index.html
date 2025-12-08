@@ -184,6 +184,28 @@ document.getElementById('test').onclick = async ()=>{
     alert('Worker test failed: ' + e.message);
   }
 };
+
+  // =========================
+// ✅ TAMBAHAN: STOP STREAM
+// =========================
+document.getElementById('stop').onclick = async ()=>{
+  const worker = document.getElementById('workerUrl').value.trim();
+  if(!worker){ alert('Masukkan Cloudflare Worker URL'); return; }
+
+  document.getElementById('log').style.display='block';
+  document.getElementById('log').textContent = 'Sending STOP...';
+
+  try{
+    const r = await postJSON(worker + '/stop', {});
+    document.getElementById('log').textContent =
+      'STOP response: ' + r.status + '\n' + r.text;
+  }catch(e){
+    document.getElementById('log').textContent = 'STOP Error: ' + e.message;
+  }
+};
+
 </script>
+
+  
 </body>
 </html>
