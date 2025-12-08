@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="utf-8"/>
-<title>YT Stream — Pro Dashboard</title>
+<title>YT Stream — Dashboard</title>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <style>
 body{margin:0;font-family:Arial;background:#020617;color:#e5e7eb}
@@ -13,7 +13,6 @@ textarea{min-height:80px}
 .row{display:flex;gap:10px}
 button{margin-top:14px;padding:10px 16px;border-radius:20px;border:0;font-weight:bold;cursor:pointer}
 .start{background:#22c55e;color:black}
-.stop{background:#ef4444;color:white}
 .test{background:#2563eb;color:white}
 .log{margin-top:16px;background:#020617;border:1px solid #1f2937;padding:12px;border-radius:10px;font-family:monospace;font-size:12px;white-space:pre-wrap;max-height:250px;overflow:auto}
 </style>
@@ -21,10 +20,10 @@ button{margin-top:14px;padding:10px 16px;border-radius:20px;border:0;font-weight
 <body>
 
 <div class="container">
-  <h2>YT Stream — Pro Dashboard</h2>
+  <h2>YT Stream — Dashboard</h2>
 
   <label>Cloudflare Worker URL</label>
-  <input id="workerUrl" placeholder="https://xxxx.workers.dev">
+  <input id="workerUrl" placeholder="http://xxxx.workers.dev">
 
   <div class="row">
     <div style="flex:1">
@@ -54,8 +53,7 @@ button{margin-top:14px;padding:10px 16px;border-radius:20px;border:0;font-weight
   </select>
 
   <div class="row">
-    <button class="start" id="btnStart">▶ START</button>
-    <button class="stop" id="btnStop">■ STOP</button>
+    <button class="start" id="btnStart">▶ START STREAM</button>
     <button class="test" id="btnTest">TEST</button>
   </div>
 
@@ -80,13 +78,13 @@ async function postJSON(url,data){
   return {status:r.status, text:text, ok:r.ok};
 }
 
-// ✅ START — PASTI MUNCUL RESPON
+// ✅ START STREAM (VERSI LAMA - STABIL)
 btnStart.onclick = async ()=>{
   const worker = workerUrl.value.trim();
 
   try{
     log("Mengirim START ke Worker...");
-    const r = await postJSON(worker + "/start", {
+    const r = await postJSON(worker, {
       video_url: video.value.trim(),
       rtmp_url: rtmp.value.trim(),
       title: title.value.trim(),
@@ -100,20 +98,7 @@ btnStart.onclick = async ()=>{
   }
 };
 
-// ✅ STOP — PASTI MUNCUL RESPON
-btnStop.onclick = async ()=>{
-  const worker = workerUrl.value.trim();
-
-  try{
-    log("Mengirim STOP ke Worker...");
-    const r = await postJSON(worker + "/stop", {});
-    log("STOP: " + r.status + " | " + r.text);
-  }catch(e){
-    log("STOP ERROR: " + e.message);
-  }
-};
-
-// ✅ TEST
+// ✅ TEST WORKER
 btnTest.onclick = async ()=>{
   const worker = workerUrl.value.trim();
   try{
