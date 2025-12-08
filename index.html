@@ -94,10 +94,12 @@ textarea{min-height:110px;resize:vertical}
           <option value="private">Private</option>
         </select>
 
-        <div style="display:flex;gap:10px;margin-top:14px">
-          <button id="trigger" class="btn">Trigger Stream</button>
-          <button id="clear" class="btn ghost">Clear</button>
-        </div>
+<div style="display:flex;gap:10px;margin-top:14px">
+  <button id="trigger" class="btn">Trigger Stream</button>
+  <button id="stop" class="btn" style="background:#ef4444">Stop Stream</button>
+  <button id="clear" class="btn ghost">Clear</button>
+</div>
+
 
         <div class="meta">Catatan: Stream key dikirim bersama payload ke Worker. Jangan bagikan stream key Anda.</div>
       </div>
