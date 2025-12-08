@@ -4,70 +4,27 @@
 <meta charset="utf-8"/>
 <title>YT Stream — Pro Dashboard</title>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap" rel="stylesheet">
 <style>
-body{
-  margin:0;
-  font-family:Inter,system-ui;
-  background:#020617;
-  color:#e5e7eb;
-}
-.container{
-  max-width:1000px;
-  margin:30px auto;
-  background:#030712;
-  border-radius:16px;
-  padding:22px;
-  border:1px solid #1f2937;
-}
-h1{margin:0 0 6px}
-.lead{color:#9ca3af;font-size:13px}
-label{display:block;margin-top:12px;font-weight:600;font-size:13px}
-input,select,textarea{
-  width:100%;
-  margin-top:6px;
-  padding:10px;
-  background:#020617;
-  border:1px solid #1f2937;
-  color:white;
-  border-radius:10px;
-}
-textarea{min-height:100px}
-.row{display:flex;gap:12px}
-button{
-  margin-top:16px;
-  padding:10px 18px;
-  border-radius:24px;
-  border:0;
-  font-weight:700;
-  cursor:pointer;
-}
+body{margin:0;font-family:Arial;background:#020617;color:#e5e7eb}
+.container{max-width:900px;margin:30px auto;background:#030712;border-radius:16px;padding:20px;border:1px solid #1f2937}
+label{display:block;margin-top:12px;font-weight:bold}
+input,select,textarea{width:100%;margin-top:6px;padding:10px;background:#020617;border:1px solid #1f2937;color:white;border-radius:10px}
+textarea{min-height:80px}
+.row{display:flex;gap:10px}
+button{margin-top:14px;padding:10px 16px;border-radius:20px;border:0;font-weight:bold;cursor:pointer}
 .start{background:#22c55e;color:black}
 .stop{background:#ef4444;color:white}
 .test{background:#2563eb;color:white}
-
-.log{
-  background:#020617;
-  border:1px solid #1f2937;
-  padding:12px;
-  border-radius:10px;
-  margin-top:16px;
-  font-family:monospace;
-  font-size:12px;
-  max-height:260px;
-  overflow:auto;
-  white-space:pre-wrap;
-}
+.log{margin-top:16px;background:#020617;border:1px solid #1f2937;padding:12px;border-radius:10px;font-family:monospace;font-size:12px;white-space:pre-wrap;max-height:250px;overflow:auto}
 </style>
 </head>
 <body>
 
 <div class="container">
-  <h1>YT Stream — Pro Dashboard</h1>
-  <div class="lead">Kontrol Live Streaming YouTube (Start & Stop Otomatis + Jadwal)</div>
+  <h2>YT Stream — Pro Dashboard</h2>
 
   <label>Cloudflare Worker URL</label>
-  <input id="workerUrl" placeholder="https://xxx.workers.dev">
+  <input id="workerUrl" placeholder="https://xxxx.workers.dev">
 
   <div class="row">
     <div style="flex:1">
@@ -77,17 +34,6 @@ button{
     <div style="flex:1">
       <label>Stream Key</label>
       <input id="streamKey" type="password">
-    </div>
-  </div>
-
-  <div class="row">
-    <div style="flex:1">
-      <label>Tanggal (WIB)</label>
-      <input id="date" type="date">
-    </div>
-    <div style="flex:1">
-      <label>Jam (WIB)</label>
-      <input id="time" type="time">
     </div>
   </div>
 
@@ -108,8 +54,8 @@ button{
   </select>
 
   <div class="row">
-    <button class="start" id="btnStart">▶ START STREAM</button>
-    <button class="stop" id="btnStop">■ STOP STREAM</button>
+    <button class="start" id="btnStart">▶ START</button>
+    <button class="stop" id="btnStop">■ STOP</button>
     <button class="test" id="btnTest">TEST</button>
   </div>
 
@@ -117,18 +63,11 @@ button{
 </div>
 
 <script>
-function appendLog(msg){
+function log(msg){
   const el = document.getElementById("log");
   const t = new Date().toLocaleTimeString();
   el.textContent += "\n[" + t + "] " + msg;
   el.scrollTop = el.scrollHeight;
-}
-
-function toISO(date,time){
-  if(!date||!time) return "";
-  const local = new Date(date + "T" + time + ":00");
-  const utc = new Date(local.getTime() - 7*3600*1000);
-  return utc.toISOString();
 }
 
 async function postJSON(url,data){
@@ -140,55 +79,38 @@ async function postJSON(url,data){
   return {status:r.status, text: await r.text(), ok:r.ok};
 }
 
-// ✅ START
-document.getElementById("btnStart").onclick = async ()=>{
-  const worker = document.getElementById("workerUrl").value.trim();
+// START
+btnStart.onclick = async ()=>{
+  const worker = workerUrl.value.trim();
 
   const payload = {
-    video_url: document.getElementById("video").value.trim(),
-    rtmp_url: document.getElementById("rtmp").value.trim(),
-    start_time: toISO(
-      document.getElementById("date").value,
-      document.getElementById("time").value
-    ),
-    title: document.getElementById("title").value.trim(),
-    description: document.getElementById("description").value.trim(),
-    visibility: document.getElementById("visibility").value,
-    stream_key: document.getElementById("streamKey").value.trim()
+    video_url: video.value.trim(),
+    rtmp_url: rtmp.value.trim(),
+    title: title.value.trim(),
+    description: description.value.trim(),
+    visibility: visibility.value,
+    stream_key: streamKey.value.trim()
   };
 
-  appendLog("Mengirim START ke Worker...");
+  log("Mengirim START ke Worker...");
   const r = await postJSON(worker + "/start", payload);
-  appendLog("START: " + r.status + " | " + r.text);
+  log("START: " + r.status + " | " + r.text);
 };
 
-// ✅ STOP
-document.getElementById("btnStop").onclick = async ()=>{
-  const worker = document.getElementById("workerUrl").value.trim();
-  appendLog("Mengirim STOP ke Worker...");
+// STOP
+btnStop.onclick = async ()=>{
+  const worker = workerUrl.value.trim();
+  log("Mengirim STOP ke Worker...");
   const r = await postJSON(worker + "/stop", {});
-  appendLog("STOP: " + r.status + " | " + r.text);
+  log("STOP: " + r.status + " | " + r.text);
 };
 
-// ✅ TEST WORKER
-document.getElementById("btnTest").onclick = async ()=>{
-  const worker = document.getElementById("workerUrl").value.trim();
+// TEST
+btnTest.onclick = async ()=>{
+  const worker = workerUrl.value.trim();
   const r = await fetch(worker, {method:"OPTIONS"});
-  appendLog("TEST: " + r.status);
+  log("TEST: " + r.status);
 };
-
-// ✅ SET DEFAULT TANGGAL & JAM SEKARANG
-(function init(){
-  const now = new Date();
-  const y = now.getFullYear();
-  const m = String(now.getMonth()+1).padStart(2,"0");
-  const d = String(now.getDate()).padStart(2,"0");
-  const h = String(now.getHours()).padStart(2,"0");
-  const i = String(now.getMinutes()).padStart(2,"0");
-
-  document.getElementById("date").value = `${y}-${m}-${d}`;
-  document.getElementById("time").value = `${h}:${i}`;
-})();
 </script>
 
 </body>
