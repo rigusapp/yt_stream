@@ -76,40 +76,52 @@ async function postJSON(url,data){
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify(data)
   });
-  return {status:r.status, text: await r.text(), ok:r.ok};
+  const text = await r.text();
+  return {status:r.status, text:text, ok:r.ok};
 }
 
-// START
+// ✅ START — PASTI MUNCUL RESPON
 btnStart.onclick = async ()=>{
   const worker = workerUrl.value.trim();
 
-  const payload = {
-    video_url: video.value.trim(),
-    rtmp_url: rtmp.value.trim(),
-    title: title.value.trim(),
-    description: description.value.trim(),
-    visibility: visibility.value,
-    stream_key: streamKey.value.trim()
-  };
-
-  log("Mengirim START ke Worker...");
-  const r = await postJSON(worker + "/start", payload);
-  log("START: " + r.status + " | " + r.text);
+  try{
+    log("Mengirim START ke Worker...");
+    const r = await postJSON(worker + "/start", {
+      video_url: video.value.trim(),
+      rtmp_url: rtmp.value.trim(),
+      title: title.value.trim(),
+      description: description.value.trim(),
+      visibility: visibility.value,
+      stream_key: streamKey.value.trim()
+    });
+    log("START: " + r.status + " | " + r.text);
+  }catch(e){
+    log("START ERROR: " + e.message);
+  }
 };
 
-// STOP
+// ✅ STOP — PASTI MUNCUL RESPON
 btnStop.onclick = async ()=>{
   const worker = workerUrl.value.trim();
-  log("Mengirim STOP ke Worker...");
-  const r = await postJSON(worker + "/stop", {});
-  log("STOP: " + r.status + " | " + r.text);
+
+  try{
+    log("Mengirim STOP ke Worker...");
+    const r = await postJSON(worker + "/stop", {});
+    log("STOP: " + r.status + " | " + r.text);
+  }catch(e){
+    log("STOP ERROR: " + e.message);
+  }
 };
 
-// TEST
+// ✅ TEST
 btnTest.onclick = async ()=>{
   const worker = workerUrl.value.trim();
-  const r = await fetch(worker, {method:"OPTIONS"});
-  log("TEST: " + r.status);
+  try{
+    const r = await fetch(worker, {method:"OPTIONS"});
+    log("TEST: " + r.status);
+  }catch(e){
+    log("TEST ERROR: " + e.message);
+  }
 };
 </script>
 
