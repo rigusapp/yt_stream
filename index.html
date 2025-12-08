@@ -94,12 +94,10 @@ textarea{min-height:110px;resize:vertical}
           <option value="private">Private</option>
         </select>
 
-<div style="display:flex;gap:10px;margin-top:14px">
-  <button id="trigger" class="btn">Trigger Stream</button>
-  <button id="stop" class="btn" style="background:#ef4444">Stop Stream</button>
-  <button id="clear" class="btn ghost">Clear</button>
-</div>
-
+        <div style="display:flex;gap:10px;margin-top:14px">
+          <button id="trigger" class="btn">Trigger Stream</button>
+          <button id="clear" class="btn ghost">Clear</button>
+        </div>
 
         <div class="meta">Catatan: Stream key dikirim bersama payload ke Worker. Jangan bagikan stream key Anda.</div>
       </div>
@@ -167,8 +165,7 @@ document.getElementById('trigger').onclick = async ()=>{
   document.getElementById('log').textContent = 'Sending...';
   if(!worker){ alert('Masukkan Cloudflare Worker URL'); return; }
   try{
-  const r = await postJSON(worker, payload);
-
+    const r = await postJSON(worker, { event_type:'stream_trigger', client_payload: payload });
     document.getElementById('log').textContent = 'Worker response: ' + r.status + '\n' + r.text;
   }catch(e){
     document.getElementById('log').textContent = 'Error: '+e.message;
@@ -185,28 +182,6 @@ document.getElementById('test').onclick = async ()=>{
     alert('Worker test failed: ' + e.message);
   }
 };
-
-  // =========================
-// ✅ TAMBAHAN: STOP STREAM
-// =========================
-document.getElementById('stop').onclick = async ()=>{
-  const worker = document.getElementById('workerUrl').value.trim();
-  if(!worker){ alert('Masukkan Cloudflare Worker URL'); return; }
-
-  document.getElementById('log').style.display='block';
-  document.getElementById('log').textContent = 'Sending STOP...';
-
-  try{
-    const r = await postJSON(worker + '/stop', {});
-    document.getElementById('log').textContent =
-      'STOP response: ' + r.status + '\n' + r.text;
-  }catch(e){
-    document.getElementById('log').textContent = 'STOP Error: ' + e.message;
-  }
-};
-
 </script>
-
-  
 </body>
 </html>
