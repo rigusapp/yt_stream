@@ -2,812 +2,156 @@
 <html lang="id">
 <head>
 <meta charset="utf-8"/>
-<title>YT Stream — Professional Dashboard</title>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>YT Stream — Dashboard Pro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#0f172a;
-  --card:#020617;
-  --card-soft:#020817;
-  --primary:#2563eb;
-  --primary-soft:#1d4ed8;
-  --muted:#9ca3af;
-  --accent:#22c55e;
-  --accent-soft:rgba(34,197,94,.12);
-  --danger:#ef4444;
-  --danger-soft:rgba(239,68,68,.12);
-  --border:#1f2937;
-  --yellow:#eab308;
-}
-*{box-sizing:border-box}
 body{
-  font-family:'Inter',system-ui,Segoe UI,Arial;
   margin:0;
-  background:radial-gradient(circle at top,#1f2937 0,#020617 55%);
+  font-family:Inter,system-ui;
+  background:#020617;
   color:#e5e7eb;
 }
 .container{
-  max-width:1080px;
-  margin:32px auto 40px;
-  padding:24px;
-  border-radius:16px;
-  background:linear-gradient(145deg,rgba(15,23,42,.98),rgba(2,6,23,.98));
-  box-shadow:
-    0 24px 60px rgba(0,0,0,.7),
-    0 0 0 1px rgba(148,163,184,.06);
-}
-.header{
-  display:flex;
-  align-items:center;
-  gap:16px;
-}
-.logo{
-  width:60px;
-  height:60px;
-  border-radius:18px;
-  background:radial-gradient(circle at 20% 20%,#f97316,#ef4444 40%,#1d4ed8 100%);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:white;
-  font-weight:800;
-  font-size:22px;
-  box-shadow:0 18px 35px rgba(239,68,68,.5);
-}
-h1{
-  margin:0;
-  font-size:22px;
-}
-.lead{
-  margin:4px 0 0;
-  color:var(--muted);
-  font-size:13px;
-}
-.badge-pro{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:4px 10px;
-  border-radius:999px;
-  font-size:11px;
-  background:rgba(34,197,94,.1);
-  color:#bbf7d0;
-  border:1px solid rgba(34,197,94,.3);
-  margin-top:6px;
-}
-.grid{
-  display:grid;
-  grid-template-columns: minmax(0,1.6fr) minmax(0,1.1fr);
-  gap:18px;
-  margin-top:20px;
-}
-@media (max-width:900px){
-  .grid{grid-template-columns:1fr}
-}
-.panel{
-  background:var(--card);
-  padding:16px;
+  max-width:960px;
+  margin:30px auto;
+  background:#030712;
   border-radius:14px;
-  border:1px solid var(--border);
+  padding:20px;
+  border:1px solid #1f2937;
 }
-.panel-soft{
-  background:var(--card-soft);
-}
-.panel-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:8px;
-}
-.panel-title{
-  font-size:14px;
-  font-weight:600;
-}
-.panel-sub{
-  font-size:12px;
-  color:var(--muted);
-}
-.form-row{
-  display:flex;
-  gap:10px;
-}
-label{
-  display:block;
-  font-weight:600;
-  margin-top:10px;
-  margin-bottom:4px;
-  color:#e5e7eb;
-  font-size:12px;
-}
-.input, select, textarea{
+h1{margin:0 0 6px}
+.lead{color:#9ca3af;font-size:13px}
+label{display:block;margin-top:12px;font-weight:600;font-size:13px}
+input,select,textarea{
   width:100%;
-  padding:9px 10px;
-  border-radius:9px;
-  border:1px solid var(--border);
+  margin-top:5px;
+  padding:9px;
   background:#020617;
-  font-size:13px;
-  color:#e5e7eb;
-}
-.input:focus, select:focus, textarea:focus{
-  outline:none;
-  border-color:var(--primary);
-  box-shadow:0 0 0 1px rgba(37,99,235,.4);
-}
-textarea{
-  min-height:90px;
-  resize:vertical;
-}
-.small{
-  font-size:12px;
-  color:var(--muted);
-  margin-top:6px;
-}
-.btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  padding:8px 13px;
-  border-radius:999px;
-  border:0;
-  cursor:pointer;
-  font-weight:600;
-  font-size:13px;
-  transition:transform .08s ease, box-shadow .08s ease, background .1s;
-  white-space:nowrap;
-}
-.btn-primary{
-  background:linear-gradient(to right,var(--primary),var(--primary-soft));
+  border:1px solid #1f2937;
   color:white;
-  box-shadow:0 12px 25px rgba(37,99,235,.45);
+  border-radius:8px;
 }
-.btn-primary:active{
-  transform:translateY(1px);
-  box-shadow:0 6px 12px rgba(37,99,235,.4);
-}
-.btn-ghost{
-  background:rgba(15,23,42,.7);
-  color:var(--muted);
-  border:1px solid var(--border);
-}
-.btn-ghost:hover{background:#020617}
-.btn-danger{
-  background:var(--danger-soft);
-  color:#fecaca;
-  border:1px solid rgba(239,68,68,.5);
-}
-.btn:disabled{
-  opacity:.55;
-  cursor:not-allowed;
-  box-shadow:none;
-}
-.btn-icon{
-  font-size:15px;
-}
-.actions-row{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-top:12px;
-}
-.meta{
-  font-size:11px;
-  color:var(--muted);
-  margin-top:8px;
-}
-.status-bar{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-top:10px;
-}
-.status-pill{
-  font-size:11px;
-  padding:4px 9px;
-  border-radius:999px;
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  border:1px solid var(--border);
-}
-.status-dot{
-  width:8px;
-  height:8px;
-  border-radius:50%;
-}
-.status-worker.connected{
-  border-color:rgba(34,197,94,.6);
-  background:var(--accent-soft);
-  color:#bbf7d0;
-}
-.status-worker.connected .status-dot{
-  background:var(--accent);
-  box-shadow:0 0 6px rgba(34,197,94,.9);
-}
-.status-worker.offline{
-  border-color:rgba(239,68,68,.5);
-  background:var(--danger-soft);
-  color:#fecaca;
-}
-.status-worker.offline .status-dot{
-  background:var(--danger);
-  box-shadow:0 0 6px rgba(239,68,68,.9);
-}
-.status-gh.idle{
-  background:rgba(15,23,42,.9);
-  color:var(--muted);
-}
-.status-gh.triggered{
-  border-color:rgba(34,197,94,.6);
-  background:var(--accent-soft);
-  color:#bbf7d0;
-}
-.status-gh.error{
-  border-color:rgba(239,68,68,.5);
-  background:var(--danger-soft);
-  color:#fecaca;
-}
-.status-gh .status-dot{
-  background:var(--yellow);
-}
-.badge-live{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  font-size:11px;
-  padding:3px 8px;
-  border-radius:999px;
-  background:rgba(239,68,68,.15);
-  color:#fecaca;
-  border:1px solid rgba(239,68,68,.5);
-}
-.badge-live-dot{
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  background:#ef4444;
-  box-shadow:0 0 6px rgba(239,68,68,1);
-}
-.debug{
-  background:#020617;
-  color:#d1fae5;
-  padding:10px;
-  border-radius:9px;
-  font-family:SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-  white-space:pre-wrap;
-  font-size:11px;
-  max-height:220px;
-  overflow:auto;
-  border:1px solid #111827;
-}
-.debug-title{
-  font-size:12px;
+textarea{min-height:90px}
+.row{display:flex;gap:10px}
+button{
+  margin-top:14px;
+  padding:9px 14px;
+  border-radius:20px;
+  border:0;
   font-weight:600;
-  margin-bottom:4px;
-}
-.tag-pill{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:3px 9px;
-  font-size:11px;
-  border-radius:999px;
-  background:#020617;
-  border:1px dashed #1f2937;
-  color:var(--muted);
-}
-.preview-box{
-  background:#020617;
-  border-radius:10px;
-  padding:10px;
-  border:1px solid #111827;
-}
-.preview-placeholder{
-  border-radius:8px;
-  border:1px dashed #1f2937;
-  padding:14px;
-  text-align:center;
-  font-size:12px;
-  color:var(--muted);
-}
-.preview-video{
-  width:100%;
-  border-radius:8px;
-  max-height:220px;
-}
-.stream-key-row{
-  display:flex;
-  align-items:center;
-  gap:6px;
-}
-.toggle-view{
-  font-size:11px;
-  color:var(--muted);
   cursor:pointer;
-  user-select:none;
 }
-.toggle-view:hover{color:#e5e7eb}
-.input-error{
-  border-color:var(--danger) !important;
-  box-shadow:0 0 0 1px rgba(239,68,68,.6);
-}
-.error-text{
-  font-size:11px;
-  color:#fecaca;
-  margin-top:2px;
-}
-.footer{
-  margin-top:16px;
-  color:var(--muted);
-  font-size:11px;
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  flex-wrap:wrap;
-}
-.footer a{
-  color:#60a5fa;
-  text-decoration:none;
-}
-.footer a:hover{text-decoration:underline}
-.badge-env{
-  font-size:11px;
-  padding:3px 8px;
-  border-radius:999px;
-  border:1px solid #1e293b;
-  background:rgba(15,23,42,.8);
-  color:var(--muted);
+.start{background:#22c55e;color:black}
+.stop{background:#ef4444;color:white}
+.test{background:#2563eb;color:white}
+.log{
+  background:#020617;
+  border:1px solid #1f2937;
+  padding:10px;
+  border-radius:8px;
+  margin-top:14px;
+  font-family:monospace;
+  font-size:12px;
+  max-height:200px;
+  overflow:auto;
 }
 </style>
 </head>
 <body>
+
 <div class="container">
-  <div class="header">
-    <div class="logo">YT</div>
-    <div>
-      <h1>YT Stream — Professional Console</h1>
-      <div class="lead">Dashboard profesional untuk mengatur livestream YouTube dengan Cloudflare Worker + GitHub Actions.</div>
-      <div class="badge-pro">
-        <span>⚡ Automation Ready</span>
-        <span>•</span>
-        <span>RTMP + FFmpeg Orchestrator</span>
-      </div>
+  <h1>YT Stream — Pro Dashboard</h1>
+  <div class="lead">Kontrol Live Streaming YouTube (Start & Stop Otomatis)</div>
+
+  <label>Cloudflare Worker URL</label>
+  <input id="workerUrl" placeholder="https://xxx.workers.dev">
+
+  <div class="row">
+    <div style="flex:1">
+      <label>RTMP Server</label>
+      <input id="rtmp" value="rtmp://a.rtmp.youtube.com/live2">
+    </div>
+    <div style="flex:1">
+      <label>Stream Key</label>
+      <input id="streamKey" type="password">
     </div>
   </div>
 
-  <div class="status-bar">
-    <div id="statusWorker" class="status-pill status-worker offline">
-      <span class="status-dot"></span>
-      <span>Worker: Offline</span>
-    </div>
-    <div id="statusGh" class="status-pill status-gh idle">
-      <span class="status-dot"></span>
-      <span>GitHub: Idle</span>
-    </div>
-    <div class="badge-live">
-      <span class="badge-live-dot"></span>
-      <span>Status Live dipantau dari YouTube Studio</span>
-    </div>
+  <label>Video URL</label>
+  <input id="video">
+
+  <label>Judul</label>
+  <input id="title">
+
+  <label>Deskripsi</label>
+  <textarea id="description"></textarea>
+
+  <label>Visibility</label>
+  <select id="visibility">
+    <option value="public">Public</option>
+    <option value="unlisted">Unlisted</option>
+    <option value="private">Private</option>
+  </select>
+
+  <div class="row">
+    <button class="start" id="btnStart">▶ START STREAM</button>
+    <button class="stop" id="btnStop">■ STOP STREAM</button>
+    <button class="test" id="btnTest">TEST</button>
   </div>
 
-  <div class="grid">
-    <!-- LEFT: FORM -->
-    <div>
-      <div class="panel panel-soft">
-        <div class="panel-header">
-          <div>
-            <div class="panel-title">Konfigurasi Stream</div>
-            <div class="panel-sub">Isi data berikut lalu tekan <b>Start Stream</b> untuk mengirim perintah ke Worker.</div>
-          </div>
-          <span class="badge-env">WIB • UTC+7</span>
-        </div>
-
-        <label>Cloudflare Worker URL</label>
-        <input id="workerUrl" class="input" placeholder="https://your-worker.workers.dev/">
-        <div id="err-workerUrl" class="error-text" style="display:none"></div>
-
-        <div class="form-row">
-          <div style="flex:1">
-            <label>RTMP Server</label>
-            <input id="rtmp" class="input" value="rtmp://a.rtmp.youtube.com/live2">
-          </div>
-          <div style="flex:1">
-            <label>Stream Key</label>
-            <div class="stream-key-row">
-              <input id="streamKey" class="input" type="password" placeholder="rmfk-xxxx-xxxx-xxxx">
-              <span id="toggleKey" class="toggle-view">Tampilkan</span>
-            </div>
-            <div id="err-streamKey" class="error-text" style="display:none"></div>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div style="flex:1">
-            <label>Tanggal (WIB)</label>
-            <input id="date" type="date" class="input">
-            <div id="err-date" class="error-text" style="display:none"></div>
-          </div>
-          <div style="flex:1">
-            <label>Waktu (WIB)</label>
-            <input id="time" type="time" class="input">
-            <div id="err-time" class="error-text" style="display:none"></div>
-          </div>
-        </div>
-
-        <label>Durasi (estimasi)</label>
-        <select id="duration" class="input">
-          <option value="1800">30 menit</option>
-          <option value="3600" selected>1 Jam</option>
-          <option value="7200">2 Jam</option>
-          <option value="10800">3 Jam</option>
-          <option value="14400">4 Jam</option>
-          <option value="18000">5 Jam</option>
-          <option value="21600">6 Jam</option>
-          <option value="25200">7 Jam</option>
-          <option value="28800">8 Jam</option>
-          <option value="32400">9 Jam</option>
-          <option value="36000">10 Jam</option>
-          <option value="39600">11 Jam</option>
-          <option value="43200">12 Jam</option>
-        </select>
-
-        <label>Video URL</label>
-        <input id="video" class="input" placeholder="https://.../video.mp4">
-        <div id="err-video" class="error-text" style="display:none"></div>
-
-        <label>Title</label>
-        <input id="title" class="input" placeholder="Judul Live">
-
-        <label>Description</label>
-        <textarea id="description" class="input" placeholder="Deskripsi singkat..."></textarea>
-
-        <label>Visibility</label>
-        <select id="visibility" class="input">
-          <option value="public">Public</option>
-          <option value="unlisted">Unlisted</option>
-          <option value="private">Private</option>
-        </select>
-
-        <div class="actions-row">
-          <button id="btnStart" class="btn btn-primary">
-            <span class="btn-icon">⏺</span>
-            <span>Start Stream</span>
-          </button>
-          <button id="btnStop" class="btn btn-danger" type="button">
-            <span class="btn-icon">⏹</span>
-            <span>Stop Stream</span>
-          </button>
-          <button id="btnTest" class="btn btn-ghost" type="button">
-            <span class="btn-icon">🧪</span>
-            <span>Test Connection</span>
-          </button>
-          <button id="btnClear" class="btn btn-ghost" type="button">
-            <span class="btn-icon">🧹</span>
-            <span>Clear</span>
-          </button>
-        </div>
-
-        <div class="meta">
-          Catatan: Stream key hanya dikirim ke Cloudflare Worker & GitHub Actions, tidak disimpan di browser maupun server lain.
-        </div>
-      </div>
-    </div>
-
-    <!-- RIGHT: PREVIEW & LOG -->
-    <div>
-      <div class="panel">
-        <div class="panel-header">
-          <div>
-            <div class="panel-title">Preview Video</div>
-            <div class="panel-sub">Pastikan URL video benar dan dapat diputar.</div>
-          </div>
-          <span class="tag-pill">Preview only • FFmpeg yang streaming</span>
-        </div>
-        <div class="preview-box">
-          <div id="previewPlaceholder" class="preview-placeholder">
-            Masukkan <b>Video URL</b> untuk melihat preview di sini.
-          </div>
-          <video id="previewVideo" class="preview-video" controls style="display:none"></video>
-        </div>
-      </div>
-
-      <div style="height:12px"></div>
-
-      <div class="panel">
-        <div class="panel-header">
-          <div>
-            <div class="panel-title">Payload & Log</div>
-            <div class="panel-sub">Payload yang dikirim ke Worker dan log eksekusi akan muncul di sini.</div>
-          </div>
-        </div>
-
-        <div class="debug-section">
-          <div class="debug-title">Payload (stream_key dimask)</div>
-          <pre id="payload" class="debug" style="margin-bottom:8px">Belum ada payload yang dikirim.</pre>
-
-          <div class="debug-title">Log</div>
-          <pre id="log" class="debug">Menunggu aksi pertama...</pre>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="footer">
-    <div>Built for automation — Cloudflare Worker + GitHub Actions + FFmpeg + YouTube RTMP.</div>
-    <div>Stop stream: cancel workflow di <b>GitHub → Actions</b>.</div>
-  </div>
+  <div class="log" id="log">Menunggu aksi...</div>
 </div>
 
 <script>
-// Helper waktu ke ISO UTC (WIB → UTC)
-function toISO(date,time){
-  if(!date || !time) return '';
-  const local = new Date(date + 'T' + time + ':00');
-  const utc = new Date(local.getTime() - 7*3600*1000);
-  return utc.toISOString().split('.')[0] + 'Z';
+function appendLog(msg){
+  const el = document.getElementById("log");
+  const t = new Date().toLocaleTimeString();
+  el.textContent += "\n[" + t + "] " + msg;
+  el.scrollTop = el.scrollHeight;
 }
 
-async function postJSON(url, body){
-  const res = await fetch(url, {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify(body)
+async function postJSON(url,data){
+  const r = await fetch(url,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(data)
   });
-  const text = await res.text().catch(()=> '');
-  return {ok:res.ok,status:res.status,text};
+  return {status:r.status, text: await r.text(), ok:r.ok};
 }
 
-function appendLog(message){
-  const logEl = document.getElementById('log');
-  const now = new Date();
-  const ts = now.toISOString().split('T')[1].split('.')[0]; // HH:MM:SS
-  const line = `[${ts}] ${message}`;
-  if(!logEl.dataset.initiated){
-    logEl.textContent = line;
-    logEl.dataset.initiated = '1';
-  } else {
-    logEl.textContent += '\\n' + line;
-  }
-  logEl.scrollTop = logEl.scrollHeight;
-}
-
-function setWorkerStatus(state){
-  const el = document.getElementById('statusWorker');
-  el.classList.remove('connected','offline');
-  if(state === 'connected'){
-    el.classList.add('connected');
-    el.querySelector('span:last-child').textContent = 'Worker: Connected';
-  } else if(state === 'offline'){
-    el.classList.add('offline');
-    el.querySelector('span:last-child').textContent = 'Worker: Offline';
-  } else {
-    el.classList.add('offline');
-    el.querySelector('span:last-child').textContent = 'Worker: Unknown';
-  }
-}
-
-function setGhStatus(state){
-  const el = document.getElementById('statusGh');
-  el.classList.remove('idle','triggered','error');
-  if(state === 'triggered'){
-    el.classList.add('triggered');
-    el.querySelector('span:last-child').textContent = 'GitHub: Triggered';
-  } else if(state === 'error'){
-    el.classList.add('error');
-    el.querySelector('span:last-child').textContent = 'GitHub: Error';
-  } else {
-    el.classList.add('idle');
-    el.querySelector('span:last-child').textContent = 'GitHub: Idle';
-  }
-}
-
-function clearErrors(){
-  ['workerUrl','streamKey','date','time','video'].forEach(id=>{
-    const input = document.getElementById(id);
-    input.classList.remove('input-error');
-  });
-  ['workerUrl','streamKey','date','time','video'].forEach(id=>{
-    const err = document.getElementById('err-'+id);
-    if(err) err.style.display='none';
-  });
-}
-
-function validateForm(){
-  clearErrors();
-  let ok = true;
-
-  const worker = document.getElementById('workerUrl');
-  const video = document.getElementById('video');
-  const key = document.getElementById('streamKey');
-  const date = document.getElementById('date');
-  const time = document.getElementById('time');
-
-  if(!worker.value.trim()){
-    worker.classList.add('input-error');
-    const e = document.getElementById('err-workerUrl');
-    e.textContent = 'Worker URL wajib diisi.';
-    e.style.display = 'block';
-    ok = false;
-  }
-  if(!video.value.trim()){
-    video.classList.add('input-error');
-    const e = document.getElementById('err-video');
-    e.textContent = 'Video URL wajib diisi.';
-    e.style.display = 'block';
-    ok = false;
-  }
-  if(!key.value.trim()){
-    key.classList.add('input-error');
-    const e = document.getElementById('err-streamKey');
-    e.textContent = 'Stream key wajib diisi.';
-    e.style.display = 'block';
-    ok = false;
-  }
-  if(!date.value){
-    date.classList.add('input-error');
-    const e = document.getElementById('err-date');
-    e.textContent = 'Tanggal wajib diisi.';
-    e.style.display = 'block';
-    ok = false;
-  }
-  if(!time.value){
-    time.classList.add('input-error');
-    const e = document.getElementById('err-time');
-    e.textContent = 'Waktu wajib diisi.';
-    e.style.display = 'block';
-    ok = false;
-  }
-
-  return ok;
-}
-
-// Button handlers
-document.getElementById('btnClear').onclick = ()=>{
-  document.getElementById('video').value='';
-  document.getElementById('streamKey').value='';
-  document.getElementById('title').value='';
-  document.getElementById('description').value='';
-  document.getElementById('visibility').value='public';
-  document.getElementById('payload').textContent = 'Belum ada payload yang dikirim.';
-  document.getElementById('log').textContent = 'Menunggu aksi pertama...';
-  delete document.getElementById('log').dataset.initiated;
-  document.getElementById('previewVideo').style.display='none';
-  document.getElementById('previewVideo').src='';
-  document.getElementById('previewPlaceholder').style.display='block';
-  clearErrors();
-  appendLog('Form dibersihkan.');
-};
-
-document.getElementById('btnTest').onclick = async ()=>{
-  clearErrors();
-  const worker = document.getElementById('workerUrl').value.trim();
-  if(!worker){
-    document.getElementById('workerUrl').classList.add('input-error');
-    const e = document.getElementById('err-workerUrl');
-    e.textContent = 'Isi Worker URL terlebih dahulu untuk test.';
-    e.style.display = 'block';
-    return;
-  }
-  appendLog('Mengirim OPTIONS ke Worker untuk test koneksi...');
-  setWorkerStatus('offline');
-  try{
-    const r = await fetch(worker, {method:'OPTIONS'});
-    appendLog('Worker test response status: ' + r.status);
-    if(r.status === 204){
-      setWorkerStatus('connected');
-    } else {
-      setWorkerStatus('offline');
-    }
-  }catch(e){
-    appendLog('Worker test failed: ' + e.message);
-    setWorkerStatus('offline');
-  }
-};
-
-document.getElementById('btnStart').onclick = async ()=>{
-  if(!validateForm()) {
-    appendLog('Validasi form gagal. Periksa field yang bertanda merah.');
-    return;
-  }
-
-  const worker = document.getElementById('workerUrl').value.trim();
+// ✅ START
+document.getElementById("btnStart").onclick = async ()=>{
+  const worker = document.getElementById("workerUrl").value.trim();
   const payload = {
-    video_url: document.getElementById('video').value.trim(),
-    rtmp_url: document.getElementById('rtmp').value.trim(),
-    start_time: toISO(document.getElementById('date').value, document.getElementById('time').value),
-    duration_seconds: document.getElementById('duration').value,
-    title: document.getElementById('title').value.trim(),
-    description: document.getElementById('description').value.trim(),
-    visibility: document.getElementById('visibility').value,
-    stream_key: document.getElementById('streamKey').value.trim()
+    video_url: document.getElementById("video").value.trim(),
+    rtmp_url: document.getElementById("rtmp").value.trim(),
+    title: document.getElementById("title").value.trim(),
+    description: document.getElementById("description").value.trim(),
+    visibility: document.getElementById("visibility").value,
+    stream_key: document.getElementById("streamKey").value.trim()
   };
 
-  const payloadEl = document.getElementById('payload');
-  // tampilkan payload dengan stream_key dimask
-  const safe = JSON.parse(JSON.stringify(payload));
-  if(safe.stream_key){
-    safe.stream_key = '*****MASKED*****';
-  }
-  payloadEl.textContent = JSON.stringify(safe,null,2);
-
-  appendLog('Mengirim perintah stream ke Worker (POST)...');
-  setGhStatus('idle');
-
-  document.getElementById('btnStart').disabled = true;
-  document.getElementById('btnTest').disabled = true;
-
-  try{
-    const r = await postJSON(worker, {
-      event_type:'stream_trigger',
-      client_payload: payload
-    });
-    appendLog('Worker response: ' + r.status);
-    if(r.text){
-      appendLog('Worker body: ' + r.text.substring(0,400));
-    }
-    if(r.ok){
-      setWorkerStatus('connected');
-      setGhStatus('triggered');
-    } else {
-      setGhStatus('error');
-    }
-  }catch(e){
-    appendLog('Error saat mengirim ke Worker: ' + e.message);
-    setGhStatus('error');
-  }finally{
-    document.getElementById('btnStart').disabled = false;
-    document.getElementById('btnTest').disabled = false;
-  }
+  appendLog("Mengirim START ke Worker...");
+  const r = await postJSON(worker + "/start", payload);
+  appendLog("START: " + r.status + " | " + r.text);
 };
 
-document.getElementById('btnStop').onclick = ()=>{
-  appendLog('Stop Stream ditekan. Untuk benar-benar menghentikan live, cancel workflow aktif di GitHub → Actions.');
-  alert('Untuk menghentikan live:\n\n1. Buka GitHub → Actions\n2. Pilih workflow streaming yang sedang berjalan\n3. Klik “Cancel workflow”\n\nDashboard ini belum terhubung langsung untuk stop otomatis.');
+// ✅ STOP
+document.getElementById("btnStop").onclick = async ()=>{
+  const worker = document.getElementById("workerUrl").value.trim();
+  appendLog("Mengirim STOP ke Worker...");
+  const r = await postJSON(worker + "/stop", {});
+  appendLog("STOP: " + r.status + " | " + r.text);
 };
 
-// Toggle stream key show/hide
-document.getElementById('toggleKey').onclick = ()=>{
-  const input = document.getElementById('streamKey');
-  const t = document.getElementById('toggleKey');
-  if(input.type === 'password'){
-    input.type = 'text';
-    t.textContent = 'Sembunyikan';
-  } else {
-    input.type = 'password';
-    t.textContent = 'Tampilkan';
-  }
+// ✅ TEST WORKER
+document.getElementById("btnTest").onclick = async ()=>{
+  const worker = document.getElementById("workerUrl").value.trim();
+  const r = await fetch(worker, {method:"OPTIONS"});
+  appendLog("TEST: " + r.status);
 };
-
-// Preview video saat URL berubah
-document.getElementById('video').addEventListener('change', ()=>{
-  const url = document.getElementById('video').value.trim();
-  const vid = document.getElementById('previewVideo');
-  const ph = document.getElementById('previewPlaceholder');
-  if(!url){
-    vid.style.display='none';
-    vid.src='';
-    ph.style.display='block';
-    return;
-  }
-  vid.src = url;
-  vid.style.display='block';
-  ph.style.display='none';
-  appendLog('Preview video di-update.');
-});
-
-// Set default tanggal/hari ini
-(function initDefaultDateTime(){
-  const now = new Date();
-  const local = new Date(now.getTime() + 7*3600*1000); // asumsi server UTC, user WIB
-  const yyyy = local.getUTCFullYear();
-  const mm = String(local.getUTCMonth()+1).padStart(2,'0');
-  const dd = String(local.getUTCDate()).padStart(2,'0');
-  const hh = String(local.getUTCHours()).padStart(2,'0');
-  const mi = String(local.getUTCMinutes()).padStart(2,'0');
-  document.getElementById('date').value = `${yyyy}-${mm}-${dd}`;
-  document.getElementById('time').value = `${hh}:${mi}`;
-})();
 </script>
+
 </body>
 </html>
