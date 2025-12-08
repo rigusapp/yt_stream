@@ -23,11 +23,9 @@ jobs:
           echo "=== STREAM_KEY ==="
           echo "${{ github.event.client_payload.stream_key }}"
 
-      - name: Start Stream
-        run: |
-          VIDEO="${{ github.event.client_payload.video_url }}"
-          RTMP="${{ github.event.client_payload.rtmp_url }}"
-          KEY="${{ github.event.client_payload.stream_key }}"
-          echo "Stream to: $RTMP/$KEY"
-          if [ -z "$KEY" ]; then echo "ERROR: no stream key"; exit 1; fi
-          ffmpeg -re -stream_loop -1 -i "$VIDEO" -vcodec libx264 -preset veryfast -maxrate 3000k -bufsize 6000k -pix_fmt yuv420p -g 50 -c:a aac -b:a 128k -ar 44100 -f flv "$RTMP/$KEY"
+ - name: Stream to YouTube
+  run: |
+    RTMP="${{ github.event.client_payload.rtmp_url }}/${{ github.event.client_payload.stream_key }}"
+    ffmpeg -re -i "${{ github.event.client_payload.video_url }}" \
+    -c:v libx264 -preset veryfast -b:v 4500k \
+    -c:a aac -b:a 128k -f flv "$RTMP"
