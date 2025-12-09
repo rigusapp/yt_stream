@@ -24,12 +24,22 @@ jobs:
           echo "KEY:  ${{ github.event.client_payload.stream_key }}"
           echo "DUR:  ${{ github.event.client_payload.duration_seconds }}"
 
-      - name: Stream to YouTube
+           - name: Stream to YouTube
         run: |
           RTMP="${{ github.event.client_payload.rtmp_url }}/${{ github.event.client_payload.stream_key }}"
 
-          ffmpeg -re -stream_loop -1 \
+          # Tentukan apakah looping aktif atau tidak
+          if [[ "${{ github.event.client_payload.loop }}" == "true" ]]; then
+            LOOP="-stream_loop -1"
+          else
+            LOOP=""
+          fi
+
+          echo "Looping: $LOOP"
+
+          ffmpeg -re $LOOP \
           -i "${{ github.event.client_payload.video_url }}" \
           -c:v libx264 -preset veryfast -b:v 4500k \
           -c:a aac -b:a 128k \
           -f flv "$RTMP"
+
