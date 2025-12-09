@@ -4,35 +4,61 @@
 <meta charset="utf-8"/>
 <title>YT Stream — Professional</title>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap" rel="stylesheet">
 
 <style>
-:root{--bg:#f4f7fb;--card:#ffffff;--primary:#2563eb;--muted:#6b7280;--accent:#0ea5a0;--danger:#ef4444}
+:root{
+  --bg:#f4f7fb;
+  --card:#ffffff;
+  --primary:#2563eb;
+  --muted:#6b7280;
+}
+
 *{box-sizing:border-box}
-body{font-family:'Inter',system-ui,Segoe UI,Arial;background:var(--bg);margin:0;color:#0f172a}
-.container{max-width:980px;margin:36px auto;padding:28px;border-radius:12px;background:var(--card);box-shadow:0 8px 30px rgba(16,24,40,0.06)}
+body{
+  font-family:'Inter',system-ui,Segoe UI,Arial;
+  background:var(--bg);
+  margin:0;
+  color:#0f172a;
+}
+
+.container{
+  max-width:980px;
+  margin:36px auto;
+  padding:28px;
+  border-radius:12px;
+  background:var(--card);
+  box-shadow:0 8px 30px rgba(16,24,40,0.06);
+}
+
 .header{display:flex;align-items:center;gap:14px}
-.logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--primary),#1e40af);display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:20px}
+.logo{
+  width:56px;height:56px;border-radius:10px;
+  background:linear-gradient(135deg,var(--primary),#1e40af);
+  display:flex;align-items:center;justify-content:center;
+  color:white;font-weight:800;font-size:20px
+}
 h1{margin:0;font-size:20px}
 .lead{margin:6px 0 0;color:var(--muted);font-size:14px}
 
-/* ================= NAVBAR SaaS ================= */
+/* ================= NAVBAR ================= */
 .nav{
   margin-top:20px;
   display:flex;
-  gap:28px;
+  gap:30px;
   border-bottom:1px solid #e5e7eb;
-  padding-bottom:14px;
+  padding-bottom:12px;
 }
 
 .nav-item{
   font-size:15px;
   font-weight:600;
-  text-decoration:none;  /* hilangkan underline */
+  text-decoration:none;
   color:#1f2937;
-  padding:6px 0;
+  padding-bottom:6px;
   border-bottom:2px solid transparent;
-  transition:color .15s, border-color .15s;
+  transition:all .15s ease;
 }
 
 .nav-item:hover{
@@ -43,30 +69,114 @@ h1{margin:0;font-size:20px}
   color:#2563eb;
   border-color:#2563eb;
 }
-/* ================================================= */
+/* =========================================== */
 
-.grid{display:grid;grid-template-columns:1fr 320px;gap:18px;margin-top:18px}
-.panel{background:#fbfdff;padding:16px;border-radius:10px;border:1px solid #eef2ff}
-label{display:block;font-weight:600;margin-top:10px;color:#0f172a;font-size:13px}
-.input, select, textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #e6eefc;background:white;font-size:14px}
-textarea{min-height:110px;resize:vertical}
-.small{font-size:13px;color:var(--muted);margin-top:6px}
-.btn{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;background:var(--primary);color:white;border-radius:10px;border:0;cursor:pointer;font-weight:700}
-.btn.ghost{background:transparent;color:var(--primary);border:1px solid #dbeafe}
-.debug{background:#0b1220;color:#bfe7b0;padding:12px;border-radius:8px;font-family:monospace;white-space:pre-wrap;display:none;margin-top:12px}
-.footer{margin-top:12px;color:var(--muted);font-size:13px}
-.meta{font-size:13px;color:var(--muted);margin-top:8px}
-
-/* Flatpickr styling */
-.flatpickr-calendar { border-radius: 12px; font-family: 'Inter', sans-serif; }
-.flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange {
-  background: #2563eb !important;
-  border-color: #2563eb !important;
+.grid{
+  display:grid;
+  grid-template-columns:1fr 320px;
+  gap:18px;
+  margin-top:18px;
 }
-.flatpickr-time { border-left: 1px solid #e5e7eb !important; padding-left: 10px; }
-.flatpickr-time .flatpickr-time-separator { padding: 0 4px; }
-.flatpickr-time input { font-size: 18px; font-weight: 600; color: #2563eb; }
-.flatpickr-am-pm { display: none; }
+
+.panel{
+  background:#fbfdff;
+  padding:16px;
+  border-radius:10px;
+  border:1px solid #eef2ff;
+}
+
+label{
+  display:block;
+  font-weight:600;
+  margin-top:10px;
+  color:#0f172a;
+  font-size:13px;
+}
+
+.input, select, textarea{
+  width:100%;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #e6eefc;
+  background:white;
+  font-size:14px;
+}
+
+textarea{min-height:110px;resize:vertical}
+
+.small{font-size:13px;color:var(--muted);margin-top:6px}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 14px;
+  background:var(--primary);
+  color:white;
+  border-radius:10px;
+  border:0;
+  cursor:pointer;
+  font-weight:700;
+}
+
+.btn.ghost{
+  background:transparent;
+  color:var(--primary);
+  border:1px solid #dbeafe;
+}
+
+.debug{
+  background:#0b1220;
+  color:#bfe7b0;
+  padding:12px;
+  border-radius:8px;
+  font-family:monospace;
+  white-space:pre-wrap;
+  display:none;
+  margin-top:12px;
+}
+
+.footer{
+  margin-top:12px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+/* ================= FLATPICKR FIX ================= */
+
+/* Jangan menimpa style flatpickr */
+#datetime{
+  border:1px solid #e6eefc;
+  border-radius:8px;
+  padding:10px;
+  font-size:14px;
+  background:white;
+}
+
+/* Reset autofill browser */
+input:-webkit-autofill,
+input:-webkit-autofill:focus{
+  transition:background-color 9999s ease-in-out 0s !important;
+}
+
+/* Kembalikan tampilan Material Blue */
+.flatpickr-calendar{
+  border-radius:12px !important;
+  overflow:hidden !important;
+}
+
+.flatpickr-months{
+  background:#2563eb !important;
+  color:white !important;
+}
+
+.flatpickr-time input{
+  font-size:18px !important;
+  font-weight:600 !important;
+  color:#2563eb !important;
+}
+
+/* ================================================= */
 
 </style>
 </head>
@@ -74,24 +184,23 @@ textarea{min-height:110px;resize:vertical}
 
 <body>
 <div class="container">
+
   <div class="header">
     <div class="logo">YT</div>
     <div>
       <h1>YT Stream — Professional</h1>
-      <div class="lead">Dashboard profesional untuk mengatur livestream YouTube. (RTMP & Stream Key dikirim dari dashboard)</div>
+      <div class="lead">Dashboard profesional untuk mengatur livestream YouTube.</div>
     </div>
   </div>
 
-  <!-- ================= NAVBAR ================= -->
+  <!-- NAVBAR -->
   <div class="nav">
     <a href="index.html" class="nav-item">Dashboard</a>
     <a href="jadwal.html" class="nav-item">Jadwal Live</a>
     <a href="monitoring.html" class="nav-item">Monitoring</a>
     <a href="pengaturan.html" class="nav-item">Pengaturan</a>
   </div>
-  <!-- ============================================ -->
 
-  <!-- ACTIVE SCRIPT -->
   <script>
   document.addEventListener("DOMContentLoaded", ()=>{
     const current = location.pathname.split("/").pop();
@@ -102,10 +211,8 @@ textarea{min-height:110px;resize:vertical}
     });
   });
   </script>
-  <!-- ============================================ -->
 
-
-  <!-- ====== KONTEN DASHBOARD MASIH SAMA ====== -->
+  
   <div class="grid">
     <div>
       <div class="panel">
@@ -114,7 +221,7 @@ textarea{min-height:110px;resize:vertical}
         <input id="title" class="input" placeholder="Judul Live">
 
         <label>Description</label>
-        <textarea id="description" class="input" placeholder="Deskripsi singpat..."></textarea>
+        <textarea id="description" class="input" placeholder="Deskripsi singkat..."></textarea>
 
         <label>Visibility</label>
         <select id="visibility" class="input">
@@ -124,7 +231,7 @@ textarea{min-height:110px;resize:vertical}
         </select>
 
         <label>Tanggal & Jam Live (WIB)</label>
-        <input id="datetime" class="input" placeholder="Pilih tanggal & jam...">
+        <input id="datetime" class="input" placeholder="Pilih tanggal & jam..." autocomplete="off">
 
         <label>Durasi</label>
         <select id="duration" class="input">
@@ -145,10 +252,10 @@ textarea{min-height:110px;resize:vertical}
           <option value="43200">12 Jam</option>
         </select>
 
-<label style="margin-top:10px; display:flex; align-items:center; gap:8px;">
-  <input type="checkbox" id="looping">
-  Loop Video (tanpa batas)
-</label>
+        <label style="margin-top:10px;display:flex;align-items:center;gap:8px;">
+          <input type="checkbox" id="looping">
+          Loop Video (tanpa batas)
+        </label>
 
         <label>Video URL</label>
         <input id="video" class="input" placeholder="https://.../video.mp4">
@@ -161,7 +268,7 @@ textarea{min-height:110px;resize:vertical}
           <button id="clear" class="btn ghost">Clear</button>
         </div>
 
-        <div class="meta">Catatan: Stream key dikirim bersama payload ke Worker. Jangan bagikan stream key Anda.</div>
+        <div class="meta">Catatan: Stream key dikirim ke Worker. Jangan bagikan stream key Anda.</div>
       </div>
     </div>
 
@@ -182,6 +289,91 @@ textarea{min-height:110px;resize:vertical}
     </div>
   </div>
 
-  <div class="footer">Built for you — Professional SaaS style. Want OAuth integration with YouTube Data API? Ask me.</div>
-
+  <div class="footer">Built for you — Professional SaaS.</div>
 </div>
+
+
+<script>
+function toISO(datetime){
+  if(!datetime) return "";
+  const [date, time] = datetime.split(" ");
+  const [day, month, year] = date.split("/");
+  const local = new Date(`${year}-${month}-${day}T${time}:00`);
+  const utc = new Date(local.getTime() - 7 * 3600 * 1000);
+  return utc.toISOString().split(".")[0] + "Z";
+}
+
+async function postJSON(url, body){
+  const res = await fetch(url, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify(body)
+  });
+  const text = await res.text().catch(()=> "");
+  return { ok:res.ok, status:res.status, text };
+}
+
+document.getElementById("clear").onclick = ()=>{
+  document.getElementById("video").value="";
+  document.getElementById("streamKey").value="";
+  document.getElementById("title").value="";
+  document.getElementById("description").value="";
+  document.getElementById("visibility").value="public";
+  document.getElementById("payload").style.display="none";
+  document.getElementById("log").style.display="none";
+};
+
+document.getElementById("trigger").onclick = async ()=>{
+  const worker = "https://ytstream-proxy.rigus-apps.workers.dev/";
+
+  const payload = {
+    video_url: document.getElementById("video").value.trim(),
+    rtmp_url:"rtmp://a.rtmp.youtube.com/live2",
+    start_time: toISO(document.getElementById("datetime").value),
+    duration_seconds: Number(document.getElementById("duration").value),
+    title: document.getElementById("title").value.trim(),
+    description: document.getElementById("description").value.trim(),
+    visibility: document.getElementById("visibility").value,
+    stream_key: document.getElementById("streamKey").value.trim(),
+    looping: document.getElementById("looping").checked
+  };
+
+  document.getElementById("payload").style.display="block";
+  document.getElementById("payload").textContent =
+    JSON.stringify(payload,null,2).replace(payload.stream_key,"*****MASKED*****");
+
+  document.getElementById("log").style.display="block";
+  document.getElementById("log").textContent = "Sending...";
+
+  try{
+    const r = await postJSON(worker,{event_type:"stream_trigger",client_payload:payload});
+    document.getElementById("log").textContent = "Worker response: "+r.status+"\n"+r.text;
+  }catch(e){
+    document.getElementById("log").textContent = "Error: "+e.message;
+  }
+};
+
+document.getElementById("test").onclick = async ()=>{
+  const worker = "https://ytstream-proxy.rigus-apps.workers.dev/";
+  try{
+    const r = await fetch(worker,{method:"OPTIONS"});
+    alert("Worker OPTIONS status: "+r.status);
+  }catch(e){
+    alert("Worker test failed: "+e.message);
+  }
+};
+</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+flatpickr("#datetime", {
+  enableTime:true,
+  dateFormat:"d/m/Y H:i",
+  time_24hr:true
+});
+</script>
+
+</body>
+</html>
