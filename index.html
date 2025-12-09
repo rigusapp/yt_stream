@@ -89,7 +89,13 @@ textarea{min-height:110px;resize:vertical}
           <option value="39600">11 Jam</option>
           <option value="43200">12 Jam</option>
         </select>
+        
+<label style="margin-top:10px; display:flex; align-items:center; gap:8px;">
+  <input type="checkbox" id="looping">
+  Loop Video (tanpa batas)
+</label>
 
+        
         <label>Video URL</label>
         <input id="video" class="input" placeholder="https://.../video.mp4">
 
@@ -162,13 +168,12 @@ document.getElementById("trigger").onclick = async ()=>{
     video_url: document.getElementById("video").value.trim(),
     rtmp_url: "rtmp://a.rtmp.youtube.com/live2",
     start_time: toISO(document.getElementById("datetime").value),
-
     duration_seconds: Number(document.getElementById("duration").value),
-
     title: document.getElementById("title").value.trim(),
     description: document.getElementById("description").value.trim(),
     visibility: document.getElementById("visibility").value,
     stream_key: document.getElementById("streamKey").value.trim()
+    looping: document.getElementById('looping').checked,
   };
 
   document.getElementById("payload").style.display="block";
