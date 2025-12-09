@@ -47,16 +47,9 @@ textarea{min-height:110px;resize:vertical}
         <label>RTMP Server</label>
         <input id="rtmp" class="input" value="rtmp://a.rtmp.youtube.com/live2">
 
-        <div class="form-row">
-          <div style="flex:1">
-            <label>Tanggal (WIB)</label>
-            <input id="date" type="date" class="input">
-          </div>
-          <div style="width:160px">
-            <label>Waktu (WIB)</label>
-            <input id="time" type="time" class="input">
-          </div>
-        </div>
+<label>Tanggal & Jam Live (WIB)</label>
+<input id="datetime" class="input" placeholder="Pilih tanggal & jam...">
+
 
         <label>Durasi</label>
         <select id="duration" class="input">
@@ -124,12 +117,15 @@ textarea{min-height:110px;resize:vertical}
 </div>
 
 <script>
-function toISO(date,time){
-  if(!date||!time) return '';
-  const local = new Date(date + 'T' + time + ':00');
+function toISO(datetime){
+  if(!datetime) return '';
+  const [date, time] = datetime.split(' ');
+  const [day, month, year] = date.split('/'); 
+  const local = new Date(`${year}-${month}-${day}T${time}:00`);
   const utc = new Date(local.getTime() - 7*3600*1000);
   return utc.toISOString().split('.')[0] + 'Z';
 }
+
 
 async function postJSON(url, body){
   const res = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
@@ -152,7 +148,8 @@ document.getElementById('trigger').onclick = async ()=>{
   const payload = {
     video_url: document.getElementById('video').value.trim(),
     rtmp_url: document.getElementById('rtmp').value.trim(),
-    start_time: toISO(document.getElementById('date').value, document.getElementById('time').value),
+    start_time: toISO(document.getElementById('datetime').value),
+
     duration_seconds: document.getElementById('duration').value,
     title: document.getElementById('title').value.trim(),
     description: document.getElementById('description').value.trim(),
@@ -183,5 +180,17 @@ document.getElementById('test').onclick = async ()=>{
   }
 };
 </script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+  <script>
+flatpickr("#datetime", {
+  enableTime: true,
+  dateFormat: "d/m/Y H:i",
+  time_24hr: true,
+});
+</script>
+
+  
 </body>
 </html>
