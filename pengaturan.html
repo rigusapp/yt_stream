@@ -3,45 +3,104 @@
 <head>
 <meta charset="utf-8">
 <title>Pengaturan</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap" rel="stylesheet">
+
 <style>
-body.sidebar-loaded .content { margin-left:260px; }
-.content { padding:32px; font-family:'Inter'; }
-.input{padding:8px;width:300px;border:1px solid #ddd;border-radius:6px;margin-top:6px;}
+body{font-family:'Inter',sans-serif;background:#f4f7fb;margin:0;padding:0;color:#0f172a;}
+.container{max-width:980px;margin:36px auto;padding:28px;background:white;border-radius:12px;
+box-shadow:0 8px 30px rgba(16,24,40,0.06);}
+
+.nav{
+  margin-top:20px;
+  display:flex;
+  gap:24px;
+  border-bottom:1px solid #e5e7eb;
+  padding-bottom:14px;
+}
+
+.nav-item{
+  font-size:15px;
+  font-weight:600;
+  text-decoration:none;
+  color:#374151;
+  padding:6px 0;
+  border-bottom:2px solid transparent;
+}
+
+.nav-item.active{
+  color:#2563eb;
+  border-color:#2563eb;
+}
+
+.input{
+  padding:10px;
+  width:300px;
+  border-radius:8px;
+  border:1px solid #ddd;
+  margin-top:6px;
+}
+
+.card{
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  border:1px solid #e5e7eb;
+  margin-top:24px;
+}
 </style>
 </head>
 
 <body>
 
-<script>
-fetch("sidebar.html")
-  .then(r=>r.text())
-  .then(html=>{
-    document.body.insertAdjacentHTML("afterbegin",html);
-    document.body.classList.add("sidebar-loaded");
+<div class="container">
+
+  <h1 style="margin:0;">Pengaturan Sistem</h1>
+  <p style="margin-top:6px;color:#6b7280;">Atur preferensi aplikasi.</p>
+
+  <!-- NAVBAR -->
+  <div class="nav">
+    <a href="index.html" class="nav-item">Dashboard</a>
+    <a href="jadwal.html" class="nav-item">Jadwal Live</a>
+    <a href="monitoring.html" class="nav-item">Monitoring</a>
+    <a href="pengaturan.html" class="nav-item">Pengaturan</a>
+  </div>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", ()=>{
+    const current = location.pathname.split("/").pop();
+    document.querySelectorAll(".nav-item").forEach(a=>{
+      if(a.getAttribute("href") === current){
+        a.classList.add("active");
+      }
+    });
   });
-</script>
+  </script>
 
-<div class="content">
-  <h1>Pengaturan Sistem</h1>
+  <div class="card">
+    <label>Worker URL</label><br>
+    <input id="workerUrl" class="input" placeholder="https://...workers.dev/">
 
-  <label>Worker URL</label><br>
-  <input id="workerUrl" class="input" placeholder="https://...workers.dev/"><br><br>
+    <br><br>
+    <label>Default Stream Key</label><br>
+    <input id="defaultKey" class="input">
 
-  <label>Default Stream Key</label><br>
-  <input id="defaultKey" class="input"><br><br>
+    <br><br>
+    <label>Default Video URL</label><br>
+    <input id="defaultVideo" class="input">
 
-  <label>Default Video URL</label><br>
-  <input id="defaultVideo" class="input"><br><br>
+    <br><br>
+    <label style="display:flex;align-items:center;gap:6px;">
+      <input type="checkbox" id="darkMode">
+      Mode Gelap
+    </label>
 
-  <label style="display:flex;align-items:center;gap:6px;margin-top:12px;">
-    <input type="checkbox" id="darkMode">
-    Mode Gelap
-  </label>
+    <br><br>
+    <button onclick="save()" style="padding:10px 16px;background:#2563eb;color:white;border:0;border-radius:8px;font-weight:600;">
+      Simpan Pengaturan
+    </button>
+  </div>
 
-  <button onclick="save()" style="margin-top:20px;padding:10px 16px;background:#2563eb;color:white;border:0;border-radius:8px;">
-    Simpan
-  </button>
 </div>
 
 <script>
@@ -53,13 +112,12 @@ function save(){
   alert("Pengaturan disimpan.");
 }
 
-// load saved values
 window.onload = ()=>{
   document.getElementById("workerUrl").value = localStorage.getItem("workerUrl") || "";
   document.getElementById("defaultKey").value = localStorage.getItem("defaultKey") || "";
   document.getElementById("defaultVideo").value = localStorage.getItem("defaultVideo") || "";
   document.getElementById("darkMode").checked = localStorage.getItem("darkMode") === "true";
-}
+};
 </script>
 
 </body>
