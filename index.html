@@ -7,6 +7,108 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap" rel="stylesheet">
 
 <style>
+/* =============================== */
+/*   PREMIUM MOBILE iOS / ANDROID  */
+/* =============================== */
+@media (max-width: 680px){
+
+  body{
+    background:#f3f6fb;
+    padding:0;
+  }
+
+  .container{
+    margin:0;
+    padding:22px;
+    border-radius:0;
+    box-shadow:none;
+    border:0;
+  }
+
+  /* Header sticky style */
+  .header{
+    position:sticky;
+    top:0;
+    background:var(--card);
+    padding:16px 0;
+    z-index:50;
+    margin-bottom:15px;
+    border-bottom:1px solid #e9edf7;
+  }
+
+  .logo{
+    width:54px;
+    height:54px;
+    font-size:22px;
+    border-radius:16px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.12);
+  }
+
+  h1{
+    font-size:20px;
+  }
+
+  .lead{
+    font-size:13px;
+  }
+
+  /* Grid menjadi 1 kolom */
+  .grid{
+    grid-template-columns:1fr;
+    gap:14px;
+  }
+
+  /* Panel mobile style */
+  .panel{
+    border-radius:18px;
+    padding:18px;
+    border:1px solid #eef1f8;
+    box-shadow:0 6px 22px rgba(0,0,0,0.06);
+  }
+
+  /* Input iOS Style */
+  .input, select, textarea{
+    padding:14px 16px;
+    font-size:15px;
+    border-radius:14px;
+  }
+
+  textarea{
+    min-height:120px;
+  }
+
+  label{
+    margin-top:16px;
+    font-size:14px;
+  }
+
+  /* Button iOS/Android style */
+  .btn{
+    width:100%;
+    padding:15px 20px;
+    font-size:16px;
+    border-radius:16px;
+    margin-top:10px;
+  }
+
+  .btn.ghost{
+    border-radius:16px;
+  }
+
+  /* Panel preview/log full width */
+  #payload,
+  #log{
+    font-size:12px;
+    padding:12px;
+  }
+
+  .footer{
+    font-size:12px;
+    padding:30px 0;
+  }
+}
+
+  
 :root{
   --bg:#f3f6fb;
   --card:#ffffff;
