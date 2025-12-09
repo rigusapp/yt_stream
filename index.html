@@ -14,36 +14,9 @@ body{font-family:'Inter',system-ui,Segoe UI,Arial;background:var(--bg);margin:0;
 .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--primary),#1e40af);display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:20px}
 h1{margin:0;font-size:20px}
 .lead{margin:6px 0 0;color:var(--muted);font-size:14px}
-
-.nav{
-  margin-top:20px;
-  display:flex;
-  gap:24px;
-  border-bottom:1px solid #e5e7eb;
-  padding-bottom:14px;
-}
-
-.nav-item{
-  font-size:15px;
-  font-weight:600;
-  text-decoration:none;
-  color:#374151;
-  padding:6px 0;
-  border-bottom:2px solid transparent;
-  transition:.15s;
-}
-
-.nav-item:hover{
-  color:#2563eb;
-}
-
-.nav-item.active{
-  color:#2563eb;
-  border-color:#2563eb;
-}
-
 .grid{display:grid;grid-template-columns:1fr 320px;gap:18px;margin-top:18px}
 .panel{background:#fbfdff;padding:16px;border-radius:10px;border:1px solid #eef2ff}
+.form-row{display:flex;gap:10px}
 label{display:block;font-weight:600;margin-top:10px;color:#0f172a;font-size:13px}
 .input, select, textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #e6eefc;background:white;font-size:14px}
 textarea{min-height:110px;resize:vertical}
@@ -52,44 +25,31 @@ textarea{min-height:110px;resize:vertical}
 .btn.ghost{background:transparent;color:var(--primary);border:1px solid #dbeafe}
 .debug{background:#0b1220;color:#bfe7b0;padding:12px;border-radius:8px;font-family:monospace;white-space:pre-wrap;display:none;margin-top:12px}
 .footer{margin-top:12px;color:var(--muted);font-size:13px}
+.meta{font-size:13px;color:var(--muted);margin-top:8px}
 
+/* Flatpickr styling */
+.flatpickr-calendar { border-radius: 12px; font-family: 'Inter', sans-serif; }
+.flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange {
+  background: #2563eb !important;
+  border-color: #2563eb !important;
+}
+.flatpickr-time { border-left: 1px solid #e5e7eb !important; padding-left: 10px; }
+.flatpickr-time .flatpickr-time-separator { padding: 0 4px; }
+.flatpickr-time input { font-size: 18px; font-weight: 600; color: #2563eb; }
+.flatpickr-am-pm { display: none; }
 </style>
 </head>
 
 
 <body>
 <div class="container">
-
   <div class="header">
     <div class="logo">YT</div>
     <div>
       <h1>YT Stream — Professional</h1>
-      <div class="lead">Dashboard profesional untuk mengatur livestream YouTube.</div>
+      <div class="lead">Dashboard profesional untuk mengatur livestream YouTube. (RTMP & Stream Key dikirim dari dashboard)</div>
     </div>
   </div>
-
-  <!-- 🔥 NAVIGATION SAAS -->
-  <div class="nav">
-    <a href="index.html" class="nav-item">Dashboard</a>
-    <a href="jadwal.html" class="nav-item">Jadwal Live</a>
-    <a href="monitoring.html" class="nav-item">Monitoring</a>
-    <a href="pengaturan.html" class="nav-item">Pengaturan</a>
-  </div>
-  <!-- END NAV -->
-
-  <script>
-  // Auto-activate current page
-  document.addEventListener("DOMContentLoaded", ()=>{
-    const current = location.pathname.split("/").pop();
-    document.querySelectorAll(".nav-item").forEach(a=>{
-      if(a.getAttribute("href") === current){
-        a.classList.add("active");
-      }
-    });
-  });
-  </script>
-
-  <!-- 🔽 MULAI KONTEN DASHBOARD ANDA (tidak saya ubah) -->
 
   <div class="grid">
     <div>
@@ -99,7 +59,7 @@ textarea{min-height:110px;resize:vertical}
         <input id="title" class="input" placeholder="Judul Live">
 
         <label>Description</label>
-        <textarea id="description" class="input" placeholder="Deskripsi singkat..."></textarea>
+        <textarea id="description" class="input" placeholder="Deskripsi singpat..."></textarea>
 
         <label>Visibility</label>
         <select id="visibility" class="input">
@@ -118,13 +78,24 @@ textarea{min-height:110px;resize:vertical}
           <option value="1800">30 menit</option>
           <option value="3600" selected>1 Jam</option>
           <option value="7200">2 Jam</option>
+          <option value="10800">3 Jam</option>
+          <option value="14400">4 Jam</option>
+          <option value="18000">5 Jam</option>
+          <option value="21600">6 Jam</option>
+          <option value="25200">7 Jam</option>
+          <option value="28800">8 Jam</option>
+          <option value="32400">9 Jam</option>
+          <option value="36000">10 Jam</option>
+          <option value="39600">11 Jam</option>
+          <option value="43200">12 Jam</option>
         </select>
-
+        
 <label style="margin-top:10px; display:flex; align-items:center; gap:8px;">
   <input type="checkbox" id="looping">
   Loop Video (tanpa batas)
 </label>
 
+        
         <label>Video URL</label>
         <input id="video" class="input" placeholder="https://.../video.mp4">
 
@@ -136,29 +107,116 @@ textarea{min-height:110px;resize:vertical}
           <button id="clear" class="btn ghost">Clear</button>
         </div>
 
-        <div class="meta">Catatan: Stream key dikirim bersama payload ke Worker.</div>
+        <div class="meta">Catatan: Stream key dikirim bersama payload ke Worker. Jangan bagikan stream key Anda.</div>
       </div>
     </div>
 
     <div>
       <div class="panel">
         <h3 style="margin:0">Preview & Log</h3>
+        <div class="small">Payload yang akan dikirim ke Worker:</div>
         <pre id="payload" class="debug"></pre>
         <div id="log" class="debug"></div>
       </div>
 
       <div style="height:12px"></div>
       <div class="panel">
+        <div class="small">Quick actions</div>
         <button id="test" class="btn ghost" style="width:100%;margin-top:10px">Test connection</button>
+        <div class="small meta">Use Test to verify Worker responds with 204.</div>
       </div>
     </div>
   </div>
 
-  <div class="footer">Built for you — Professional SaaS style.</div>
-
+  <div class="footer">Built for you — Professional SaaS style. Want OAuth integration with YouTube Data API? Ask me.</div>
 </div>
 
-<!-- (script FFmpeg dan lainnya tetap sama seperti file Anda) -->
+<script>
+function toISO(datetime){
+  if(!datetime) return "";
+  const [date, time] = datetime.split(" ");
+  const [day, month, year] = date.split("/");
+  const local = new Date(`${year}-${month}-${day}T${time}:00`);
+  const utc = new Date(local.getTime() - 7 * 3600 * 1000);
+  return utc.toISOString().split(".")[0] + "Z";
+}
+
+async function postJSON(url, body){
+  const res = await fetch(url, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify(body)
+  });
+  const text = await res.text().catch(()=> "");
+  return { ok:res.ok, status:res.status, text };
+}
+
+document.getElementById("clear").onclick = ()=>{
+  document.getElementById("video").value="";
+  document.getElementById("streamKey").value="";
+  document.getElementById("title").value="";
+  document.getElementById("description").value="";
+  document.getElementById("visibility").value="public";
+  document.getElementById("payload").style.display="none";
+  document.getElementById("log").style.display="none";
+};
+
+document.getElementById("trigger").onclick = async ()=>{
+  const worker = "https://ytstream-proxy.rigus-apps.workers.dev/";
+
+  const payload = {
+    video_url: document.getElementById("video").value.trim(),
+    rtmp_url: "rtmp://a.rtmp.youtube.com/live2",
+    start_time: toISO(document.getElementById("datetime").value),
+    duration_seconds: Number(document.getElementById("duration").value),
+    title: document.getElementById("title").value.trim(),
+    description: document.getElementById("description").value.trim(),
+    visibility: document.getElementById("visibility").value,
+    stream_key: document.getElementById("streamKey").value.trim(),
+    looping: document.getElementById('looping').checked
+  };
+
+  document.getElementById("payload").style.display="block";
+  document.getElementById("payload").textContent =
+    JSON.stringify(payload, null, 2)
+    .replace(payload.stream_key, "*****MASKED*****");
+
+  document.getElementById("log").style.display="block";
+  document.getElementById("log").textContent = "Sending...";
+
+  try{
+    const r = await postJSON(worker, {
+      event_type:"stream_trigger",
+      client_payload: payload
+    });
+    document.getElementById("log").textContent =
+      "Worker response: " + r.status + "\n" + r.text;
+  }catch(e){
+    document.getElementById("log").textContent = "Error: " + e.message;
+  }
+};
+
+document.getElementById("test").onclick = async ()=>{
+  const worker = "https://ytstream-proxy.rigus-apps.workers.dev/";
+  try{
+    const r = await fetch(worker, { method:"OPTIONS" });
+    alert("Worker OPTIONS status: " + r.status);
+  }catch(e){
+    alert("Worker test failed: " + e.message);
+  }
+};
+</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+flatpickr("#datetime", {
+  enableTime: true,
+  dateFormat: "d/m/Y H:i",
+  time_24hr: true
+});
+</script>
 
 </body>
 </html>
