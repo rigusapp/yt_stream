@@ -78,8 +78,6 @@ textarea{min-height:110px;resize:vertical}
   <div class="grid">
     <div>
       <div class="panel">
-        <label>Cloudflare Worker URL</label>
-        <input id="workerUrl" class="input" placeholder="https://your-worker.workers.dev/">
 
 <label>Tanggal & Jam Live (WIB)</label>
 <input id="datetime" class="input" placeholder="Pilih tanggal & jam...">
@@ -177,7 +175,7 @@ document.getElementById('clear').onclick = ()=>{
 };
 
 document.getElementById('trigger').onclick = async ()=>{
-  const worker = document.getElementById('workerUrl').value.trim();
+  const worker = "https://ytstream-proxy.rigus-apps.workers.dev/";
   const payload = {
     video_url: document.getElementById('video').value.trim(),
     rtmp_url: "rtmp://a.rtmp.youtube.com/live2",
@@ -203,7 +201,7 @@ document.getElementById('trigger').onclick = async ()=>{
 };
 
 document.getElementById('test').onclick = async ()=>{
-  const worker = document.getElementById('workerUrl').value.trim();
+  const worker = "https://ytstream-proxy.rigus-apps.workers.dev/";
   if(!worker){ alert('Masukkan Cloudflare Worker URL'); return; }
   try{
     const r = await fetch(worker, {method:'OPTIONS'});
