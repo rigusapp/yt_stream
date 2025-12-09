@@ -51,6 +51,28 @@ textarea{min-height:110px;resize:vertical}
     </div>
   </div>
 
+<!-- 🔥 NAVIGATION SAAS -->
+  <div class="nav">
+    <a href="index.html" class="nav-item">Dashboard</a>
+    <a href="jadwal.html" class="nav-item">Jadwal Live</a>
+    <a href="monitoring.html" class="nav-item">Monitoring</a>
+    <a href="pengaturan.html" class="nav-item">Pengaturan</a>
+  </div>
+  <!-- END NAV -->
+
+  <script>
+  // Auto-activate current page
+  document.addEventListener("DOMContentLoaded", ()=>{
+    const current = location.pathname.split("/").pop();
+    document.querySelectorAll(".nav-item").forEach(a=>{
+      if(a.getAttribute("href") === current){
+        a.classList.add("active");
+      }
+    });
+  });
+  </script>
+
+  
   <div class="grid">
     <div>
       <div class="panel">
