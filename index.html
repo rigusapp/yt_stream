@@ -8,40 +8,43 @@
 
 <style>
 /* =============================== */
-/*   PREMIUM MOBILE iOS / ANDROID  */
+/*     FULL PREMIUM MOBILE UI     */
 /* =============================== */
-@media (max-width: 680px){
+@media (max-width: 720px){
 
   body{
-    background:#f3f6fb;
+    background:#f4f6fb;
+    margin:0;
     padding:0;
   }
 
+  /* Container full app style */
   .container{
     margin:0;
-    padding:22px;
+    padding:20px 18px;
     border-radius:0;
-    box-shadow:none;
+    box-shadow:none !important;
     border:0;
+    max-width:100%;
   }
 
-  /* Header sticky style */
+  /* Sticky header like iOS app */
   .header{
     position:sticky;
     top:0;
-    background:var(--card);
-    padding:16px 0;
-    z-index:50;
-    margin-bottom:15px;
-    border-bottom:1px solid #e9edf7;
+    background:white;
+    padding:16px 4px 14px 4px;
+    margin:0 0 20px 0;
+    z-index:100;
+    border-bottom:1px solid #e8ebf2;
   }
 
   .logo{
-    width:54px;
-    height:54px;
-    font-size:22px;
-    border-radius:16px;
-    box-shadow:0 4px 12px rgba(0,0,0,0.12);
+    width:48px;
+    height:48px;
+    border-radius:14px;
+    font-size:20px;
+    box-shadow:0 3px 10px rgba(0,0,0,0.15);
   }
 
   h1{
@@ -52,61 +55,76 @@
     font-size:13px;
   }
 
-  /* Grid menjadi 1 kolom */
+  /* Stack layout — 1 column only */
   .grid{
     grid-template-columns:1fr;
-    gap:14px;
+    gap:18px;
+    margin-top:10px;
   }
 
-  /* Panel mobile style */
+  /* iOS Card style */
   .panel{
     border-radius:18px;
-    padding:18px;
-    border:1px solid #eef1f8;
-    box-shadow:0 6px 22px rgba(0,0,0,0.06);
+    padding:18px 16px;
+    background:white;
+    border:1px solid #edf1f7;
+    box-shadow:0 5px 18px rgba(0,0,0,0.06) !important;
   }
 
-  /* Input iOS Style */
+  label{
+    font-size:14px;
+    margin-top:14px;
+    display:block;
+  }
+
+  /* Input mobile style */
   .input, select, textarea{
+    width:100%;
     padding:14px 16px;
-    font-size:15px;
     border-radius:14px;
+    font-size:15px;
+    border:1px solid #dbe2f2;
+    margin-top:6px;
+  }
+
+  .input:focus, select:focus, textarea:focus{
+    border-color:#2563eb;
+    box-shadow:0 0 0 3px rgba(37,99,235,0.18);
+    outline:none;
   }
 
   textarea{
     min-height:120px;
   }
 
-  label{
-    margin-top:16px;
-    font-size:14px;
-  }
-
-  /* Button iOS/Android style */
+  /* Buttons full width */
   .btn{
     width:100%;
     padding:15px 20px;
-    font-size:16px;
     border-radius:16px;
-    margin-top:10px;
+    font-size:16px;
+    margin-top:12px;
   }
 
   .btn.ghost{
     border-radius:16px;
   }
 
-  /* Panel preview/log full width */
-  #payload,
-  #log{
+  /* Debug panel make smaller but readable */
+  #payload, #log{
     font-size:12px;
     padding:12px;
+    border-radius:12px;
   }
 
   .footer{
+    margin-top:25px;
     font-size:12px;
-    padding:30px 0;
+    text-align:center;
+    padding-bottom:20px;
   }
 }
+
 
   
 :root{
