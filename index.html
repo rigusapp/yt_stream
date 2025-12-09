@@ -79,6 +79,19 @@ textarea{min-height:110px;resize:vertical}
     <div>
       <div class="panel">
 
+        <label>Title</label>
+        <input id="title" class="input" placeholder="Judul Live">
+
+        <label>Description</label>
+        <textarea id="description" class="input" placeholder="Deskripsi singkat..."></textarea>
+
+        <label>Visibility</label>
+        <select id="visibility" class="input">
+          <option value="public">Public</option>
+          <option value="unlisted">Unlisted</option>
+          <option value="private">Private</option>
+        </select>
+      
 <label>Tanggal & Jam Live (WIB)</label>
 <input id="datetime" class="input" placeholder="Pilih tanggal & jam...">
 
@@ -105,20 +118,7 @@ textarea{min-height:110px;resize:vertical}
         <label>Stream Key</label>
         <input id="streamKey" class="input" placeholder="rmfk-xxxx-xxxx-xxxx">
 
-        <label>Title</label>
-        <input id="title" class="input" placeholder="Judul Live">
-
-        <label>Description</label>
-        <textarea id="description" class="input" placeholder="Deskripsi singkat..."></textarea>
-
-        <label>Visibility</label>
-        <select id="visibility" class="input">
-          <option value="public">Public</option>
-          <option value="unlisted">Unlisted</option>
-          <option value="private">Private</option>
-        </select>
-
-        <div style="display:flex;gap:10px;margin-top:14px">
+          <div style="display:flex;gap:10px;margin-top:14px">
           <button id="trigger" class="btn">Trigger Stream</button>
           <button id="clear" class="btn ghost">Clear</button>
         </div>
