@@ -1,4 +1,4 @@
-name: Stream to YouTube (Auto Stop Duration)
+name: Stream to YouTube (Looping Optional)
 
 on:
   repository_dispatch:
@@ -23,25 +23,39 @@ jobs:
           echo "RTMP URL     : ${{ github.event.client_payload.rtmp_url }}"
           echo "STREAM KEY   : ${{ github.event.client_payload.stream_key }}"
           echo "DURATION SEC : ${{ github.event.client_payload.duration_seconds }}"
+          echo "LOOPING      : ${{ github.event.client_payload.looping }}"
 
       - name: Stream to YouTube
         run: |
           VIDEO="${{ github.event.client_payload.video_url }}"
           RTMP="${{ github.event.client_payload.rtmp_url }}/${{ github.event.client_payload.stream_key }}"
           DURATION=${{ github.event.client_payload.duration_seconds }}
+          LOOP="${{ github.event.client_payload.looping }}"
 
           echo "=== STARTING STREAM ==="
           echo "Video     : $VIDEO"
           echo "RTMP      : $RTMP"
-          echo "Duration  : $DURATION seconds"
+          echo "Duration  : $DURATION"
+          echo "Loop Mode : $LOOP"
           echo "========================"
 
-          # Jalankan FFmpeg dan hentikan otomatis berdasarkan durasi
-          ffmpeg -re \
-            -i "$VIDEO" \
-            -t $DURATION \
-            -c:v libx264 -preset veryfast -b:v 4500k \
-            -c:a aac -b:a 128k \
-            -f flv "$RTMP"
+          if [ "$LOOP" = "true" ]; then
+            echo "Looping ENABLED (stream_loop -1)"
+            ffmpeg -re \
+              -stream_loop -1 \
+              -i "$VIDEO" \
+              -t $DURATION \
+              -c:v libx264 -preset veryfast -b:v 4500k \
+              -c:a aac -b:a 128k \
+              -f flv "$RTMP"
+          else
+            echo "Looping DISABLED (play once)"
+            ffmpeg -re \
+              -i "$VIDEO" \
+              -t $DURATION \
+              -c:v libx264 -preset veryfast -b:v 4500k \
+              -c:a aac -b:a 128k \
+              -f flv "$RTMP"
+          fi
 
           echo "=== STREAM FINISHED ==="
