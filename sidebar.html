@@ -1,37 +1,65 @@
 <div id="sidebar" style="
   width:240px;
-  background:white;
+  background:#ffffff;
   position:fixed;
   top:0;
   left:0;
   bottom:0;
   border-right:1px solid #e5e7eb;
-  padding:24px 0;
+  padding:20px 0;
   font-family:'Inter', sans-serif;
   z-index:1000;
 ">
 
-  <h2 style="margin:0 24px 20px; font-size:20px; font-weight:800; color:#2563eb;">
-    YT Stream
-  </h2>
+  <!-- Brand -->
+  <div style="padding:0 20px 24px;">
+    <div style="font-size:22px; font-weight:800; color:#2563eb; letter-spacing:-0.5px;">
+      YT Stream
+    </div>
+    <div style="font-size:12px; color:#6b7280;">Professional Dashboard</div>
+  </div>
 
-  <a href="index.html" class="menu">Dashboard</a>
-  <a href="jadwal.html" class="menu">Jadwal Live</a>
-  <a href="monitoring.html" class="menu">Monitoring</a>
-  <a href="pengaturan.html" class="menu">Pengaturan</a>
+  <!-- Navigation -->
+  <nav>
 
+    <a href="index.html" class="nav-item">
+      <span>📊</span> Dashboard
+    </a>
+
+    <a href="jadwal.html" class="nav-item">
+      <span>🗓️</span> Jadwal Live
+    </a>
+
+    <a href="monitoring.html" class="nav-item">
+      <span>🖥️</span> Monitoring
+    </a>
+
+    <a href="pengaturan.html" class="nav-item">
+      <span>⚙️</span> Pengaturan
+    </a>
+
+  </nav>
 </div>
 
 <style>
-.menu{
-  display:block;
+.nav-item {
+  display:flex;
+  align-items:center;
+  gap:12px;
   padding:12px 24px;
   text-decoration:none;
-  color:#0f172a;
-  font-weight:600;
+  color:#374151;
   font-size:15px;
+  font-weight:600;
+  transition:all .15s ease;
 }
-.menu:hover{
+
+.nav-item:hover {
   background:#f3f4f6;
+}
+
+.nav-item.active {
+  background:#2563eb;
+  color:white !important;
 }
 </style>
