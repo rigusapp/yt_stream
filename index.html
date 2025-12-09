@@ -81,12 +81,8 @@ textarea{min-height:110px;resize:vertical}
         <label>Cloudflare Worker URL</label>
         <input id="workerUrl" class="input" placeholder="https://your-worker.workers.dev/">
 
-        <label>RTMP Server</label>
-        <input id="rtmp" class="input" value="rtmp://a.rtmp.youtube.com/live2">
-
 <label>Tanggal & Jam Live (WIB)</label>
 <input id="datetime" class="input" placeholder="Pilih tanggal & jam...">
-
 
         <label>Durasi</label>
         <select id="duration" class="input">
@@ -184,7 +180,7 @@ document.getElementById('trigger').onclick = async ()=>{
   const worker = document.getElementById('workerUrl').value.trim();
   const payload = {
     video_url: document.getElementById('video').value.trim(),
-    rtmp_url: document.getElementById('rtmp').value.trim(),
+    rtmp_url: "rtmp://a.rtmp.youtube.com/live2",
     start_time: toISO(document.getElementById('datetime').value),
 
     duration_seconds: document.getElementById('duration').value,
