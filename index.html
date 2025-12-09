@@ -356,6 +356,11 @@ textarea{
         <label>Video URL</label>
         <input id="video" class="input" placeholder="https://.../video.mp4">
 
+<label style="display:flex;align-items:center;gap:8px;margin-top:12px;">
+  <input type="checkbox" id="loop" style="width:18px;height:18px;">
+  Looping Video
+</label>
+        
         <label>Stream Key</label>
         <input id="streamKey" class="input" placeholder="rmfk-xxxx-xxxx-xxxx">
 
@@ -440,6 +445,7 @@ document.getElementById('trigger').onclick = async ()=>{
     description: document.getElementById('description').value.trim(),
     visibility: document.getElementById('visibility').value,
     stream_key: document.getElementById('streamKey').value.trim()
+    loop: document.getElementById('loop').checked
   };
   document.getElementById('payload').style.display='block';
   document.getElementById('payload').textContent = JSON.stringify(payload,null,2).replace(payload.stream_key,'*****MASKED*****');
