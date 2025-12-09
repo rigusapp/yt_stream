@@ -2,59 +2,103 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<title>Monitoring Sistem</title>
+<title>Monitoring</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap" rel="stylesheet">
+
 <style>
-body.sidebar-loaded .content { margin-left:260px; }
-.content { padding:32px; font-family:'Inter'; }
-.card { padding:16px; background:white; border:1px solid #ddd; border-radius:8px; margin-bottom:16px; }
+body{font-family:'Inter',sans-serif;background:#f4f7fb;margin:0;padding:0;color:#0f172a;}
+.container{max-width:980px;margin:36px auto;padding:28px;background:white;border-radius:12px;
+box-shadow:0 8px 30px rgba(16,24,40,0.06);}
+
+.nav{
+  margin-top:20px;
+  display:flex;
+  gap:24px;
+  border-bottom:1px solid #e5e7eb;
+  padding-bottom:14px;
+}
+
+.nav-item{
+  font-size:15px;
+  font-weight:600;
+  text-decoration:none;
+  color:#374151;
+  padding:6px 0;
+  border-bottom:2px solid transparent;
+}
+
+.nav-item.active{
+  color:#2563eb;
+  border-color:#2563eb;
+}
+
+.card{
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  border:1px solid #e5e7eb;
+  margin-top:24px;
+}
+
 </style>
 </head>
 
 <body>
 
-<script>
-fetch("sidebar.html")
-  .then(r=>r.text())
-  .then(html=>{
-    document.body.insertAdjacentHTML("afterbegin",html);
-    document.body.classList.add("sidebar-loaded");
+<div class="container">
+
+  <h1 style="margin:0;">Monitoring Sistem</h1>
+  <p style="margin-top:6px;color:#6b7280;">Pantau status Worker, GitHub Actions, dan YouTube.</p>
+
+  <!-- NAVBAR -->
+  <div class="nav">
+    <a href="index.html" class="nav-item">Dashboard</a>
+    <a href="jadwal.html" class="nav-item">Jadwal Live</a>
+    <a href="monitoring.html" class="nav-item">Monitoring</a>
+    <a href="pengaturan.html" class="nav-item">Pengaturan</a>
+  </div>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", ()=>{
+    const current = location.pathname.split("/").pop();
+    document.querySelectorAll(".nav-item").forEach(a=>{
+      if(a.getAttribute("href") === current){
+        a.classList.add("active");
+      }
+    });
   });
-</script>
+  </script>
 
-<div class="content">
-  <h1>Monitoring</h1>
-
+  <!-- STATUS WORKER -->
   <div class="card">
     <h3>Status Worker</h3>
-    <div id="workerStatus">Checking...</div>
+    <div id="worker">Checking...</div>
   </div>
 
+  <!-- STATUS GITHUB ACTIONS -->
   <div class="card">
     <h3>Status GitHub Actions</h3>
-    <div id="actionsStatus">Checking...</div>
+    <div id="actions">Belum diintegrasikan.</div>
   </div>
 
+  <!-- STATUS YOUTUBE -->
   <div class="card">
     <h3>Status YouTube</h3>
-    <div id="ytStatus">Tanpa API Key, status YouTube dicek manual.</div>
+    <div id="youtube">Tanpa API Key, status dicek manual.</div>
   </div>
+
 </div>
 
 <script>
-// Check Cloudflare Worker
+// Check Worker
 fetch("https://ytstream-proxy.rigus-apps.workers.dev/", { method:"OPTIONS" })
-  .then(r => {
-    document.getElementById("workerStatus").innerText =
-      "Worker OK (status " + r.status + ")";
+  .then(r=>{
+    document.getElementById("worker").innerText = "Worker OK (status " + r.status + ")";
   })
-  .catch(() => {
-    document.getElementById("workerStatus").innerText = "Worker ERROR!";
+  .catch(e=>{
+    document.getElementById("worker").innerText = "Worker ERROR!";
   });
-
-// Placeholder GitHub Actions
-document.getElementById("actionsStatus").innerText =
-  "Integrasi GitHub API siap bila Anda mau.";
 </script>
 
 </body>
