@@ -27,44 +27,20 @@ textarea{min-height:110px;resize:vertical}
 .footer{margin-top:12px;color:var(--muted);font-size:13px}
 .meta{font-size:13px;color:var(--muted);margin-top:8px}
 
- /* Buat tampilan mirip Material Calendar */
-.flatpickr-calendar {
-  border-radius: 12px;
-  font-family: 'Inter', sans-serif;
-}
-
-/* Warna highlight tanggal terpilih */
-.flatpickr-day.selected,
-.flatpickr-day.startRange,
-.flatpickr-day.endRange {
+/* Flatpickr styling */
+.flatpickr-calendar { border-radius: 12px; font-family: 'Inter', sans-serif; }
+.flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange {
   background: #2563eb !important;
   border-color: #2563eb !important;
 }
-
-/* Panel waktu seperti contoh */
-.flatpickr-time {
-  border-left: 1px solid #e5e7eb !important;
-  padding-left: 10px;
-}
-
-.flatpickr-time .flatpickr-time-separator {
-  padding: 0 4px;
-}
-
-.flatpickr-time input {
-  font-size: 18px;
-  font-weight: 600;
-  color: #2563eb;
-}
-
-.flatpickr-am-pm {
-  display: none; /* karena 24 jam */
-}
-  
+.flatpickr-time { border-left: 1px solid #e5e7eb !important; padding-left: 10px; }
+.flatpickr-time .flatpickr-time-separator { padding: 0 4px; }
+.flatpickr-time input { font-size: 18px; font-weight: 600; color: #2563eb; }
+.flatpickr-am-pm { display: none; }
 </style>
 </head>
 
-  
+
 <body>
 <div class="container">
   <div class="header">
@@ -83,7 +59,7 @@ textarea{min-height:110px;resize:vertical}
         <input id="title" class="input" placeholder="Judul Live">
 
         <label>Description</label>
-        <textarea id="description" class="input" placeholder="Deskripsi singkat..."></textarea>
+        <textarea id="description" class="input" placeholder="Deskripsi singpat..."></textarea>
 
         <label>Visibility</label>
         <select id="visibility" class="input">
@@ -91,9 +67,9 @@ textarea{min-height:110px;resize:vertical}
           <option value="unlisted">Unlisted</option>
           <option value="private">Private</option>
         </select>
-      
-<label>Tanggal & Jam Live (WIB)</label>
-<input id="datetime" class="input" placeholder="Pilih tanggal & jam...">
+
+        <label>Tanggal & Jam Live (WIB)</label>
+        <input id="datetime" class="input" placeholder="Pilih tanggal & jam...">
 
         <label>Durasi</label>
         <select id="duration" class="input">
@@ -120,7 +96,7 @@ textarea{min-height:110px;resize:vertical}
         <label>Stream Key</label>
         <input id="streamKey" class="input" placeholder="rmfk-xxxx-xxxx-xxxx">
 
-          <div style="display:flex;gap:10px;margin-top:14px">
+        <div style="display:flex;gap:10px;margin-top:14px">
           <button id="trigger" class="btn">Trigger Stream</button>
           <button id="clear" class="btn ghost">Clear</button>
         </div>
@@ -151,79 +127,91 @@ textarea{min-height:110px;resize:vertical}
 
 <script>
 function toISO(datetime){
-  if(!datetime) return '';
-  const [date, time] = datetime.split(' ');
-  const [day, month, year] = date.split('/'); 
+  if(!datetime) return "";
+  const [date, time] = datetime.split(" ");
+  const [day, month, year] = date.split("/");
   const local = new Date(`${year}-${month}-${day}T${time}:00`);
-  const utc = new Date(local.getTime() - 7*3600*1000);
-  return utc.toISOString().split('.')[0] + 'Z';
+  const utc = new Date(local.getTime() - 7 * 3600 * 1000);
+  return utc.toISOString().split(".")[0] + "Z";
 }
-
 
 async function postJSON(url, body){
-  const res = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
-  const text = await res.text().catch(()=>'');
-  return {ok:res.ok,status:res.status,text};
+  const res = await fetch(url, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify(body)
+  });
+  const text = await res.text().catch(()=> "");
+  return { ok:res.ok, status:res.status, text };
 }
 
-document.getElementById('clear').onclick = ()=>{
-  document.getElementById('video').value='';
-  document.getElementById('streamKey').value='';
-  document.getElementById('title').value='';
-  document.getElementById('description').value='';
-  document.getElementById('visibility').value='public';
-  document.getElementById('payload').style.display='none';
-  document.getElementById('log').style.display='none';
+document.getElementById("clear").onclick = ()=>{
+  document.getElementById("video").value="";
+  document.getElementById("streamKey").value="";
+  document.getElementById("title").value="";
+  document.getElementById("description").value="";
+  document.getElementById("visibility").value="public";
+  document.getElementById("payload").style.display="none";
+  document.getElementById("log").style.display="none";
 };
 
-document.getElementById('trigger').onclick = async ()=>{
+document.getElementById("trigger").onclick = async ()=>{
   const worker = "https://ytstream-proxy.rigus-apps.workers.dev/";
-  const payload = {
-    video_url: document.getElementById('video').value.trim(),
-    rtmp_url: "rtmp://a.rtmp.youtube.com/live2",
-    start_time: toISO(document.getElementById('datetime').value),
 
-    duration_seconds: document.getElementById('duration').value,
-    title: document.getElementById('title').value.trim(),
-    description: document.getElementById('description').value.trim(),
-    visibility: document.getElementById('visibility').value,
-    stream_key: document.getElementById('streamKey').value.trim()
+  const payload = {
+    video_url: document.getElementById("video").value.trim(),
+    rtmp_url: "rtmp://a.rtmp.youtube.com/live2",
+    start_time: toISO(document.getElementById("datetime").value),
+
+    duration_seconds: Number(document.getElementById("duration").value),
+
+    title: document.getElementById("title").value.trim(),
+    description: document.getElementById("description").value.trim(),
+    visibility: document.getElementById("visibility").value,
+    stream_key: document.getElementById("streamKey").value.trim()
   };
-  document.getElementById('payload').style.display='block';
-  document.getElementById('payload').textContent = JSON.stringify(payload,null,2).replace(payload.stream_key,'*****MASKED*****');
-  document.getElementById('log').style.display='block';
-  document.getElementById('log').textContent = 'Sending...';
-  if(!worker){ alert('Masukkan Cloudflare Worker URL'); return; }
+
+  document.getElementById("payload").style.display="block";
+  document.getElementById("payload").textContent =
+    JSON.stringify(payload, null, 2)
+    .replace(payload.stream_key, "*****MASKED*****");
+
+  document.getElementById("log").style.display="block";
+  document.getElementById("log").textContent = "Sending...";
+
   try{
-    const r = await postJSON(worker, { event_type:'stream_trigger', client_payload: payload });
-    document.getElementById('log').textContent = 'Worker response: ' + r.status + '\n' + r.text;
+    const r = await postJSON(worker, {
+      event_type:"stream_trigger",
+      client_payload: payload
+    });
+    document.getElementById("log").textContent =
+      "Worker response: " + r.status + "\n" + r.text;
   }catch(e){
-    document.getElementById('log').textContent = 'Error: '+e.message;
+    document.getElementById("log").textContent = "Error: " + e.message;
   }
 };
 
-document.getElementById('test').onclick = async ()=>{
+document.getElementById("test").onclick = async ()=>{
   const worker = "https://ytstream-proxy.rigus-apps.workers.dev/";
-  if(!worker){ alert('Masukkan Cloudflare Worker URL'); return; }
   try{
-    const r = await fetch(worker, {method:'OPTIONS'});
-    alert('Worker OPTIONS status: ' + r.status);
+    const r = await fetch(worker, { method:"OPTIONS" });
+    alert("Worker OPTIONS status: " + r.status);
   }catch(e){
-    alert('Worker test failed: ' + e.message);
+    alert("Worker test failed: " + e.message);
   }
 };
 </script>
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-  <script>
+<script>
 flatpickr("#datetime", {
   enableTime: true,
   dateFormat: "d/m/Y H:i",
-  time_24hr: true,
+  time_24hr: true
 });
 </script>
 
-  
 </body>
 </html>
