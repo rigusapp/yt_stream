@@ -8,190 +8,92 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap" rel="stylesheet">
 
 <style>
-body{
-  font-family:'Inter',sans-serif;
-  background:#f4f7fb;
-  margin:0;
-  padding:0;
-  color:#0f172a;
-}
-
-.container{
-  max-width:980px;
-  margin:36px auto;
-  padding:28px;
-  background:white;
-  border-radius:12px;
-  box-shadow:0 8px 30px rgba(16,24,40,0.06);
-}
-
-/* NAVBAR */
-.nav{
-  margin-top:20px;
-  display:flex;
-  gap:30px;
-  border-bottom:1px solid #e5e7eb;
-  padding-bottom:12px;
-}
-
-.nav-item{
-  font-size:15px;
-  font-weight:600;
-  text-decoration:none;
-  color:#1f2937;
-  padding-bottom:6px;
-  border-bottom:2px solid transparent;
-  transition:all .15s ease;
-}
-
-.nav-item:hover{ color:#2563eb; }
-.nav-item.active{
-  color:#2563eb;
-  border-color:#2563eb;
-}
-
-.card{
-  background:white;
-  padding:20px;
-  border-radius:10px;
-  border:1px solid #e5e7eb;
-  margin-top:24px;
-}
-
-label{
-  display:block;
-  font-weight:600;
-  margin-top:12px;
-  font-size:13px;
-}
-
-.input, select, textarea{
-  width:100%;
-  padding:10px;
-  border-radius:8px;
-  border:1px solid #e5e7eb;
-  font-size:14px;
-  background:white;
-}
-
-textarea{ min-height:110px; resize:vertical; }
-
-.btn{
-  display:inline-flex;
-  align-items:center;
-  gap:10px;
-  padding:10px 14px;
-  background:#2563eb;
-  color:white;
-  border-radius:10px;
-  border:0;
-  cursor:pointer;
-  font-weight:700;
-}
-
-.btn.ghost{
-  background:transparent;
-  color:#2563eb;
-  border:1px solid #dbeafe;
-}
-
-.debug{
-  background:#0b1220;
-  color:#bfe7b0;
-  padding:12px;
-  border-radius:8px;
-  font-family:monospace;
-  white-space:pre-wrap;
-  display:none;
-  margin-top:12px;
-}
-
-#datetime{
-  border:1px solid #e5e7eb;
-  border-radius:8px;
-  padding:10px;
-  font-size:14px;
-}
-
-.footer{
-  margin-top:24px;
-  color:#6b7280;
-  font-size:13px;
-}
+body{font-family:'Inter',sans-serif;background:#f4f7fb;margin:0;padding:0;color:#0f172a;}
+.container{max-width:980px;margin:36px auto;padding:28px;background:white;border-radius:12px;box-shadow:0 8px 30px rgba(16,24,40,0.06);}
+.nav{margin-top:20px;display:flex;gap:30px;border-bottom:1px solid #e5e7eb;padding-bottom:12px;}
+.nav-item{font-size:15px;font-weight:600;text-decoration:none;color:#1f2937;padding-bottom:6px;border-bottom:2px solid transparent;transition:.15s;}
+.nav-item:hover{color:#2563eb;}
+.nav-item.active{color:#2563eb;border-color:#2563eb;}
+.card{background:white;padding:20px;border-radius:10px;border:1px solid #e5e7eb;margin-top:24px;}
+label{display:block;font-weight:600;margin-top:12px;font-size:13px;}
+.input,select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #e5e7eb;font-size:14px;background:white;}
+textarea{min-height:110px;resize:vertical;}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;background:#2563eb;color:white;border-radius:10px;border:0;cursor:pointer;font-weight:700;}
+.btn.ghost{background:transparent;color:#2563eb;border:1px solid #dbeafe;}
+.debug{background:#0b1220;color:#bfe7b0;padding:12px;border-radius:8px;font-family:monospace;white-space:pre-wrap;display:none;margin-top:12px;}
+#datetime{border:1px solid #e5e7eb;border-radius:8px;padding:10px;font-size:14px;}
+.footer{margin-top:24px;color:#6b7280;font-size:13px;}
 </style>
 </head>
 
 <body>
 <div class="container">
 
-  <h1 style="margin:0;">YT Stream — Professional</h1>
-  <p style="margin:6px 0 0; color:#6b7280;">Dashboard profesional untuk mengatur livestream YouTube.</p>
+<h1 style="margin:0;">YT Stream — Professional</h1>
+<p style="margin:6px 0 0; color:#6b7280;">Dashboard profesional untuk mengatur livestream YouTube.</p>
 
-  <div class="nav">
-    <a href="index.html" class="nav-item">Dashboard</a>
-    <a href="penyimpanan.html" class="nav-item">Penyimpanan</a>
-    <a href="jadwal.html" class="nav-item">Jadwal Live</a>
-    <a href="monitoring.html" class="nav-item">Monitoring</a>
-    <a href="pengaturan.html" class="nav-item">Pengaturan</a>
-  </div>
+<div class="nav">
+  <a href="index.html" class="nav-item">Dashboard</a>
+  <a href="penyimpanan.html" class="nav-item">Penyimpanan</a>
+  <a href="jadwal.html" class="nav-item">Jadwal Live</a>
+  <a href="monitoring.html" class="nav-item">Monitoring</a>
+  <a href="pengaturan.html" class="nav-item">Pengaturan</a>
+</div>
 
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
   const current = location.pathname.split("/").pop();
   document.querySelectorAll(".nav-item").forEach(nav=>{
-    if(nav.getAttribute("href") === current){
-      nav.classList.add("active");
-    }
+    if(nav.getAttribute("href") === current) nav.classList.add("active");
   });
 });
 </script>
 
-<!-- FORM -->
+<!-- PANEL FORM -->
 <div class="card">
 
-  <label>Title</label>
-  <input id="title" class="input" placeholder="Judul Live">
+<label>Title</label>
+<input id="title" class="input" placeholder="Judul Live">
 
-  <label>Description</label>
-  <textarea id="description" class="input" placeholder="Deskripsi singkat..."></textarea>
+<label>Description</label>
+<textarea id="description" class="input" placeholder="Deskripsi singkat..."></textarea>
 
-  <label>Visibility</label>
-  <select id="visibility" class="input">
-    <option value="public">Public</option>
-    <option value="unlisted">Unlisted</option>
-    <option value="private">Private</option>
-  </select>
+<label>Visibility</label>
+<select id="visibility" class="input">
+  <option value="public">Public</option>
+  <option value="unlisted">Unlisted</option>
+  <option value="private">Private</option>
+</select>
 
-  <label>Tanggal & Jam Live (WIB)</label>
-  <input id="datetime" class="input" autocomplete="off" placeholder="Pilih tanggal & jam...">
+<label>Tanggal & Jam Live (WIB)</label>
+<input id="datetime" class="input" autocomplete="off" placeholder="Pilih tanggal & jam...">
 
-  <label>Durasi</label>
-  <select id="duration" class="input">
-    <option value="300">5 menit</option>
-    <option value="420">7 menit</option>
-    <option value="1800">30 menit</option>
-    <option value="3600" selected>1 Jam</option>
-    <option value="7200">2 Jam</option>
-  </select>
+<label>Durasi</label>
+<select id="duration" class="input">
+  <option value="300">5 menit</option>
+  <option value="420">7 menit</option>
+  <option value="1800">30 menit</option>
+  <option value="3600" selected>1 Jam</option>
+</select>
 
-  <label style="margin-top:10px;display:flex;align-items:center;gap:8px;">
-    <input type="checkbox" id="looping"> Loop Video
-  </label>
+<label style="margin-top:10px;display:flex;align-items:center;gap:8px;">
+  <input type="checkbox" id="looping"> Loop Video
+</label>
 
-  <label>Video URL</label>
-  <input id="video" class="input" placeholder="https://.../video.mp4">
+<label>Video URL</label>
+<input id="video" class="input" placeholder="https://.../video.mp4">
 
-  <label>Stream Key</label>
-  <input id="streamKey" class="input" placeholder="xxxx-xxxx">
+<label>Stream Key</label>
+<input id="streamKey" class="input" placeholder="xxxx-xxxx">
 
-  <div style="display:flex;gap:10px;margin-top:14px">
-    <button id="trigger" class="btn">Trigger Stream</button>
-    <button id="clear" class="btn ghost">Clear</button>
-  </div>
+<div style="display:flex;gap:10px;margin-top:14px">
+  <button id="trigger" class="btn">Trigger Stream</button>
+  <button id="clear" class="btn ghost">Clear</button>
+</div>
 
 </div>
 
-<!-- LOG -->
+<!-- PANEL LOG -->
 <div class="card">
   <h3 style="margin-top:0;">Preview & Log</h3>
   <pre id="payload" class="debug"></pre>
@@ -208,25 +110,14 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 </div>
 
-<!-- ========================================== -->
-<!--        JAVASCRIPT UTAMA FINAL FIX          -->
-<!-- ========================================== -->
+<!-- =========================== -->
+<!--  JAVASCRIPT UTAMA FINAL FIX -->
+<!-- =========================== -->
 <script>
-function toISO(datetime){
-  if(!datetime) return "";
-  const [date, time] = datetime.split(" ");
-  const [d,m,y] = date.split("/");
-  const local = new Date(`${y}-${m}-${d}T${time}:00`);
-  const utc = new Date(local.getTime() - 7*3600*1000);
-  return utc.toISOString().split(".")[0] + "Z";
-}
+function toISO(d){ if(!d) return ""; const [date,time]=d.split(" "); const [day,month,year]=date.split("/"); const local=new Date(`${year}-${month}-${day}T${time}:00`); return new Date(local.getTime()-7*3600*1000).toISOString().split('.')[0]+"Z"; }
 
 async function postJSON(url, body){
-  const res = await fetch(url,{
-    method:"POST",
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify(body)
-  });
+  const res = await fetch(url,{method:"POST",headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   return {ok:res.ok,status:res.status,text:await res.text()};
 }
 
@@ -277,14 +168,12 @@ triggerBtn.onclick = async () => {
       return;
     }
 
-    // SHOW PAYLOAD
     payloadEl.style.display="block";
     payloadEl.textContent = JSON.stringify(payload,null,2).replace(payload.stream_key,"*****MASKED*****");
 
     logEl.style.display="block";
     logEl.textContent="Menyimpan jadwal...";
 
-    // 1) SIMPAN JADWAL (inkl stream_key)
     await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule",{
       method:"POST",
       headers:{'Content-Type':'application/json'},
@@ -293,40 +182,40 @@ triggerBtn.onclick = async () => {
 
     logEl.textContent="Men-trigger stream...";
 
-    // 2) TRIGGER STREAM ENGINE
-    const worker="https://ytstream-proxy.rigus-apps.workers.dev/";
-    const r = await postJSON(worker,{event_type:"stream_trigger",client_payload:payload});
-    logEl.textContent = "Worker response: "+r.status+"\n"+r.text;
+    const r = await postJSON("https://ytstream-proxy.rigus-apps.workers.dev/",{
+      event_type:"stream_trigger",
+      client_payload:payload
+    });
+
+    logEl.textContent="Worker response: "+r.status+"\n"+r.text;
 
   } catch(e){
-    logEl.style.display="block";
-    logEl.textContent = "Error: " + e.message;
-    alert("Error: " + e.message);
+    logEl.textContent="Error: "+e.message;
+    alert("Error: "+e.message);
   }
 };
 
 // TEST
-testBtn.onclick = async () => {
-  const worker="https://ytstream-proxy.rigus-apps.workers.dev/";
-  const r = await fetch(worker,{method:"OPTIONS"});
-  alert("Worker OPTIONS status: " + r.status);
+testBtn.onclick = async ()=>{
+  const r = await fetch("https://ytstream-proxy.rigus-apps.workers.dev/",{method:"OPTIONS"});
+  alert("Worker OPTIONS: "+r.status);
 };
 </script>
 
-<!-- ========================================== -->
-<!--     MODE EDIT (dari halaman jadwal.html)    -->
-<!-- ========================================== -->
+<!-- =============================== -->
+<!--   MODE EDIT FROM jadwal.html    -->
+<!-- =============================== -->
 <script>
 document.addEventListener("DOMContentLoaded", async ()=>{
-
   const url = new URL(window.location.href);
   const id = url.searchParams.get("edit_id");
   if(!id) return;
 
-  try {
+  try{
     const res = await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule");
     const json = await res.json();
-    const item = (json.list || []).find(x => x.id === id);
+    const item = (json.list||[]).find(x=>x.id===id);
+
     if(!item) return alert("Jadwal tidak ditemukan");
 
     titleEl.value = item.title || "";
@@ -337,12 +226,11 @@ document.addEventListener("DOMContentLoaded", async ()=>{
     loopingEl.checked = !!item.looping;
 
     const dt = new Date(item.start_time);
-    const wib = new Date(dt.getTime() + 7*3600*1000)
-                  .toISOString().slice(0,16).replace("T"," ");
+    const wib = new Date(dt.getTime() + 7*3600*1000).toISOString().slice(0,16).replace("T"," ");
     datetimeEl.value = wib;
 
-  } catch(e){
-    alert("Gagal load jadwal: " + e.message);
+  }catch(e){
+    alert("Gagal load jadwal: "+e.message);
   }
 });
 </script>
