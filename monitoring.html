@@ -7,32 +7,49 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap" rel="stylesheet">
 
 <style>
-body{font-family:'Inter',sans-serif;background:#f4f7fb;margin:0;padding:0;color:#0f172a;}
-.container{max-width:980px;margin:36px auto;padding:28px;background:white;border-radius:12px;
-box-shadow:0 8px 30px rgba(16,24,40,0.06);}
+body{
+  font-family:'Inter',sans-serif;
+  background:#f4f7fb;
+  margin:0;
+  padding:0;
+  color:#0f172a;
+}
 
+.container{
+  max-width:980px;
+  margin:36px auto;
+  padding:28px;
+  background:white;
+  border-radius:12px;
+  box-shadow:0 8px 30px rgba(16,24,40,0.06);
+}
+
+/* NAVBAR */
 .nav{
   margin-top:20px;
   display:flex;
-  gap:24px;
+  gap:30px;
   border-bottom:1px solid #e5e7eb;
-  padding-bottom:14px;
+  padding-bottom:12px;
 }
 
 .nav-item{
   font-size:15px;
   font-weight:600;
   text-decoration:none;
-  color:#374151;
-  padding:6px 0;
+  color:#1f2937;
+  padding-bottom:6px;
   border-bottom:2px solid transparent;
+  transition:all .15s ease;
 }
 
+.nav-item:hover{ color:#2563eb; }
 .nav-item.active{
   color:#2563eb;
   border-color:#2563eb;
 }
 
+/* CARD */
 .card{
   background:white;
   padding:20px;
@@ -40,7 +57,6 @@ box-shadow:0 8px 30px rgba(16,24,40,0.06);}
   border:1px solid #e5e7eb;
   margin-top:24px;
 }
-
 </style>
 </head>
 
@@ -48,8 +64,8 @@ box-shadow:0 8px 30px rgba(16,24,40,0.06);}
 
 <div class="container">
 
-  <h1 style="margin:0;">Monitoring Sistem</h1>
-  <p style="margin-top:6px;color:#6b7280;">Pantau status Worker, GitHub Actions, dan YouTube.</p>
+  <h1 style="margin:0;">Monitoring</h1>
+  <p style="margin:6px 0 0; color:#6b7280;">Status sistem, worker, dan YouTube Live.</p>
 
   <!-- NAVBAR -->
   <div class="nav">
@@ -60,47 +76,29 @@ box-shadow:0 8px 30px rgba(16,24,40,0.06);}
     <a href="pengaturan.html" class="nav-item">Pengaturan</a>
   </div>
 
+  <!-- AUTO ACTIVE -->
   <script>
   document.addEventListener("DOMContentLoaded", ()=>{
     const current = location.pathname.split("/").pop();
-    document.querySelectorAll(".nav-item").forEach(a=>{
-      if(a.getAttribute("href") === current){
-        a.classList.add("active");
+    document.querySelectorAll(".nav-item").forEach(nav=>{
+      if(nav.getAttribute("href") === current){
+        nav.classList.add("active");
       }
     });
   });
   </script>
 
-  <!-- STATUS WORKER -->
   <div class="card">
-    <h3>Status Worker</h3>
-    <div id="worker">Checking...</div>
-  </div>
-
-  <!-- STATUS GITHUB ACTIONS -->
-  <div class="card">
-    <h3>Status GitHub Actions</h3>
-    <div id="actions">Belum diintegrasikan.</div>
-  </div>
-
-  <!-- STATUS YOUTUBE -->
-  <div class="card">
-    <h3>Status YouTube</h3>
-    <div id="youtube">Tanpa API Key, status dicek manual.</div>
+    <h3 style="margin-top:0;">Status Monitoring</h3>
+    <ul>
+      <li>Status GitHub Actions: <strong>–</strong></li>
+      <li>Status Cloudflare Worker: <strong>–</strong></li>
+      <li>Status YouTube Live: <strong>–</strong></li>
+    </ul>
+    <p>Monitoring dapat diintegrasikan dengan API kapan saja.</p>
   </div>
 
 </div>
-
-<script>
-// Check Worker
-fetch("https://ytstream-proxy.rigus-apps.workers.dev/", { method:"OPTIONS" })
-  .then(r=>{
-    document.getElementById("worker").innerText = "Worker OK (status " + r.status + ")";
-  })
-  .catch(e=>{
-    document.getElementById("worker").innerText = "Worker ERROR!";
-  });
-</script>
 
 </body>
 </html>
