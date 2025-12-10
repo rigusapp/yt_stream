@@ -92,25 +92,211 @@ body{
   </script>
 
   <div class="card">
-    <h3 style="margin-top:0;">Data Penyimpanan</h3>
-    <p>Di sini Anda dapat menyimpan:</p>
-    <ul>
-      <li>Riwayat stream</li>
-      <li>Playlist video</li>
-      <li>Konfigurasi preset</li>
-      <li>Metadata untuk YouTube Live</li>
-    </ul>
-
-    <p>Saat ini halaman masih kosong. Jika Anda ingin penyimpanan otomatis menggunakan:</p>
-    <ul>
-      <li>Cloudflare R2</li>
-      <li>KV Storage</li>
-      <li>LocalStorage</li>
-      <li>GitHub Storage</li>
-    </ul>
-
-    Saya siap bangunkan backend-nya kapan saja.
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <div>
+      <button id="btnAdd" class="btn">+ Tambah Jadwal</button>
+      <button id="btnSync" class="btn ghost">Sync Now</button>
+    </div>
+    <div class="small" id="status">—</div>
   </div>
+
+  <div style="margin-top:12px;overflow:auto">
+    <table id="table">
+      <thead>
+        <tr>
+          <th>Waktu (WIB)</th>
+          <th>Judul</th>
+          <th>Durasi</th>
+          <th>Video</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="tbody">
+        <tr><td colspan="5" class="small">Memuat...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal untuk tambah / edit -->
+<div id="modal" class="modal" style="display:none;align-items:center;justify-content:center;position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,0.4)">
+  <div class="panel" style="background:white;padding:18px;border-radius:12px;width:520px;max-width:92%">
+    <h3 id="modalTitle">Tambah Jadwal</h3>
+    <div>
+      <label>Judul</label>
+      <input id="m_title">
+      <label>Deskripsi</label>
+      <textarea id="m_description"></textarea>
+      <label>Tanggal & Jam (ISO, contoh: 2025-12-11T10:00:00Z)</label>
+      <input id="m_start" placeholder="2025-12-11T10:00:00Z">
+      <label>Durasi (detik)</label>
+      <input id="m_duration" value="3600">
+      <label>Video URL</label>
+      <input id="m_video">
+      <label>Stream Key</label>
+      <input id="m_stream">
+      <label style="display:flex;align-items:center;gap:8px;margin-top:8px"><input id="m_loop" type="checkbox"> Looping</label>
+
+      <div style="display:flex;gap:10px;margin-top:12px;justify-content:flex-end">
+        <button id="m_cancel" class="btn ghost">Batal</button>
+        <button id="m_save" class="btn">Simpan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* --- GANTI WORKER_URL DI SINI DENGAN URL WORKER KAMU --- */
+const WORKER_URL = "https://yt-scheduler-api.rigus-apps.workers.dev";
+/* ---------------------------------------------------- */
+
+const api = (path, opts={}) => fetch(WORKER_URL + path, Object.assign({
+  headers: { "Content-Type": "application/json" }
+}, opts));
+
+const $ = id => document.getElementById(id);
+let editingId = null;
+
+async function loadList(){
+  $("status").textContent = "Memuat jadwal...";
+  try {
+    const r = await api("/schedule");
+    const j = await r.json();
+    if(!j.ok){ throw new Error(j.error || "Gagal ambil data"); }
+    renderTable(j.list || []);
+    $("status").textContent = "Terakhir: " + new Date().toLocaleString();
+  } catch(err) {
+    $("status").textContent = "Error: "+err.message;
+    renderTable([]);
+  }
+}
+
+function renderTable(list){
+  const tbody = $("tbody");
+  if(!list.length){
+    tbody.innerHTML = '<tr><td colspan="5" class="small">Belum ada jadwal.</td></tr>';
+    return;
+  }
+  list.sort((a,b)=> new Date(a.start_time) - new Date(b.start_time));
+  tbody.innerHTML = "";
+  const now = Date.now();
+  for(const item of list){
+    const tr = document.createElement("tr");
+    const startLocal = new Date(item.start_time);
+    const dur = Math.floor((item.duration_seconds||0)/60) + "m";
+    const isUpcoming = new Date(item.start_time) - now < 3600*1000 && new Date(item.start_time) > now;
+    tr.innerHTML = `
+      <td>
+        ${startLocal.toLocaleString()} ${isUpcoming?'<div class="tag-upcoming" style="display:inline-block;background:#e8f3ff;color:#075985;padding:4px 8px;border-radius:999px;font-weight:700;font-size:12px;margin-left:6px">Mulai sebentar lagi</div>':''}
+      </td>
+      <td><strong>${escapeHtml(item.title)}</strong><div class="small">${escapeHtml(item.description||"")}</div></td>
+      <td>${dur}</td>
+      <td class="small">${escapeHtml(item.video_url||"")}</td>
+      <td style="text-align:right">
+        <button class="btn ghost" data-edit="${item.id}">Edit</button>
+        <button class="btn" data-del="${item.id}">Hapus</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  }
+  tbody.querySelectorAll("button[data-edit]").forEach(btn=>{
+    btn.onclick = ()=> openEdit(btn.getAttribute("data-edit"));
+  });
+  tbody.querySelectorAll("button[data-del]").forEach(btn=>{
+    btn.onclick = ()=> delItem(btn.getAttribute("data-del"));
+  });
+}
+
+function escapeHtml(s){
+  if(!s) return "";
+  return String(s).replace(/[&<>"']/g, (m)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' }[m]));
+}
+
+/* Modal controls */
+$("btnAdd").onclick = ()=> openAdd();
+$("btnSync").onclick = ()=> loadList();
+$("m_cancel").onclick = ()=> closeModal();
+$("m_save").onclick = ()=> saveModal();
+
+function openAdd(){
+  editingId = null;
+  $("modalTitle").textContent = "Tambah Jadwal";
+  $("m_title").value = "";
+  $("m_description").value = "";
+  $("m_start").value = "";
+  $("m_duration").value = "3600";
+  $("m_video").value = "";
+  $("m_stream").value = "";
+  $("m_loop").checked = false;
+  $("modal").style.display = "flex";
+}
+function openEdit(id){
+  editingId = id;
+  api("/schedule").then(r=>r.json()).then(j=>{
+    const item = (j.list||[]).find(x=>x.id===id);
+    if(!item){ alert("Item tidak ditemukan"); return; }
+    $("modalTitle").textContent = "Edit Jadwal";
+    $("m_title").value = item.title || "";
+    $("m_description").value = item.description || "";
+    $("m_start").value = item.start_time || "";
+    $("m_duration").value = item.duration_seconds || "3600";
+    $("m_video").value = item.video_url || "";
+    $("m_stream").value = item.stream_key || "";
+    $("m_loop").checked = !!item.looping;
+    $("modal").style.display = "flex";
+  }).catch(e=>alert("Gagal ambil data: "+e.message));
+}
+function closeModal(){ $("modal").style.display = "none"; }
+
+async function saveModal(){
+  const payload = {
+    title: $("m_title").value.trim(),
+    description: $("m_description").value.trim(),
+    start_time: $("m_start").value.trim(),
+    duration_seconds: Number($("m_duration").value)||3600,
+    video_url: $("m_video").value.trim(),
+    stream_key: $("m_stream").value.trim(),
+    looping: $("m_loop").checked
+  };
+  if(!payload.title || !payload.start_time){
+    alert("Judul dan waktu harus diisi");
+    return;
+  }
+  try {
+    if(editingId){
+      const r = await api("/schedule/" + editingId, { method: "PUT", body: JSON.stringify(payload) });
+      const j = await r.json();
+      if(!j.ok) throw new Error(j.error || "Gagal update");
+      closeModal();
+      loadList();
+    } else {
+      const r = await api("/schedule", { method: "POST", body: JSON.stringify(payload) });
+      const j = await r.json();
+      if(!j.ok) throw new Error(j.error || "Gagal tambah");
+      closeModal();
+      loadList();
+    }
+  } catch(e) {
+    alert("Error: " + e.message);
+  }
+}
+
+async function delItem(id){
+  if(!confirm("Hapus jadwal?")) return;
+  try {
+    const r = await api("/schedule/" + id, { method: "DELETE" });
+    const j = await r.json();
+    if(!j.ok) throw new Error(j.error || "Gagal hapus");
+    loadList();
+  } catch(e) {
+    alert("Error: " + e.message);
+  }
+}
+
+/* inisialisasi */
+loadList();
+</script>
+
 
 </div>
 
