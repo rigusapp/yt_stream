@@ -198,10 +198,11 @@ async function loadFiles() {
         <td>${item.key}</td>
         <td>${Math.round(item.size / 1024)} KB</td>
         <td>
-          <a class="btn gray" style="padding:6px 12px;"
-             href="${API}/storage/${item.key}" target="_blank">Download</a>
-          <button class="btn red" style="padding:6px 12px;"
-             onclick="deleteFile('${item.key}')">Hapus</button>
+          <button class="btn gray" style="padding:6px 12px;"
+        onclick="copyLink('${item.key}')">Copy</button>
+<button class="btn red" style="padding:6px 12px;"
+        onclick="deleteFile('${item.key}')">Hapus</button>
+
         </td>
       `;
 
