@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<title>Penyimpanan</title>
+<title>Pengaturan</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap" rel="stylesheet">
 
@@ -24,13 +24,14 @@ body{
   box-shadow:0 8px 30px rgba(16,24,40,0.06);
 }
 
-/* NAVBAR */
+/* NAV FIX */
 .nav{
   margin-top:20px;
   display:flex;
   gap:30px;
   border-bottom:1px solid #e5e7eb;
   padding-bottom:12px;
+  margin-bottom:0 !important;
 }
 
 .nav-item{
@@ -40,13 +41,10 @@ body{
   color:#1f2937;
   padding-bottom:6px;
   border-bottom:2px solid transparent;
-  transition:all .15s ease;
+  transition:.15s;
 }
 
-.nav-item:hover{
-  color:#2563eb;
-}
-
+.nav-item:hover{ color:#2563eb; }
 .nav-item.active{
   color:#2563eb;
   border-color:#2563eb;
@@ -66,10 +64,10 @@ body{
 
 <div class="container">
 
-  <h1 style="margin:0;">Penyimpanan</h1>
-  <p style="margin:6px 0 0; color:#6b7280;">Halaman untuk mengelola data tersimpan.</p>
+  <h1 style="margin:0;">Pengaturan</h1>
+  <p style="margin:6px 0 0; color:#6b7280;">Atur preferensi dan konfigurasi aplikasi.</p>
 
-  <!-- NAVBAR -->
+  <!-- NAV -->
   <div class="nav">
     <a href="index.html" class="nav-item">Dashboard</a>
     <a href="penyimpanan.html" class="nav-item">Penyimpanan</a>
@@ -91,24 +89,23 @@ body{
   </script>
 
   <div class="card">
-    <h3 style="margin-top:0;">Data Penyimpanan</h3>
-    <p>Di sini Anda dapat menyimpan:</p>
-    <ul>
-      <li>Riwayat stream</li>
-      <li>Playlist video</li>
-      <li>Konfigurasi preset</li>
-      <li>Metadata untuk YouTube Live</li>
-    </ul>
+    <h3 style="margin-top:0;">Pengaturan Aplikasi</h3>
 
-    <p>Saat ini halaman masih kosong. Jika Anda ingin penyimpanan otomatis menggunakan:</p>
-    <ul>
-      <li>Cloudflare R2</li>
-      <li>KV Storage</li>
-      <li>LocalStorage</li>
-      <li>GitHub Storage</li>
-    </ul>
+    Worker URL  
+    <input class="input" style="width:100%; padding:10px; margin:6px 0 12px; border:1px solid #e5e7eb; border-radius:8px;" placeholder="https://your-worker-url.workers.dev/">
 
-    Saya siap bangunkan backend-nya kapan saja.
+    Default Stream Key  
+    <input class="input" style="width:100%; padding:10px; margin:6px 0 12px; border:1px solid #e5e7eb; border-radius:8px;" placeholder="xxxxxxxxxxxx">
+
+    Default Video URL  
+    <input class="input" style="width:100%; padding:10px; margin:6px 0 12px; border:1px solid #e5e7eb; border-radius:8px;" placeholder="https://.../video.mp4">
+
+    <label style="display:flex;align-items:center;gap:8px; margin-top:10px;">
+      <input type="checkbox">
+      Mode Gelap (Dark Mode)
+    </label>
+
+    <p style="margin-top:16px;">Pengaturan belum disimpan. Anda bisa menambahkan backend kapan saja.</p>
   </div>
 
 </div>
