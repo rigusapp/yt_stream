@@ -4,238 +4,240 @@
 <meta charset="utf-8"/>
 <title>YT Stream — Professional</title>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap" rel="stylesheet">
 
 <style>
-body{font-family:'Inter',sans-serif;background:#f4f7fb;margin:0;padding:0;color:#0f172a;}
-.container{max-width:980px;margin:36px auto;padding:28px;background:white;border-radius:12px;box-shadow:0 8px 30px rgba(16,24,40,0.06);}
-.nav{margin-top:20px;display:flex;gap:30px;border-bottom:1px solid #e5e7eb;padding-bottom:12px;}
-.nav-item{font-size:15px;font-weight:600;text-decoration:none;color:#1f2937;padding-bottom:6px;border-bottom:2px solid transparent;transition:.15s;}
-.nav-item:hover{color:#2563eb;}
-.nav-item.active{color:#2563eb;border-color:#2563eb;}
-.card{background:white;padding:20px;border-radius:10px;border:1px solid #e5e7eb;margin-top:24px;}
-label{display:block;font-weight:600;margin-top:12px;font-size:13px;}
-.input,select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #e5e7eb;font-size:14px;background:white;}
-textarea{min-height:110px;resize:vertical;}
-.btn{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;background:#2563eb;color:white;border-radius:10px;border:0;cursor:pointer;font-weight:700;}
-.btn.ghost{background:transparent;color:#2563eb;border:1px solid #dbeafe;}
-.debug{background:#0b1220;color:#bfe7b0;padding:12px;border-radius:8px;font-family:monospace;white-space:pre-wrap;display:none;margin-top:12px;}
-#datetime{border:1px solid #e5e7eb;border-radius:8px;padding:10px;font-size:14px;}
-.footer{margin-top:24px;color:#6b7280;font-size:13px;}
-.small{font-size:13px;color:#6b7280;}
+body{
+  font-family:'Inter',sans-serif;
+  background:#f4f7fb;
+  margin:0;
+  padding:0;
+  color:#0f172a;
+}
+.container{
+  max-width:980px;
+  margin:36px auto;
+  padding:28px;
+  background:white;
+  border-radius:12px;
+  box-shadow:0 8px 30px rgba(16,24,40,0.06);
+}
+.nav{
+  margin-top:20px;
+  display:flex;
+  gap:30px;
+  border-bottom:1px solid #e5e7eb;
+  padding-bottom:12px;
+}
+.nav-item{
+  font-size:15px;
+  font-weight:600;
+  text-decoration:none;
+  color:#1f2937;
+  padding-bottom:6px;
+  border-bottom:2px solid transparent;
+  transition:all .15s ease;
+}
+.nav-item:hover{ color:#2563eb; }
+.nav-item.active{ color:#2563eb; border-color:#2563eb; }
+
+.card{
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  border:1px solid #e5e7eb;
+  margin-top:24px;
+}
+
+label{ display:block;font-weight:600;margin-top:12px;font-size:13px; }
+.input, select, textarea{
+  width:100%; padding:10px; border-radius:8px; border:1px solid #e5e7eb;
+  font-size:14px; background:white;
+}
+textarea{ min-height:110px; resize:vertical; }
+
+.btn{ display:inline-flex;align-items:center;gap:10px;padding:10px 14px;background:#2563eb;color:white;border-radius:10px;border:0;cursor:pointer;font-weight:700; }
+.btn.ghost{ background:transparent;color:#2563eb;border:1px solid #dbeafe; }
+
+.debug{
+  background:#0b1220;color:#bfe7b0;padding:12px;border-radius:8px;
+  font-family:monospace;white-space:pre-wrap;display:none;margin-top:12px;
+}
+.footer{ margin-top:24px;color:#6b7280;font-size:13px; }
 </style>
 </head>
+
 <body>
+
 <div class="container">
-  <h1 style="margin:0;">YT Stream — Professional</h1>
-  <p style="margin:6px 0 0; color:#6b7280;">Dashboard profesional untuk mengatur livestream YouTube.</p>
 
-  <div class="nav">
-    <a href="index.html" class="nav-item">Dashboard</a>
-    <a href="penyimpanan.html" class="nav-item">Penyimpanan</a>
-    <a href="jadwal.html" class="nav-item">Jadwal Live</a>
-    <a href="monitoring.html" class="nav-item">Monitoring</a>
-    <a href="pengaturan.html" class="nav-item">Pengaturan</a>
-  </div>
+<h1 style="margin:0;">YT Stream — Professional</h1>
+<p style="margin:6px 0 0; color:#6b7280;">Dashboard profesional untuk mengatur livestream YouTube.</p>
 
-  <script>
-  document.addEventListener("DOMContentLoaded", ()=>{
-    const current = location.pathname.split("/").pop();
-    document.querySelectorAll(".nav-item").forEach(nav=>{
-      if(nav.getAttribute("href") === current) nav.classList.add("active");
-    });
-  });
-  </script>
-
-  <div class="card">
-    <label>Title</label>
-    <input id="title" class="input" placeholder="Judul Live">
-
-    <label>Description</label>
-    <textarea id="description" class="input" placeholder="Deskripsi singkat..."></textarea>
-
-    <label>Visibility</label>
-    <select id="visibility" class="input">
-      <option value="public">Public</option>
-      <option value="unlisted">Unlisted</option>
-      <option value="private">Private</option>
-    </select>
-
-    <label>Tanggal & Jam Live (WIB)</label>
-    <input id="datetime" class="input" autocomplete="off" placeholder="Pilih tanggal & jam...">
-
-    <label>Durasi</label>
-    <select id="duration" class="input">
-      <option value="300">5 menit</option>
-      <option value="420">7 menit</option>
-      <option value="1800">30 menit</option>
-      <option value="3600" selected>1 Jam</option>
-      <option value="7200">2 Jam</option>
-    </select>
-
-    <label style="margin-top:10px;display:flex;align-items:center;gap:8px;">
-      <input type="checkbox" id="looping"> Loop Video (tanpa batas)
-    </label>
-
-    <label>Video URL</label>
-    <input id="video" class="input" placeholder="https://.../video.mp4">
-
-    <label>Stream Key</label>
-    <input id="streamKey" class="input" placeholder="xxxx-xxxx">
-
-    <div style="display:flex;gap:10px;margin-top:14px">
-      <button id="trigger" class="btn">Trigger Stream</button>
-      <button id="clear" class="btn ghost">Clear</button>
-    </div>
-
-    <p class="small" style="margin-top:10px;">
-      Catatan: Stream key dikirim ke Worker. Jangan bagikan stream key Anda.
-    </p>
-  </div>
-
-  <div class="card">
-    <h3 style="margin-top:0;">Preview & Log</h3>
-    <div class="small">Payload yang akan dikirim ke Worker:</div>
-    <pre id="payload" class="debug"></pre>
-    <div id="log" class="debug"></div>
-  </div>
-
-  <div class="card">
-    <div class="small">Quick Actions</div>
-    <button id="test" class="btn ghost" style="width:100%;margin-top:10px">Test Connection</button>
-    <div class="small" style="margin-top:6px;">Gunakan Test untuk memastikan Worker merespon 204.</div>
-  </div>
-
-  <div class="footer">Built for you — Professional SaaS.</div>
+<div class="nav">
+  <a href="index.html" class="nav-item">Dashboard</a>
+  <a href="penyimpanan.html" class="nav-item">Penyimpanan</a>
+  <a href="jadwal.html" class="nav-item">Jadwal Live</a>
+  <a href="monitoring.html" class="nav-item">Monitoring</a>
+  <a href="pengaturan.html" class="nav-item">Pengaturan</a>
 </div>
 
-<!-- FIXED JAVASCRIPT -->
 <script>
-/* Helper: convert input "dd/mm/YYYY HH:MM" (WIB) to ISO (browser will convert to UTC) */
+document.addEventListener("DOMContentLoaded", ()=>{
+  const cur = location.pathname.split("/").pop();
+  document.querySelectorAll(".nav-item").forEach(a=>{
+    if(a.getAttribute("href") === cur) a.classList.add("active");
+  });
+});
+</script>
+
+<!-- FORM -->
+<div class="card">
+
+<label>Title</label>
+<input id="title" class="input">
+
+<label>Description</label>
+<textarea id="description" class="input"></textarea>
+
+<label>Visibility</label>
+<select id="visibility" class="input">
+  <option value="public">Public</option>
+  <option value="unlisted">Unlisted</option>
+  <option value="private">Private</option>
+</select>
+
+<label>Tanggal & Jam Live (WIB)</label>
+<input id="datetime" class="input" autocomplete="off">
+
+<label>Durasi</label>
+<select id="duration" class="input">
+  <option value="300">5 menit</option>
+  <option value="1800">30 menit</option>
+  <option value="3600" selected>1 Jam</option>
+  <option value="7200">2 Jam</option>
+  <option value="10800">3 Jam</option>
+</select>
+
+<label style="margin-top:10px;display:flex;align-items:center;gap:8px;">
+  <input type="checkbox" id="looping"> Loop Video
+</label>
+
+<label>Video URL</label>
+<input id="video" class="input">
+
+<label>Stream Key</label>
+<input id="streamKey" class="input">
+
+<div style="display:flex;gap:10px;margin-top:14px">
+  <button id="trigger" class="btn">Trigger Stream</button>
+  <button id="clear" class="btn ghost">Clear</button>
+</div>
+
+</div>
+
+<div class="card">
+<h3>Preview & Log</h3>
+<pre id="payload" class="debug"></pre>
+<div id="log" class="debug"></div>
+</div>
+
+<div class="footer">Built for you — Professional SaaS.</div>
+
+</div>
+
+<!-- ============================ -->
+<!-- SCRIPT FINAL (WIB FIX 100%) -->
+<!-- ============================ -->
+
+<script>
+// FIX WAKTU TANPA KONVERSI UTC
 function toISO(datetime){
   if(!datetime) return "";
-  const parts = datetime.split(" ");
-  if(parts.length < 2) return "";
-  const [date, time] = parts;
+  const [date, time] = datetime.split(" ");
   const [d,m,y] = date.split("/");
-  if(!d || !m || !y) return "";
-  return new Date(`${y}-${m}-${d}T${time}:00`).toISOString();
+  return `${y}-${m}-${d}T${time}:00+07:00`;
 }
 
 async function postJSON(url, body){
-  const res = await fetch(url, { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(body) });
-  return { ok: res.ok, status: res.status, text: await res.text() };
+  const res = await fetch(url,{
+    method:"POST",
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(body)
+  });
+  return {ok:res.ok,status:res.status,text:await res.text()};
 }
 
-/* Cache DOM elements */
-const titleEl = document.getElementById("title");
-const descriptionEl = document.getElementById("description");
-const visibilityEl = document.getElementById("visibility");
-const datetimeEl = document.getElementById("datetime");
-const durationEl = document.getElementById("duration");
-const loopingEl = document.getElementById("looping");
-const videoEl = document.getElementById("video");
-const streamKeyEl = document.getElementById("streamKey");
+document.getElementById("clear").onclick = ()=>{
+  ["video","streamKey","title","description"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("visibility").value="public";
+  document.getElementById("payload").style.display="none";
+  document.getElementById("log").style.display="none";
+};
 
-const triggerBtn = document.getElementById("trigger");
-const clearBtn = document.getElementById("clear");
-const payloadEl = document.getElementById("payload");
-const logEl = document.getElementById("log");
-const testBtn = document.getElementById("test");
+document.getElementById("trigger").onclick = async ()=>{
 
-/* Clear handler */
-clearBtn.addEventListener("click", ()=>{
-  titleEl.value = "";
-  descriptionEl.value = "";
-  visibilityEl.value = "public";
-  datetimeEl.value = "";
-  durationEl.value = "3600";
-  loopingEl.checked = false;
-  videoEl.value = "";
-  streamKeyEl.value = "";
-  payloadEl.style.display = "none";
-  logEl.style.display = "none";
-});
+  const title = title.value.trim();
+  const description = description.value.trim();
+  const visibility = visibility.value;
+  const video_url = video.value.trim();
+  const stream_key = streamKey.value.trim();
+  const start_time = toISO(datetime.value);
+  const duration_seconds = Number(duration.value);
+  const looping = looping.checked;
 
-/* Trigger handler */
-triggerBtn.addEventListener("click", async ()=>{
-  try{
-    const title = titleEl.value.trim();
-    const description = descriptionEl.value.trim();
-    const visibility = visibilityEl.value;
-    const start_time = toISO(datetimeEl.value);
-    const duration_seconds = Number(durationEl.value) || 3600;
-    const looping = !!loopingEl.checked;
-    const video_url = videoEl.value.trim();
-    const stream_key = streamKeyEl.value.trim();
+  const payload = {video_url,start_time,duration_seconds,title,description,visibility,stream_key,looping, rtmp_url:"rtmp://a.rtmp.youtube.com/live2"};
 
-    if(!title || !start_time || !video_url || !stream_key){
-      logEl.style.display = "block";
-      logEl.textContent = "Form belum lengkap — isikan Judul, Waktu, Video URL, dan Stream Key.";
-      return;
-    }
+  payloadEl.textContent = JSON.stringify(payload,null,2).replace(stream_key,"*****MASKED*****");
+  payloadEl.style.display="block";
+  logEl.style.display="block";
+  logEl.textContent = "Sending...";
 
-    const payload = {
-      title,
-      description,
-      visibility,
-      start_time,
-      duration_seconds,
-      looping,
-      video_url,
-      stream_key,
-      rtmp_url: "rtmp://a.rtmp.youtube.com/live2"
-    };
+  // Simpan ke KV
+  await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule",{
+    method:"POST",headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)
+  });
 
-    payloadEl.style.display = "block";
-    payloadEl.textContent = JSON.stringify(payload, null, 2).replace(stream_key, "*****MASKED*****");
+  // Trigger FFmpeg
+  const r = await postJSON("https://ytstream-proxy.rigus-apps.workers.dev/",{
+    event_type:"stream_trigger",
+    client_payload:payload
+  });
 
-    logEl.style.display = "block";
-    logEl.textContent = "Menyimpan jadwal ke KV...";
+  logEl.textContent = "Worker response: "+r.status+"\n"+r.text;
+};
 
-    // Save schedule (include stream_key)
-    const schedRes = await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule", {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify(payload)
-    });
+// AUTO FILL via ?copy_id=
+(async ()=>{
+  const url = new URL(location.href);
+  const copyId = url.searchParams.get("copy_id");
+  if(!copyId) return;
 
-    if(!schedRes.ok){
-      const t = await schedRes.text();
-      logEl.textContent = "Gagal menyimpan jadwal: " + schedRes.status + " " + t;
-      return;
-    }
+  const res = await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule");
+  const j = await res.json();
+  const item = (j.list||[]).find(x=>x.id===copyId);
+  if(!item) return;
 
-    logEl.textContent = "Memicu worker stream...";
+  document.getElementById("title").value = item.title;
+  document.getElementById("description").value = item.description;
+  document.getElementById("video").value = item.video_url;
+  document.getElementById("streamKey").value = item.stream_key;
+  document.getElementById("duration").value = item.duration_seconds;
+  looping.checked = !!item.looping;
 
-    // Trigger worker stream
-    const r = await postJSON("https://ytstream-proxy.rigus-apps.workers.dev/", { event_type: "stream_trigger", client_payload: payload });
-
-    logEl.textContent = "Worker response: " + r.status + "\n" + r.text;
-  } catch(err){
-    console.error(err);
-    logEl.style.display = "block";
-    logEl.textContent = "Error: " + (err.message || err);
-  }
-});
-
-/* Test connection */
-testBtn.addEventListener("click", async ()=>{
-  try{
-    const r = await fetch("https://ytstream-proxy.rigus-apps.workers.dev/", { method: "OPTIONS" });
-    logEl.style.display = "block";
-    logEl.textContent = "Worker OPTIONS: " + r.status;
-  } catch(e){
-    logEl.style.display = "block";
-    logEl.textContent = "Worker test failed: " + e.message;
-  }
-});
+  // tampilkan WIB
+  const dt = new Date(item.start_time);
+  const local = new Date(dt.getTime() + 7*3600*1000);
+  const f = local.toISOString().slice(0,16).replace("T"," ");
+  datetime.value = f;
+})();
 </script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script>flatpickr("#datetime",{enableTime:true,dateFormat:"d/m/Y H:i",time_24hr:true});</script>
+<script>
+flatpickr("#datetime",{enableTime:true,dateFormat:"d/m/Y H:i",time_24hr:true});
+</script>
 
 </body>
 </html>
