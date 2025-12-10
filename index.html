@@ -114,8 +114,20 @@ document.addEventListener("DOMContentLoaded", ()=>{
 <!--  JAVASCRIPT UTAMA FINAL FIX -->
 <!-- =========================== -->
 <script>
-function toISO(d){ if(!d) return ""; const [date,time]=d.split(" "); const [day,month,year]=date.split("/"); const local=new Date(`${year}-${month}-${day}T${time}:00`); return new Date(local.getTime()-7*3600*1000).toISOString().split('.')[0]+"Z"; }
+function toISO(datetime) {
+  if (!datetime) return "";
+  
+  const [date, time] = datetime.split(" ");
+  const [day, month, year] = date.split("/");
 
+  // buat date dalam WIB, tetapi browser akan otomatis anggap ini lokal (WIB)
+  const local = new Date(`${year}-${month}-${day}T${time}:00`);
+
+  // langsung convert ke ISO tanpa manipulasi jam
+  return local.toISOString();
+}
+
+  
 async function postJSON(url, body){
   const res = await fetch(url,{method:"POST",headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   return {ok:res.ok,status:res.status,text:await res.text()};
