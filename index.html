@@ -360,6 +360,54 @@ document.getElementById("test").onclick = async () => {
 
 </script>
 
+  </script>
+
+<!-- ======================== -->
+<!-- MODE EDIT DARI JADWAL.HTML -->
+<!-- ======================== -->
+<script>
+document.addEventListener("DOMContentLoaded", async ()=>{
+
+  const url = new URL(window.location.href);
+  const editId = url.searchParams.get("edit_id");
+  if(!editId) return;
+
+  // Ambil semua jadwal dari Worker
+  try {
+    const res = await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule");
+    const json = await res.json();
+    if(!json.ok) throw new Error(json.error);
+
+    const item = (json.list || []).find(x => x.id === editId);
+    if(!item){
+      alert("Jadwal tidak ditemukan.");
+      return;
+    }
+
+    // AUTO ISI FORM
+    document.getElementById("title").value = item.title || "";
+    document.getElementById("description").value = item.description || "";
+    document.getElementById("video").value = item.video_url || "";
+    document.getElementById("streamKey").value = item.stream_key || "";
+    document.getElementById("duration").value = item.duration_seconds || 3600;
+    document.getElementById("looping").checked = !!item.looping;
+
+    // Konversi ISO → WIB
+    const dt = new Date(item.start_time);
+    const local = new Date(dt.getTime() + (7 * 3600 * 1000));
+    const formatted = local.toISOString().slice(0, 16).replace("T", " ");
+
+    document.getElementById("datetime").value = formatted;
+
+    alert("Mode Edit Aktif — Jadwal berhasil dimuat.");
+  }
+  catch(e){
+    alert("Gagal load jadwal: " + e.message);
+  }
+});
+</script>
+
+  
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
