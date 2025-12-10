@@ -31,6 +31,9 @@ body{
   gap:30px;
   border-bottom:1px solid #e5e7eb;
   padding-bottom:12px;
+
+  /* FIX PERBEDAAN HALAMAN */
+  margin-bottom:0 !important;
 }
 
 .nav-item{
@@ -44,9 +47,11 @@ body{
 }
 
 .nav-item:hover{ color:#2563eb; }
-.nav-item.active{ color:#2563eb; border-color:#2563eb; }
+.nav-item.active{
+  color:#2563eb;
+  border-color:#2563eb;
+}
 
-/* CARD */
 .card{
   background:white;
   padding:20px;
@@ -64,6 +69,7 @@ body{
   <h1 style="margin:0;">Jadwal Live</h1>
   <p style="margin:6px 0 0; color:#6b7280;">Halaman untuk melihat jadwal livestream.</p>
 
+  <!-- NAVBAR -->
   <div class="nav">
     <a href="index.html" class="nav-item">Dashboard</a>
     <a href="penyimpanan.html" class="nav-item">Penyimpanan</a>
@@ -72,12 +78,13 @@ body{
     <a href="pengaturan.html" class="nav-item">Pengaturan</a>
   </div>
 
+  <!-- AUTO ACTIVE -->
   <script>
   document.addEventListener("DOMContentLoaded", ()=>{
     const current = location.pathname.split("/").pop();
-    document.querySelectorAll(".nav-item").forEach(a=>{
-      if(a.getAttribute("href") === current){
-        a.classList.add("active");
+    document.querySelectorAll(".nav-item").forEach(nav=>{
+      if(nav.getAttribute("href") === current){
+        nav.classList.add("active");
       }
     });
   });
@@ -85,8 +92,9 @@ body{
 
   <div class="card">
     <h3 style="margin-top:0;">Daftar Jadwal Live</h3>
-    <p>Belum ada jadwal tercatat.</p>
-    <p>Integrasi jadwal bisa dibangun kapan saja.</p>
+
+    Belum ada jadwal tercatat.<br><br>
+    Integrasi jadwal bisa dibangun kapan saja.
   </div>
 
 </div>
