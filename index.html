@@ -146,12 +146,10 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 </div>
 
-<!-- ============================ -->
-<!-- SCRIPT FINAL (WIB FIX 100%) -->
-<!-- ============================ -->
-
+<!-- SCRIPT FINAL -->
 <script>
-// FIX WAKTU TANPA KONVERSI UTC
+
+// FIX WAKTU WIB TANPA DIUBAH KE UTC
 function toISO(datetime){
   if(!datetime) return "";
   const [date, time] = datetime.split(" ");
@@ -169,7 +167,10 @@ async function postJSON(url, body){
 }
 
 document.getElementById("clear").onclick = ()=>{
-  ["video","streamKey","title","description"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("video").value="";
+  document.getElementById("streamKey").value="";
+  document.getElementById("title").value="";
+  document.getElementById("description").value="";
   document.getElementById("visibility").value="public";
   document.getElementById("payload").style.display="none";
   document.getElementById("log").style.display="none";
@@ -177,37 +178,52 @@ document.getElementById("clear").onclick = ()=>{
 
 document.getElementById("trigger").onclick = async ()=>{
 
-  const title = title.value.trim();
-  const description = description.value.trim();
-  const visibility = visibility.value;
-  const video_url = video.value.trim();
-  const stream_key = streamKey.value.trim();
-  const start_time = toISO(datetime.value);
-  const duration_seconds = Number(duration.value);
-  const looping = looping.checked;
+  const titleVal = document.getElementById("title").value.trim();
+  const descVal = document.getElementById("description").value.trim();
+  const visibilityVal = document.getElementById("visibility").value;
+  const video_url = document.getElementById("video").value.trim();
+  const stream_key = document.getElementById("streamKey").value.trim();
+  const start_time = toISO(document.getElementById("datetime").value);
+  const duration_seconds = Number(document.getElementById("duration").value);
+  const loopingVal = document.getElementById("looping").checked;
 
-  const payload = {video_url,start_time,duration_seconds,title,description,visibility,stream_key,looping, rtmp_url:"rtmp://a.rtmp.youtube.com/live2"};
+  const payload = {
+    video_url,
+    title: titleVal,
+    description: descVal,
+    visibility: visibilityVal,
+    stream_key,
+    start_time,
+    duration_seconds,
+    looping: loopingVal,
+    rtmp_url:"rtmp://a.rtmp.youtube.com/live2"
+  };
+
+  const payloadEl = document.getElementById("payload");
+  const logEl = document.getElementById("log");
 
   payloadEl.textContent = JSON.stringify(payload,null,2).replace(stream_key,"*****MASKED*****");
   payloadEl.style.display="block";
   logEl.style.display="block";
   logEl.textContent = "Sending...";
 
-  // Simpan ke KV
+  // Simpan jadwal
   await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule",{
-    method:"POST",headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)
+    method:"POST",
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(payload)
   });
 
-  // Trigger FFmpeg
-  const r = await postJSON("https://ytstream-proxy.rigus-apps.workers.dev/",{
-    event_type:"stream_trigger",
-    client_payload:payload
-  });
+  // Trigger Worker
+  const r = await postJSON(
+    "https://ytstream-proxy.rigus-apps.workers.dev/",
+    { event_type:"stream_trigger", client_payload:payload }
+  );
 
   logEl.textContent = "Worker response: "+r.status+"\n"+r.text;
 };
 
-// AUTO FILL via ?copy_id=
+// AUTO FILL untuk copy stream
 (async ()=>{
   const url = new URL(location.href);
   const copyId = url.searchParams.get("copy_id");
@@ -223,13 +239,12 @@ document.getElementById("trigger").onclick = async ()=>{
   document.getElementById("video").value = item.video_url;
   document.getElementById("streamKey").value = item.stream_key;
   document.getElementById("duration").value = item.duration_seconds;
-  looping.checked = !!item.looping;
+  document.getElementById("looping").checked = !!item.looping;
 
-  // tampilkan WIB
   const dt = new Date(item.start_time);
   const local = new Date(dt.getTime() + 7*3600*1000);
   const f = local.toISOString().slice(0,16).replace("T"," ");
-  datetime.value = f;
+  document.getElementById("datetime").value = f;
 })();
 </script>
 
