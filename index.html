@@ -8,138 +8,26 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap" rel="stylesheet">
 
 <style>
-body{
-  font-family:'Inter',sans-serif;
-  background:#f4f7fb;
-  margin:0;
-  padding:0;
-  color:#0f172a;
-}
-
-.container{
-  max-width:980px;
-  margin:36px auto;
-  padding:28px;
-  background:white;
-  border-radius:12px;
-  box-shadow:0 8px 30px rgba(16,24,40,0.06);
-}
-
-/* NAVBAR */
-.nav{
-  margin-top:20px;
-  display:flex;
-  gap:30px;
-  border-bottom:1px solid #e5e7eb;
-  padding-bottom:12px;
-}
-
-.nav-item{
-  font-size:15px;
-  font-weight:600;
-  text-decoration:none;
-  color:#1f2937;
-  padding-bottom:6px;
-  border-bottom:2px solid transparent;
-  transition:all .15s ease;
-}
-
-.nav-item:hover{ color:#2563eb; }
-.nav-item.active{
-  color:#2563eb;
-  border-color:#2563eb;
-}
-
-/* PANEL STYLE */
-.card{
-  background:white;
-  padding:20px;
-  border-radius:10px;
-  border:1px solid #e5e7eb;
-  margin-top:24px;
-}
-
-/* FORM ELEMENTS */
-label{
-  display:block;
-  font-weight:600;
-  margin-top:12px;
-  font-size:13px;
-}
-
-.input, select, textarea{
-  width:100%;
-  padding:10px;
-  border-radius:8px;
-  border:1px solid #e5e7eb;
-  font-size:14px;
-  background:white;
-}
-textarea{ min-height:110px; resize:vertical; }
-
-.btn{
-  display:inline-flex;
-  align-items:center;
-  gap:10px;
-  padding:10px 14px;
-  background:#2563eb;
-  color:white;
-  border-radius:10px;
-  border:0;
-  cursor:pointer;
-  font-weight:700;
-}
-
-.btn.ghost{
-  background:transparent;
-  color:#2563eb;
-  border:1px solid #dbeafe;
-}
-
-/* LOG */
-.debug{
-  background:#0b1220;
-  color:#bfe7b0;
-  padding:12px;
-  border-radius:8px;
-  font-family:monospace;
-  white-space:pre-wrap;
-  display:none;
-  margin-top:12px;
-}
-
-/* DATETIME */
-#datetime{
-  border:1px solid #e5e7eb;
-  border-radius:8px;
-  padding:10px;
-  font-size:14px;
-}
-
-/* FLATPICKR */
-.flatpickr-calendar{ border-radius:12px!important; }
-.flatpickr-months{
-  background:#2563eb!important;
-  color:white!important;
-}
-.flatpickr-time input{
-  font-size:18px!important;
-  font-weight:600!important;
-  color:#2563eb!important;
-}
-
-.footer{
-  margin-top:24px;
-  color:#6b7280;
-  font-size:13px;
-}
+body{font-family:'Inter',sans-serif;background:#f4f7fb;margin:0;padding:0;color:#0f172a;}
+.container{max-width:980px;margin:36px auto;padding:28px;background:white;border-radius:12px;box-shadow:0 8px 30px rgba(16,24,40,0.06);}
+.nav{margin-top:20px;display:flex;gap:30px;border-bottom:1px solid #e5e7eb;padding-bottom:12px;}
+.nav-item{font-size:15px;font-weight:600;text-decoration:none;color:#1f2937;padding-bottom:6px;border-bottom:2px solid transparent;transition:.15s;}
+.nav-item:hover{color:#2563eb;}
+.nav-item.active{color:#2563eb;border-color:#2563eb;}
+.card{background:white;padding:20px;border-radius:10px;border:1px solid #e5e7eb;margin-top:24px;}
+label{display:block;font-weight:600;margin-top:12px;font-size:13px;}
+.input,select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #e5e7eb;font-size:14px;background:white;}
+textarea{min-height:110px;resize:vertical;}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;background:#2563eb;color:white;border-radius:10px;border:0;cursor:pointer;font-weight:700;}
+.btn.ghost{background:transparent;color:#2563eb;border:1px solid #dbeafe;}
+.debug{background:#0b1220;color:#bfe7b0;padding:12px;border-radius:8px;font-family:monospace;white-space:pre-wrap;display:none;margin-top:12px;}
+#datetime{border:1px solid #e5e7eb;border-radius:8px;padding:10px;font-size:14px;}
+.footer{margin-top:24px;color:#6b7280;font-size:13px;}
+.small{font-size:13px;color:#6b7280;}
 </style>
 </head>
-
-
 <body>
 <div class="container">
-
   <h1 style="margin:0;">YT Stream — Professional</h1>
   <p style="margin:6px 0 0; color:#6b7280;">Dashboard profesional untuk mengatur livestream YouTube.</p>
 
@@ -151,20 +39,16 @@ textarea{ min-height:110px; resize:vertical; }
     <a href="pengaturan.html" class="nav-item">Pengaturan</a>
   </div>
 
-<script>
-document.addEventListener("DOMContentLoaded", ()=>{
-  const current = location.pathname.split("/").pop();
-  document.querySelectorAll(".nav-item").forEach(nav=>{
-    if(nav.getAttribute("href") === current){
-      nav.classList.add("active");
-    }
+  <script>
+  document.addEventListener("DOMContentLoaded", ()=>{
+    const current = location.pathname.split("/").pop();
+    document.querySelectorAll(".nav-item").forEach(nav=>{
+      if(nav.getAttribute("href") === current) nav.classList.add("active");
+    });
   });
-});
-</script>
+  </script>
 
-  <!-- FORM PANEL -->
   <div class="card">
-
     <label>Title</label>
     <input id="title" class="input" placeholder="Judul Live">
 
@@ -188,21 +72,10 @@ document.addEventListener("DOMContentLoaded", ()=>{
       <option value="1800">30 menit</option>
       <option value="3600" selected>1 Jam</option>
       <option value="7200">2 Jam</option>
-      <option value="10800">3 Jam</option>
-      <option value="14400">4 Jam</option>
-      <option value="18000">5 Jam</option>
-      <option value="21600">6 Jam</option>
-      <option value="25200">7 Jam</option>
-      <option value="28800">8 Jam</option>
-      <option value="32400">9 Jam</option>
-      <option value="36000">10 Jam</option>
-      <option value="39600">11 Jam</option>
-      <option value="43200">12 Jam</option>
     </select>
 
     <label style="margin-top:10px;display:flex;align-items:center;gap:8px;">
-      <input type="checkbox" id="looping">
-      Loop Video (tanpa batas)
+      <input type="checkbox" id="looping"> Loop Video (tanpa batas)
     </label>
 
     <label>Video URL</label>
@@ -221,7 +94,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
     </p>
   </div>
 
-  <!-- LOG PANEL -->
   <div class="card">
     <h3 style="margin-top:0;">Preview & Log</h3>
     <div class="small">Payload yang akan dikirim ke Worker:</div>
@@ -229,7 +101,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
     <div id="log" class="debug"></div>
   </div>
 
-  <!-- QUICK PANEL -->
   <div class="card">
     <div class="small">Quick Actions</div>
     <button id="test" class="btn ghost" style="width:100%;margin-top:10px">Test Connection</button>
@@ -237,105 +108,134 @@ document.addEventListener("DOMContentLoaded", ()=>{
   </div>
 
   <div class="footer">Built for you — Professional SaaS.</div>
-
 </div>
 
-<!-- SCRIPT -->
+<!-- FIXED JAVASCRIPT -->
 <script>
-
-// WIB → UTC FIXED
+/* Helper: convert input "dd/mm/YYYY HH:MM" (WIB) to ISO (browser will convert to UTC) */
 function toISO(datetime){
   if(!datetime) return "";
-  const [date, time] = datetime.split(" ");
-  const [d, m, y] = date.split("/");
-  const local = new Date(`${y}-${m}-${d}T${time}:00`);
-  return local.toISOString();
+  const parts = datetime.split(" ");
+  if(parts.length < 2) return "";
+  const [date, time] = parts;
+  const [d,m,y] = date.split("/");
+  if(!d || !m || !y) return "";
+  return new Date(`${y}-${m}-${d}T${time}:00`).toISOString();
 }
 
 async function postJSON(url, body){
-  const res = await fetch(url,{
-    method:"POST",
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify(body)
-  });
-  return {ok:res.ok,status:res.status,text:await res.text()};
+  const res = await fetch(url, { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(body) });
+  return { ok: res.ok, status: res.status, text: await res.text() };
 }
 
-// CLEAR FORM
-document.getElementById("clear").onclick = () => {
-  title.value = "";
-  description.value = "";
-  video.value = "";
-  streamKey.value = "";
-  document.getElementById("payload").style.display="none";
-  document.getElementById("log").style.display="none";
-};
+/* Cache DOM elements */
+const titleEl = document.getElementById("title");
+const descriptionEl = document.getElementById("description");
+const visibilityEl = document.getElementById("visibility");
+const datetimeEl = document.getElementById("datetime");
+const durationEl = document.getElementById("duration");
+const loopingEl = document.getElementById("looping");
+const videoEl = document.getElementById("video");
+const streamKeyEl = document.getElementById("streamKey");
 
-// TRIGGER STREAM
-document.getElementById("trigger").onclick = async () => {
-  const payload = {
-    video_url: video.value.trim(),
-    rtmp_url:"rtmp://a.rtmp.youtube.com/live2",
-    start_time: toISO(datetime.value),
-    duration_seconds: Number(duration.value),
-    title: title.value.trim(),
-    description: description.value.trim(),
-    visibility: visibility.value,
-    stream_key: streamKey.value.trim(),
-    looping: looping.checked
-  };
+const triggerBtn = document.getElementById("trigger");
+const clearBtn = document.getElementById("clear");
+const payloadEl = document.getElementById("payload");
+const logEl = document.getElementById("log");
+const testBtn = document.getElementById("test");
 
-  payloadBox(payload);
+/* Clear handler */
+clearBtn.addEventListener("click", ()=>{
+  titleEl.value = "";
+  descriptionEl.value = "";
+  visibilityEl.value = "public";
+  datetimeEl.value = "";
+  durationEl.value = "3600";
+  loopingEl.checked = false;
+  videoEl.value = "";
+  streamKeyEl.value = "";
+  payloadEl.style.display = "none";
+  logEl.style.display = "none";
+});
 
-  // SAVE TO KV
+/* Trigger handler */
+triggerBtn.addEventListener("click", async ()=>{
   try{
-    await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule", {
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify(payload)
+    const title = titleEl.value.trim();
+    const description = descriptionEl.value.trim();
+    const visibility = visibilityEl.value;
+    const start_time = toISO(datetimeEl.value);
+    const duration_seconds = Number(durationEl.value) || 3600;
+    const looping = !!loopingEl.checked;
+    const video_url = videoEl.value.trim();
+    const stream_key = streamKeyEl.value.trim();
+
+    if(!title || !start_time || !video_url || !stream_key){
+      logEl.style.display = "block";
+      logEl.textContent = "Form belum lengkap — isikan Judul, Waktu, Video URL, dan Stream Key.";
+      return;
+    }
+
+    const payload = {
+      title,
+      description,
+      visibility,
+      start_time,
+      duration_seconds,
+      looping,
+      video_url,
+      stream_key,
+      rtmp_url: "rtmp://a.rtmp.youtube.com/live2"
+    };
+
+    payloadEl.style.display = "block";
+    payloadEl.textContent = JSON.stringify(payload, null, 2).replace(stream_key, "*****MASKED*****");
+
+    logEl.style.display = "block";
+    logEl.textContent = "Menyimpan jadwal ke KV...";
+
+    // Save schedule (include stream_key)
+    const schedRes = await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify(payload)
     });
-  }catch(e){
-    console.log("Gagal simpan jadwal:", e);
-  }
 
-  // TRIGGER WORKER STREAM
-  const worker = "https://ytstream-proxy.rigus-apps.workers.dev/";
+    if(!schedRes.ok){
+      const t = await schedRes.text();
+      logEl.textContent = "Gagal menyimpan jadwal: " + schedRes.status + " " + t;
+      return;
+    }
+
+    logEl.textContent = "Memicu worker stream...";
+
+    // Trigger worker stream
+    const r = await postJSON("https://ytstream-proxy.rigus-apps.workers.dev/", { event_type: "stream_trigger", client_payload: payload });
+
+    logEl.textContent = "Worker response: " + r.status + "\n" + r.text;
+  } catch(err){
+    console.error(err);
+    logEl.style.display = "block";
+    logEl.textContent = "Error: " + (err.message || err);
+  }
+});
+
+/* Test connection */
+testBtn.addEventListener("click", async ()=>{
   try{
-    const r = await postJSON(worker,{
-      event_type:"stream_trigger",
-      client_payload:payload
-    });
-    log.textContent = "Worker response: "+r.status+"\n"+r.text;
-  }catch(e){
-    log.textContent = "Error: "+e.message;
+    const r = await fetch("https://ytstream-proxy.rigus-apps.workers.dev/", { method: "OPTIONS" });
+    logEl.style.display = "block";
+    logEl.textContent = "Worker OPTIONS: " + r.status;
+  } catch(e){
+    logEl.style.display = "block";
+    logEl.textContent = "Worker test failed: " + e.message;
   }
-};
-
-function payloadBox(payload){
-  payloadEl.style.display="block";
-  payloadEl.textContent = JSON.stringify(payload,null,2)
-    .replace(payload.stream_key,"*****MASKED*****");
-  log.style.display="block";
-  log.textContent = "Sending...";
-}
-
-// TEST CONNECTION
-document.getElementById("test").onclick = async () => {
-  try{
-    const r = await fetch("https://ytstream-proxy.rigus-apps.workers.dev/",{method:"OPTIONS"});
-    alert("Worker OPTIONS status: "+r.status);
-  }catch(e){
-    alert("Worker test failed: "+e.message);
-  }
-};
-
+});
 </script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script>
-flatpickr("#datetime",{ enableTime:true, dateFormat:"d/m/Y H:i", time_24hr:true });
-</script>
+<script>flatpickr("#datetime",{enableTime:true,dateFormat:"d/m/Y H:i",time_24hr:true});</script>
 
 </body>
 </html>
