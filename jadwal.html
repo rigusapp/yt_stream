@@ -31,6 +31,7 @@ body{
   gap:30px;
   border-bottom:1px solid #e5e7eb;
   padding-bottom:12px;
+  margin-bottom:24px;
 }
 
 .nav-item{
@@ -67,53 +68,32 @@ body{
 <div class="container">
 
   <h1 style="margin:0;">Jadwal Live</h1>
-  <p style="margin:6px 0 0; color:#6b7280;">Kelola dan lihat daftar jadwal livestream yang telah Anda buat.</p>
+  <p style="margin:6px 0 0; color:#6b7280;">Halaman untuk melihat jadwal livestream.</p>
 
-  <!-- NAVBAR -->
-<div class="nav">
-  <a href="index.html?v=4" class="nav-item">Dashboard</a>
-  <a href="penyimpanan.html?v=4" class="nav-item">Penyimpanan</a>
-  <a href="jadwal.html?v=4" class="nav-item">Jadwal Live</a>
-  <a href="monitoring.html?v=4" class="nav-item">Monitoring</a>
-  <a href="pengaturan.html?v=4" class="nav-item">Pengaturan</a>
-</div>
+  <!-- NAV -->
+  <div class="nav">
+    <a href="index.html?v=4" class="nav-item">Dashboard</a>
+    <a href="penyimpanan.html?v=4" class="nav-item">Penyimpanan</a>
+    <a href="jadwal.html?v=4" class="nav-item">Jadwal Live</a>
+    <a href="monitoring.html?v=4" class="nav-item">Monitoring</a>
+    <a href="pengaturan.html?v=4" class="nav-item">Pengaturan</a>
+  </div>
 
-
-  <!-- AUTO ACTIVE -->
   <script>
   document.addEventListener("DOMContentLoaded", ()=>{
     const current = location.pathname.split("/").pop();
-    document.querySelectorAll(".nav-item").forEach(nav=>{
-      if(nav.getAttribute("href") === current){
-        nav.classList.add("active");
-      }
+    document.querySelectorAll(".nav-item").forEach(a=>{
+      if(a.href.includes(current)) a.classList.add("active");
     });
   });
   </script>
 
   <div class="card">
-  <h3 style="margin-top:0;">Daftar Jadwal Live</h3>
+    <h3 style="margin-top:0;">Daftar Jadwal Live</h3>
 
-  <p style="margin:10px 0 16px;">
-    Semua jadwal livestream yang Anda buat akan muncul di sini.
-  </p>
-
-  <div style="padding:16px; background:#f9fafb; border:1px dashed #d1d5db; border-radius:8px;">
-    <strong>Belum ada jadwal.</strong>
-    <br> Anda dapat membuat jadwal baru dari halaman Dashboard dengan mengisi formulir livestream.
+    <p>Belum ada jadwal tercatat.</p>
+    <p>Integrasi jadwal bisa dibangun kapan saja.</p>
   </div>
-
-  <p style="margin-top:16px; color:#6b7280;">
-    Fitur ini dapat dikembangkan untuk mengambil data otomatis dari:
-    <ul style="margin-top:8px; color:#6b7280;">
-      <li>Cloudflare KV (jadwal tersimpan)</li>
-      <li>Cloudflare R2 (metadata video)</li>
-      <li>GitHub Storage</li>
-      <li>LocalStorage browser</li>
-    </ul>
-  </p>
-</div>
-
 
 </div>
 
