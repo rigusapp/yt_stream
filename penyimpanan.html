@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Penyimpanan</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap" rel="stylesheet">
+
+<style>
+body{
+  font-family:'Inter',sans-serif;
+  background:#f4f7fb;
+  margin:0;
+  padding:0;
+  color:#0f172a;
+}
+
+.container{
+  max-width:980px;
+  margin:36px auto;
+  padding:28px;
+  background:white;
+  border-radius:12px;
+  box-shadow:0 8px 30px rgba(16,24,40,0.06);
+}
+
+/* NAVBAR */
+.nav{
+  margin-top:20px;
+  display:flex;
+  gap:30px;
+  border-bottom:1px solid #e5e7eb;
+  padding-bottom:12px;
+}
+
+.nav-item{
+  font-size:15px;
+  font-weight:600;
+  text-decoration:none;
+  color:#1f2937;
+  padding-bottom:6px;
+  border-bottom:2px solid transparent;
+  transition:all .15s ease;
+}
+
+.nav-item:hover{
+  color:#2563eb;
+}
+
+.nav-item.active{
+  color:#2563eb;
+  border-color:#2563eb;
+}
+
+.card{
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  border:1px solid #e5e7eb;
+  margin-top:24px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1 style="margin:0;">Penyimpanan</h1>
+  <p style="margin:6px 0 0; color:#6b7280;">Halaman untuk mengelola data tersimpan.</p>
+
+  <!-- NAVBAR -->
+  <div class="nav">
+    <a href="index.html" class="nav-item">Dashboard</a>
+    <a href="jadwal.html" class="nav-item">Jadwal Live</a>
+    <a href="monitoring.html" class="nav-item">Monitoring</a>
+    <a href="pengaturan.html" class="nav-item">Pengaturan</a>
+    <a href="penyimpanan.html" class="nav-item">Penyimpanan</a>
+  </div>
+
+  <!-- AUTO ACTIVE -->
+  <script>
+  document.addEventListener("DOMContentLoaded", ()=>{
+    const current = location.pathname.split("/").pop();
+    document.querySelectorAll(".nav-item").forEach(nav=>{
+      if(nav.getAttribute("href") === current){
+        nav.classList.add("active");
+      }
+    });
+  });
+  </script>
+
+  <div class="card">
+    <h3 style="margin-top:0;">Data Penyimpanan</h3>
+    <p>Di sini Anda dapat menyimpan:</p>
+    <ul>
+      <li>Riwayat stream</li>
+      <li>Playlist video</li>
+      <li>Konfigurasi preset</li>
+      <li>Metadata untuk YouTube Live</li>
+    </ul>
+
+    <p>Saat ini halaman masih kosong. Jika Anda ingin penyimpanan otomatis menggunakan:</p>
+    <ul>
+      <li>Cloudflare R2</li>
+      <li>KV Storage</li>
+      <li>LocalStorage</li>
+      <li>GitHub Storage</li>
+    </ul>
+
+    Saya siap bangunkan backend-nya kapan saja.
+  </div>
+
+</div>
+
+</body>
+</html>
