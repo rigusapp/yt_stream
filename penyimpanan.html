@@ -269,6 +269,17 @@ async function deleteFile(key) {
   }
 }
 
+//
+// COPY LINK
+//
+function copyLink(key) {
+  const url = API + "/storage/" + key;
+  navigator.clipboard.writeText(url)
+    .then(() => alert("Link disalin:\n" + url))
+    .catch(err => alert("Gagal menyalin: " + err));
+}
+
+  
 // Refresh
 document.getElementById("refreshBtn").onclick = loadFiles;
 
