@@ -52,26 +52,55 @@ body{
   border-color:#2563eb;
 }
 
+/* Card */
 .card{
   background:white;
-  padding:20px;
+  padding:24px;
   border-radius:10px;
   border:1px solid #e5e7eb;
   margin-top:24px;
 }
 
+/* Buttons */
 .btn{
-  padding:8px 16px;
+  padding:10px 18px;
   border-radius:8px;
   font-weight:600;
   cursor:pointer;
   border:0;
+  font-size:15px;
 }
 .btn.blue{ background:#2563eb; color:white; }
 .btn.red{ background:#e11d48; color:white; }
 .btn.gray{ background:#e5e7eb; color:#1f2937; }
 
-  
+/* Table */
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:20px;
+}
+
+table th, table td {
+  padding:12px 10px;
+  border-bottom:1px solid #e5e7eb;
+  text-align:left;
+}
+
+table th {
+  font-weight:700;
+  font-size:15px;
+  color:#1f2937;
+}
+
+table tr:last-child td{
+  border-bottom:none;
+}
+
+.small{
+  color:#6b7280;
+  font-size:14px;
+}
 </style>
 </head>
 
@@ -91,12 +120,11 @@ body{
     <a href="pengaturan.html" class="nav-item">Pengaturan</a>
   </div>
 
-
-  <!-- AUTO ACTIVE -->
+  <!-- Auto Active -->
   <script>
-  document.addEventListener("DOMContentLoaded", ()=>{
+  document.addEventListener("DOMContentLoaded", () => {
     const current = location.pathname.split("/").pop();
-    document.querySelectorAll(".nav-item").forEach(nav=>{
+    document.querySelectorAll(".nav-item").forEach(nav => {
       if(nav.getAttribute("href") === current){
         nav.classList.add("active");
       }
@@ -104,33 +132,41 @@ body{
   });
   </script>
 
+  <!-- Card Penyimpanan -->
   <div class="card">
-<h3 style="margin-top:0;">Upload File ke Cloudflare R2</h3>
-    <hr style="margin:20px 0; border:0; border-top:1px solid #e5e7eb;">
+    
+    <h3 style="margin:0 0 10px;">Upload File ke Cloudflare R2</h3>
+    <hr style="margin:18px 0; border:0; border-top:1px solid #e5e7eb;">
 
-<input id="fileInput" type="file" style="margin-top:10px;">
+    <!-- Input file -->
+    <input id="fileInput" type="file" style="margin-bottom:10px;">
 
-<div style="display:flex; gap:10px; margin-top:10px;">
-  <button id="uploadBtn" class="btn blue">Upload</button>
-  <button id="refreshBtn" class="btn gray">Refresh</button>
+    <!-- Buttons -->
+    <div style="display:flex; gap:10px; margin-top:5px; margin-bottom:15px;">
+      <button id="uploadBtn" class="btn blue">Upload</button>
+      <button id="refreshBtn" class="btn gray">Refresh</button>
+    </div>
+
+    <p id="uploadStatus" class="small"></p>
+
+    <!-- Table -->
+    <table>
+      <thead>
+        <tr>
+          <th>Nama File</th>
+          <th>Ukuran</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="storageTbody">
+        <tr><td colspan="3" class="small">Memuat...</td></tr>
+      </tbody>
+    </table>
+
+  </div>
+
 </div>
 
-<p id="uploadStatus" class="small" style="margin-top:10px;"></p>
-
-<table style="width:100%; border-collapse:collapse; margin-top:14px;">
-  <thead>
-    <tr>
-      <th>Nama File</th>
-      <th>Ukuran</th>
-      <th>Aksi</th>
-    </tr>
-  </thead>
-  <tbody id="storageTbody">
-    <tr><td colspan="3" class="small">Memuat...</td></tr>
-  </tbody>
-</table>
-
-</div>
 <script>
 const API = "https://yt-scheduler-api.rigus-apps.workers.dev";
 
@@ -162,9 +198,9 @@ async function loadFiles() {
         <td>${item.key}</td>
         <td>${Math.round(item.size / 1024)} KB</td>
         <td>
-          <a class="btn gray" style="padding:4px 8px;" 
+          <a class="btn gray" style="padding:6px 12px;"
              href="${API}/storage/${item.key}" target="_blank">Download</a>
-          <button class="btn red" style="padding:4px 8px;" 
+          <button class="btn red" style="padding:6px 12px;"
              onclick="deleteFile('${item.key}')">Hapus</button>
         </td>
       `;
@@ -220,13 +256,9 @@ async function deleteFile(key) {
   if (!confirm("Hapus file " + key + " ?")) return;
 
   try {
-    const r = await fetch(API + "/storage/" + key, {
-      method: "DELETE"
-    });
-
+    const r = await fetch(API + "/storage/" + key, { method: "DELETE" });
     const j = await r.json();
     if (j.ok) {
-      alert("File berhasil dihapus.");
       loadFiles();
     } else {
       alert("Gagal menghapus: " + j.error);
@@ -236,14 +268,10 @@ async function deleteFile(key) {
   }
 }
 
-//
-// Refresh button
-//
+// Refresh
 document.getElementById("refreshBtn").onclick = loadFiles;
 
-//
-// Load otomatis
-//
+// Auto load
 loadFiles();
 </script>
 
