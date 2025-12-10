@@ -50,7 +50,7 @@ body{
   border-color:#2563eb;
 }
 
-/* ====== PANEL STYLE (SAMA DENGAN PENYIMPANAN) ====== */
+/* PANEL STYLE */
 .card{
   background:white;
   padding:20px;
@@ -96,7 +96,7 @@ textarea{ min-height:110px; resize:vertical; }
   border:1px solid #dbeafe;
 }
 
-/* LOG OUTPUT */
+/* LOG */
 .debug{
   background:#0b1220;
   color:#bfe7b0;
@@ -108,7 +108,7 @@ textarea{ min-height:110px; resize:vertical; }
   margin-top:12px;
 }
 
-/* DATETIME FIX */
+/* DATETIME */
 #datetime{
   border:1px solid #e5e7eb;
   border-radius:8px;
@@ -151,7 +151,6 @@ textarea{ min-height:110px; resize:vertical; }
     <a href="pengaturan.html" class="nav-item">Pengaturan</a>
   </div>
 
-
   <script>
   document.addEventListener("DOMContentLoaded", ()=>{
     const current = location.pathname.split("/").pop();
@@ -165,6 +164,7 @@ textarea{ min-height:110px; resize:vertical; }
 
   <!-- PANEL FORM -->
   <div class="card">
+
     <label>Title</label>
     <input id="title" class="input" placeholder="Judul Live">
 
@@ -209,7 +209,7 @@ textarea{ min-height:110px; resize:vertical; }
     <input id="video" class="input" placeholder="https://.../video.mp4">
 
     <label>Stream Key</label>
-    <input id="streamKey" class="input" placeholder="rmfk-xxxx-xxxx-xxxx">
+    <input id="streamKey" class="input" placeholder="xxxx-xxxx">
 
     <div style="display:flex;gap:10px;margin-top:14px">
       <button id="trigger" class="btn">Trigger Stream</button>
@@ -220,6 +220,7 @@ textarea{ min-height:110px; resize:vertical; }
       Catatan: Stream key dikirim ke Worker. Jangan bagikan stream key Anda.
     </p>
   </div>
+
 
   <!-- PANEL LOG -->
   <div class="card">
@@ -233,7 +234,7 @@ textarea{ min-height:110px; resize:vertical; }
   <div class="card">
     <div class="small">Quick Actions</div>
     <button id="test" class="btn ghost" style="width:100%;margin-top:10px">Test Connection</button>
-    <div class="small" style="margin-top:6px;">Use Test to verify Worker responds with 204.</div>
+    <div class="small" style="margin-top:6px;">Gunakan Test untuk memastikan Worker merespon 204.</div>
   </div>
 
   <div class="footer">Built for you — Professional SaaS.</div>
@@ -241,22 +242,30 @@ textarea{ min-height:110px; resize:vertical; }
 </div>
 
 
+<!-- ========== JAVASCRIPT FIXED & UPDATED ========== -->
 <script>
+
+// FIX: Fungsi konversi WIB → UTC dengan template literal benar
 function toISO(datetime){
   if(!datetime) return "";
-  const [date,time] = datetime.split(" ");
-  const [day,month,year] = date.split("/");
+  const [date, time] = datetime.split(" ");
+  const [day, month, year] = date.split("/");
   const local = new Date(`${year}-${month}-${day}T${time}:00`);
-  const utc = new Date(local.getTime() - 7*3600*1000);
+  const utc = new Date(local.getTime() - (7 * 3600 * 1000));
   return utc.toISOString().split(".")[0] + "Z";
 }
 
 async function postJSON(url, body){
-  const res = await fetch(url,{method:"POST",headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const res = await fetch(url,{
+    method:"POST",
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(body)
+  });
   return {ok:res.ok,status:res.status,text:await res.text()};
 }
 
-document.getElementById("clear").onclick=()=>{
+// CLEAR FORM
+document.getElementById("clear").onclick = () => {
   document.getElementById("video").value="";
   document.getElementById("streamKey").value="";
   document.getElementById("title").value="";
@@ -266,7 +275,10 @@ document.getElementById("clear").onclick=()=>{
   document.getElementById("log").style.display="none";
 };
 
+
+// MAIN TRIGGER STREAM (SUDAH DITAMBAHKAN PENYIMPANAN JADWAL)
 document.getElementById("trigger").onclick = async () => {
+
   const title = document.getElementById("title").value.trim();
   const description = document.getElementById("description").value.trim();
   const visibility = document.getElementById("visibility").value;
@@ -279,7 +291,7 @@ document.getElementById("trigger").onclick = async () => {
 
   const payload = {
     video_url,
-    rtmp_url: "rtmp://a.rtmp.youtube.com/live2",
+    rtmp_url:"rtmp://a.rtmp.youtube.com/live2",
     start_time,
     duration_seconds,
     title,
@@ -289,72 +301,54 @@ document.getElementById("trigger").onclick = async () => {
     looping
   };
 
-  // Tampilkan payload
-  document.getElementById("payload").style.display = "block";
+  document.getElementById("payload").style.display="block";
   document.getElementById("payload").textContent =
-    JSON.stringify(payload, null, 2)
-      .replace(payload.stream_key, "*****MASKED*****");
+    JSON.stringify(payload,null,2).replace(stream_key,"*****MASKED*****");
 
-  document.getElementById("log").style.display = "block";
+  document.getElementById("log").style.display="block";
   document.getElementById("log").textContent = "Sending...";
 
-  // =====================================================
-  // 1) SINKRONISASIKAN JADWAL KE KV (Worker Schedule API)
-  // =====================================================
+  // =============================
+  // 1) SIMPAN JADWAL KE CLOUDFARE KV
+  // =============================
   try {
     await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify({
         title,
         description,
         start_time,
         duration_seconds,
         video_url,
-        stream_key,
-        looping,
-        visibility
+        visibility,
+        looping
       })
     });
-    console.log("Jadwal berhasil disimpan ke KV");
-  } catch (err) {
-    console.log("Gagal menyimpan jadwal ke KV:", err);
+  } catch (e) {
+    console.log("Gagal simpan jadwal:", e);
   }
 
-  // =====================================================
-  // 2) TRIGGER STREAM KE WORKER ENGINE
-  // =====================================================
+  // =============================
+  // 2) TRIGGER STREAM ENGINE
+  // =============================
   const worker = "https://ytstream-proxy.rigus-apps.workers.dev/";
-  try {
-    const r = await postJSON(worker, {
-      event_type: "stream_trigger",
-      client_payload: payload
+
+  try{
+    const r = await postJSON(worker,{
+      event_type:"stream_trigger",
+      client_payload:payload
     });
     document.getElementById("log").textContent =
-      "Worker response: " + r.status + "\n" + r.text;
-  } catch (e) {
-    document.getElementById("log").textContent = "Error: " + e.message;
-  }
-};
-
-
-  document.getElementById("payload").style.display="block";
-  document.getElementById("payload").textContent=JSON.stringify(payload,null,2)
-    .replace(payload.stream_key,"*****MASKED*****");
-
-  document.getElementById("log").style.display="block";
-  document.getElementById("log").textContent="Sending...";
-
-  const worker="https://ytstream-proxy.rigus-apps.workers.dev/";
-  try{
-    const r=await postJSON(worker,{event_type:"stream_trigger",client_payload:payload});
-    document.getElementById("log").textContent="Worker response: "+r.status+"\n"+r.text;
+      "Worker response: "+r.status+"\n"+r.text;
   }catch(e){
-    document.getElementById("log").textContent="Error: "+e.message;
+    document.getElementById("log").textContent = "Error: "+e.message;
   }
 };
 
-document.getElementById("test").onclick=async()=>{
+
+// TEST CONNECTION
+document.getElementById("test").onclick = async () => {
   const worker="https://ytstream-proxy.rigus-apps.workers.dev/";
   try{
     const r=await fetch(worker,{method:"OPTIONS"});
@@ -363,7 +357,9 @@ document.getElementById("test").onclick=async()=>{
     alert("Worker test failed: "+e.message);
   }
 };
+
 </script>
+
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
