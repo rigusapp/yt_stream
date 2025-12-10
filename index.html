@@ -50,7 +50,6 @@ body{
   border-color:#2563eb;
 }
 
-/* PANEL STYLE */
 .card{
   background:white;
   padding:20px;
@@ -59,7 +58,6 @@ body{
   margin-top:24px;
 }
 
-/* FORM ELEMENTS */
 label{
   display:block;
   font-weight:600;
@@ -75,6 +73,7 @@ label{
   font-size:14px;
   background:white;
 }
+
 textarea{ min-height:110px; resize:vertical; }
 
 .btn{
@@ -96,7 +95,6 @@ textarea{ min-height:110px; resize:vertical; }
   border:1px solid #dbeafe;
 }
 
-/* LOG */
 .debug{
   background:#0b1220;
   color:#bfe7b0;
@@ -151,45 +149,45 @@ document.addEventListener("DOMContentLoaded", ()=>{
 <!-- FORM -->
 <div class="card">
 
-<label>Title</label>
-<input id="title" class="input" placeholder="Judul Live">
+  <label>Title</label>
+  <input id="title" class="input" placeholder="Judul Live">
 
-<label>Description</label>
-<textarea id="description" class="input" placeholder="Deskripsi singkat..."></textarea>
+  <label>Description</label>
+  <textarea id="description" class="input" placeholder="Deskripsi singkat..."></textarea>
 
-<label>Visibility</label>
-<select id="visibility" class="input">
-  <option value="public">Public</option>
-  <option value="unlisted">Unlisted</option>
-  <option value="private">Private</option>
-</select>
+  <label>Visibility</label>
+  <select id="visibility" class="input">
+    <option value="public">Public</option>
+    <option value="unlisted">Unlisted</option>
+    <option value="private">Private</option>
+  </select>
 
-<label>Tanggal & Jam Live (WIB)</label>
-<input id="datetime" class="input" autocomplete="off" placeholder="Pilih tanggal & jam...">
+  <label>Tanggal & Jam Live (WIB)</label>
+  <input id="datetime" class="input" autocomplete="off" placeholder="Pilih tanggal & jam...">
 
-<label>Durasi</label>
-<select id="duration" class="input">
-  <option value="300">5 menit</option>
-  <option value="420">7 menit</option>
-  <option value="1800">30 menit</option>
-  <option value="3600" selected>1 Jam</option>
-  <option value="7200">2 Jam</option>
-</select>
+  <label>Durasi</label>
+  <select id="duration" class="input">
+    <option value="300">5 menit</option>
+    <option value="420">7 menit</option>
+    <option value="1800">30 menit</option>
+    <option value="3600" selected>1 Jam</option>
+    <option value="7200">2 Jam</option>
+  </select>
 
-<label style="margin-top:10px;display:flex;align-items:center;gap:8px;">
-  <input type="checkbox" id="looping"> Loop Video
-</label>
+  <label style="margin-top:10px;display:flex;align-items:center;gap:8px;">
+    <input type="checkbox" id="looping"> Loop Video
+  </label>
 
-<label>Video URL</label>
-<input id="video" class="input" placeholder="https://.../video.mp4">
+  <label>Video URL</label>
+  <input id="video" class="input" placeholder="https://.../video.mp4">
 
-<label>Stream Key</label>
-<input id="streamKey" class="input" placeholder="xxxx-xxxx">
+  <label>Stream Key</label>
+  <input id="streamKey" class="input" placeholder="xxxx-xxxx">
 
-<div style="display:flex;gap:10px;margin-top:14px">
-  <button id="trigger" class="btn">Trigger Stream</button>
-  <button id="clear" class="btn ghost">Clear</button>
-</div>
+  <div style="display:flex;gap:10px;margin-top:14px">
+    <button id="trigger" class="btn">Trigger Stream</button>
+    <button id="clear" class="btn ghost">Clear</button>
+  </div>
 
 </div>
 
@@ -210,11 +208,10 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 </div>
 
-<!-- ======================== -->
-<!-- JAVASCRIPT UTAMA -->
-<!-- ======================== -->
+<!-- ========================================== -->
+<!--        JAVASCRIPT UTAMA FINAL FIX          -->
+<!-- ========================================== -->
 <script>
-
 function toISO(datetime){
   if(!datetime) return "";
   const [date, time] = datetime.split(" ");
@@ -233,69 +230,92 @@ async function postJSON(url, body){
   return {ok:res.ok,status:res.status,text:await res.text()};
 }
 
-document.getElementById("clear").onclick = () => {
-  ["video","streamKey","title","description"].forEach(id=>document.getElementById(id).value="");
-  document.getElementById("visibility").value="public";
-  document.getElementById("payload").style.display="none";
-  document.getElementById("log").style.display="none";
+// DOM refs
+const titleEl = document.getElementById("title");
+const descriptionEl = document.getElementById("description");
+const visibilityEl = document.getElementById("visibility");
+const datetimeEl = document.getElementById("datetime");
+const durationEl = document.getElementById("duration");
+const loopingEl = document.getElementById("looping");
+const videoEl = document.getElementById("video");
+const streamKeyEl = document.getElementById("streamKey");
+
+const triggerBtn = document.getElementById("trigger");
+const clearBtn = document.getElementById("clear");
+const payloadEl = document.getElementById("payload");
+const logEl = document.getElementById("log");
+const testBtn = document.getElementById("test");
+
+// CLEAR
+clearBtn.onclick = () => {
+  titleEl.value = "";
+  descriptionEl.value = "";
+  videoEl.value = "";
+  streamKeyEl.value = "";
+  visibilityEl.value = "public";
+  payloadEl.style.display = "none";
+  logEl.style.display = "none";
 };
 
-document.getElementById("trigger").onclick = async () => {
+// TRIGGER STREAM
+triggerBtn.onclick = async () => {
+  try {
+    const payload = {
+      title: titleEl.value.trim(),
+      description: descriptionEl.value.trim(),
+      visibility: visibilityEl.value,
+      video_url: videoEl.value.trim(),
+      stream_key: streamKeyEl.value.trim(),
+      start_time: toISO(datetimeEl.value),
+      duration_seconds: Number(durationEl.value),
+      looping: loopingEl.checked,
+      rtmp_url: "rtmp://a.rtmp.youtube.com/live2"
+    };
 
-  const title = title.value.trim();
-  const description = description.value.trim();
-  const visibility = visibility.value;
-  const video_url = video.value.trim();
-  const stream_key = streamKey.value.trim();
-  const duration_seconds = Number(duration.value);
-  const looping = loopingElem.checked;
-  const start_time = toISO(datetime.value);
+    if(!payload.title || !payload.start_time || !payload.video_url || !payload.stream_key){
+      alert("Harap isi Judul, Waktu, Video URL, dan Stream Key");
+      return;
+    }
 
-  const payload = {
-    title,
-    description,
-    visibility,
-    video_url,
-    stream_key,
-    start_time,
-    duration_seconds,
-    looping,
-    rtmp_url:"rtmp://a.rtmp.youtube.com/live2"
-  };
+    // SHOW PAYLOAD
+    payloadEl.style.display="block";
+    payloadEl.textContent = JSON.stringify(payload,null,2).replace(payload.stream_key,"*****MASKED*****");
 
-  payloadEl.style.display="block";
-  payloadEl.textContent = JSON.stringify(payload,null,2).replace(stream_key,"*****MASKED*****");
+    logEl.style.display="block";
+    logEl.textContent="Menyimpan jadwal...";
 
-  logEl.style.display="block";
-  logEl.textContent="Saving schedule...";
+    // 1) SIMPAN JADWAL (inkl stream_key)
+    await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule",{
+      method:"POST",
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
 
-  // SIMPAN JADWAL (dengan stream_key)
-  await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule",{
-    method:"POST",
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify(payload)
-  });
+    logEl.textContent="Men-trigger stream...";
 
-  logEl.textContent="Triggering stream...";
+    // 2) TRIGGER STREAM ENGINE
+    const worker="https://ytstream-proxy.rigus-apps.workers.dev/";
+    const r = await postJSON(worker,{event_type:"stream_trigger",client_payload:payload});
+    logEl.textContent = "Worker response: "+r.status+"\n"+r.text;
 
-  const worker="https://ytstream-proxy.rigus-apps.workers.dev/";
-  const r = await postJSON(worker,{event_type:"stream_trigger",client_payload:payload});
-  logEl.textContent = "Worker response: "+r.status+"\n"+r.text;
+  } catch(e){
+    logEl.style.display="block";
+    logEl.textContent = "Error: " + e.message;
+    alert("Error: " + e.message);
+  }
 };
 
 // TEST
-document.getElementById("test").onclick = async () => {
+testBtn.onclick = async () => {
   const worker="https://ytstream-proxy.rigus-apps.workers.dev/";
   const r = await fetch(worker,{method:"OPTIONS"});
   alert("Worker OPTIONS status: " + r.status);
 };
-
 </script>
 
-
-<!-- ======================== -->
-<!-- MODE EDIT (untuk jadwal.html) -->
-<!-- ======================== -->
+<!-- ========================================== -->
+<!--     MODE EDIT (dari halaman jadwal.html)    -->
+<!-- ========================================== -->
 <script>
 document.addEventListener("DOMContentLoaded", async ()=>{
 
@@ -304,36 +324,32 @@ document.addEventListener("DOMContentLoaded", async ()=>{
   if(!id) return;
 
   try {
-    const r = await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule");
-    const j = await r.json();
-    const item = (j.list||[]).find(x=>x.id===id);
+    const res = await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule");
+    const json = await res.json();
+    const item = (json.list || []).find(x => x.id === id);
+    if(!item) return alert("Jadwal tidak ditemukan");
 
-    if(!item){
-      alert("Jadwal tidak ditemukan");
-      return;
-    }
+    titleEl.value = item.title || "";
+    descriptionEl.value = item.description || "";
+    videoEl.value = item.video_url || "";
+    streamKeyEl.value = item.stream_key || "";
+    durationEl.value = item.duration_seconds || 3600;
+    loopingEl.checked = !!item.looping;
 
-    title.value = item.title;
-    description.value = item.description;
-    video.value = item.video_url;
-    streamKey.value = item.stream_key || "";
-    duration.value = item.duration_seconds;
-    loopingElem.checked = !!item.looping;
-
-    // ISO → WIB
     const dt = new Date(item.start_time);
     const wib = new Date(dt.getTime() + 7*3600*1000)
-      .toISOString().slice(0,16).replace("T"," ");
-    datetime.value = wib;
+                  .toISOString().slice(0,16).replace("T"," ");
+    datetimeEl.value = wib;
 
   } catch(e){
-    alert("Gagal load data: " + e.message);
+    alert("Gagal load jadwal: " + e.message);
   }
 });
 </script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 <script>
 flatpickr("#datetime",{enableTime:true,dateFormat:"d/m/Y H:i",time_24hr:true});
 </script>
