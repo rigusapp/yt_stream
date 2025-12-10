@@ -32,6 +32,12 @@ body{
   box-shadow:0 8px 30px rgba(16,24,40,0.06);
 }
 
+/* Wrapper untuk menyamakan ukuran semua halaman */
+.page-wrapper{
+  max-width:940px;
+  margin:0 auto;
+}
+
 .header{
   margin-bottom:12px;
 }
@@ -80,7 +86,7 @@ h1{margin:0;font-size:20px}
   padding:16px;
   border-radius:10px;
   border:1px solid #eef2ff;
-  margin-top:18px;
+  margin-top:20px;
 }
 
 label{
@@ -135,16 +141,10 @@ textarea{min-height:110px;resize:vertical}
 }
 
 .footer{
-  margin-top:12px;
-  color:var(--muted);
+  margin-top:20px;
+  color:#6b7280;
   font-size:13px;
 }
-
-  .page-wrapper{
-  max-width: 940px;
-  margin: 0 auto;
-}
-
 
 /* ================= FLATPICKR FIX ================= */
 #datetime{
@@ -183,7 +183,6 @@ input:-webkit-autofill:focus{
 
 <body>
 <div class="container">
-<div class="page-wrapper">
 
   <div class="header">
     <div class="logo">YT</div>
@@ -214,80 +213,86 @@ input:-webkit-autofill:focus{
   </script>
 
 
-  <!-- ========== FORM (KOLOM UTAMA) ========== -->
-  <div class="panel">
+  <!-- ================= DASHBOARD WRAPPER ================= -->
+  <div class="page-wrapper">
 
-    <label>Title</label>
-    <input id="title" class="input" placeholder="Judul Live">
+    <!-- FORM (PANEL 1) -->
+    <div class="panel">
 
-    <label>Description</label>
-    <textarea id="description" class="input" placeholder="Deskripsi singkat..."></textarea>
+      <label>Title</label>
+      <input id="title" class="input" placeholder="Judul Live">
 
-    <label>Visibility</label>
-    <select id="visibility" class="input">
-      <option value="public">Public</option>
-      <option value="unlisted">Unlisted</option>
-      <option value="private">Private</option>
-    </select>
+      <label>Description</label>
+      <textarea id="description" class="input" placeholder="Deskripsi singkat..."></textarea>
 
-    <label>Tanggal & Jam Live (WIB)</label>
-    <input id="datetime" class="input" placeholder="Pilih tanggal & jam..." autocomplete="off">
+      <label>Visibility</label>
+      <select id="visibility" class="input">
+        <option value="public">Public</option>
+        <option value="unlisted">Unlisted</option>
+        <option value="private">Private</option>
+      </select>
 
-    <label>Durasi</label>
-    <select id="duration" class="input">
-      <option value="300">5 menit</option>
-      <option value="420">7 menit</option>
-      <option value="1800">30 menit</option>
-      <option value="3600" selected>1 Jam</option>
-      <option value="7200">2 Jam</option>
-      <option value="10800">3 Jam</option>
-      <option value="14400">4 Jam</option>
-      <option value="18000">5 Jam</option>
-      <option value="21600">6 Jam</option>
-      <option value="25200">7 Jam</option>
-      <option value="28800">8 Jam</option>
-      <option value="32400">9 Jam</option>
-      <option value="36000">10 Jam</option>
-      <option value="39600">11 Jam</option>
-      <option value="43200">12 Jam</option>
-    </select>
+      <label>Tanggal & Jam Live (WIB)</label>
+      <input id="datetime" class="input" placeholder="Pilih tanggal & jam..." autocomplete="off">
 
-    <label style="margin-top:10px;display:flex;align-items:center;gap:8px;">
-      <input type="checkbox" id="looping">
-      Loop Video (tanpa batas)
-    </label>
+      <label>Durasi</label>
+      <select id="duration" class="input">
+        <option value="300">5 menit</option>
+        <option value="420">7 menit</option>
+        <option value="1800">30 menit</option>
+        <option value="3600" selected>1 Jam</option>
+        <option value="7200">2 Jam</option>
+        <option value="10800">3 Jam</option>
+        <option value="14400">4 Jam</option>
+        <option value="18000">5 Jam</option>
+        <option value="21600">6 Jam</option>
+        <option value="25200">7 Jam</option>
+        <option value="28800">8 Jam</option>
+        <option value="32400">9 Jam</option>
+        <option value="36000">10 Jam</option>
+        <option value="39600">11 Jam</option>
+        <option value="43200">12 Jam</option>
+      </select>
 
-    <label>Video URL</label>
-    <input id="video" class="input" placeholder="https://.../video.mp4">
+      <label style="margin-top:10px;display:flex;align-items:center;gap:8px;">
+        <input type="checkbox" id="looping">
+        Loop Video (tanpa batas)
+      </label>
 
-    <label>Stream Key</label>
-    <input id="streamKey" class="input" placeholder="rmfk-xxxx-xxxx-xxxx">
+      <label>Video URL</label>
+      <input id="video" class="input" placeholder="https://.../video.mp4">
 
-    <div style="display:flex;gap:10px;margin-top:14px">
-      <button id="trigger" class="btn">Trigger Stream</button>
-      <button id="clear" class="btn ghost">Clear</button>
+      <label>Stream Key</label>
+      <input id="streamKey" class="input" placeholder="rmfk-xxxx-xxxx-xxxx">
+
+      <div style="display:flex;gap:10px;margin-top:14px">
+        <button id="trigger" class="btn">Trigger Stream</button>
+        <button id="clear" class="btn ghost">Clear</button>
+      </div>
+
+      <div class="small" style="margin-top:10px;">
+        Catatan: Stream key dikirim ke Worker. Jangan bagikan stream key Anda.
+      </div>
     </div>
 
-    <div class="meta" style="margin-top:10px;">
-      Catatan: Stream key dikirim ke Worker. Jangan bagikan stream key Anda.
+
+    <!-- PREVIEW & LOG -->
+    <div class="panel">
+      <h3 style="margin:0">Preview & Log</h3>
+      <div class="small">Payload yang akan dikirim ke Worker:</div>
+      <pre id="payload" class="debug"></pre>
+      <div id="log" class="debug"></div>
     </div>
-  </div>
 
+    <!-- QUICK ACTIONS -->
+    <div class="panel">
+      <div class="small">Quick actions</div>
+      <button id="test" class="btn ghost" style="width:100%;margin-top:10px">Test connection</button>
+      <div class="small meta">Use Test to verify Worker responds with 204.</div>
+    </div>
 
-  <!-- ========== PREVIEW & LOG (SEKARANG DI BAWAH) ========== -->
-  <div class="panel">
-    <h3 style="margin:0">Preview & Log</h3>
-    <div class="small">Payload yang akan dikirim ke Worker:</div>
-    <pre id="payload" class="debug"></pre>
-    <div id="log" class="debug"></div>
   </div>
-
-  <!-- ========== QUICK ACTIONS (SEKARANG DI BAWAH) ========== -->
-  <div class="panel">
-    <div class="small">Quick actions</div>
-    <button id="test" class="btn ghost" style="width:100%;margin-top:10px">Test connection</button>
-    <div class="small meta">Use Test to verify Worker responds with 204.</div>
-  </div>
+  <!-- ============= END WRAPPER ============= -->
 
 
   <div class="footer">Built for you — Professional SaaS.</div>
@@ -316,7 +321,7 @@ async function postJSON(url, body){
 
 document.getElementById("clear").onclick = ()=>{
   document.getElementById("video").value="";
-  document.getElementById("trace").value="";
+  document.getElementById("streamKey").value="";
   document.getElementById("title").value="";
   document.getElementById("description").value="";
   document.getElementById("visibility").value="public";
@@ -375,7 +380,6 @@ flatpickr("#datetime", {
   time_24hr:true
 });
 </script>
-</div> <!-- page-wrapper -->
 
 </body>
 </html>
