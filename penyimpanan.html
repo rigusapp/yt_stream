@@ -59,6 +59,19 @@ body{
   border:1px solid #e5e7eb;
   margin-top:24px;
 }
+
+.btn{
+  padding:8px 16px;
+  border-radius:8px;
+  font-weight:600;
+  cursor:pointer;
+  border:0;
+}
+.btn.blue{ background:#2563eb; color:white; }
+.btn.red{ background:#e11d48; color:white; }
+.btn.gray{ background:#e5e7eb; color:#1f2937; }
+
+  
 </style>
 </head>
 
@@ -93,6 +106,32 @@ body{
 
   <div class="card">
     <h3 style="margin-top:0;">Data Penyimpanan</h3>
+    <hr style="margin:20px 0; border:0; border-top:1px solid #e5e7eb;">
+
+<h3 style="margin-top:0;">Upload File ke Cloudflare R2</h3>
+
+<input id="fileInput" type="file" style="margin-top:10px;">
+
+<div style="display:flex; gap:10px; margin-top:10px;">
+  <button id="uploadBtn" class="btn blue">Upload</button>
+  <button id="refreshBtn" class="btn gray">Refresh</button>
+</div>
+
+<p id="uploadStatus" class="small" style="margin-top:10px;">—</p>
+
+<table style="width:100%; border-collapse:collapse; margin-top:14px;">
+  <thead>
+    <tr>
+      <th>Nama File</th>
+      <th>Ukuran</th>
+      <th>Aksi</th>
+    </tr>
+  </thead>
+  <tbody id="storageTbody">
+    <tr><td colspan="3" class="small">Memuat...</td></tr>
+  </tbody>
+</table>
+
     <p>Di sini Anda dapat menyimpan:</p>
     <ul>
       <li>Riwayat stream</li>
@@ -113,6 +152,121 @@ body{
   </div>
 
 </div>
+<script>
+const API = "https://yt-scheduler-api.rigus-apps.workers.dev";
+
+//
+// LIST FILES
+//
+async function loadFiles() {
+  const tbody = document.getElementById("storageTbody");
+  tbody.innerHTML = `<tr><td colspan="3" class="small">Memuat...</td></tr>`;
+
+  try {
+    const r = await fetch(API + "/storage");
+    const j = await r.json();
+    if (!j.ok) {
+      tbody.innerHTML = `<tr><td colspan="3" class="small">Gagal memuat data</td></tr>`;
+      return;
+    }
+
+    if (j.list.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="3" class="small">Belum ada file tersimpan</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = "";
+    j.list.forEach(item => {
+      const tr = document.createElement("tr");
+
+      tr.innerHTML = `
+        <td>${item.key}</td>
+        <td>${Math.round(item.size / 1024)} KB</td>
+        <td>
+          <a class="btn gray" style="padding:4px 8px;" 
+             href="${API}/storage/${item.key}" target="_blank">Download</a>
+          <button class="btn red" style="padding:4px 8px;" 
+             onclick="deleteFile('${item.key}')">Hapus</button>
+        </td>
+      `;
+
+      tbody.appendChild(tr);
+    });
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="3" class="small">Error: ${err}</td></tr>`;
+  }
+}
+
+//
+// UPLOAD
+//
+document.getElementById("uploadBtn").onclick = async () => {
+  const fileEl = document.getElementById("fileInput");
+  const status = document.getElementById("uploadStatus");
+
+  if (!fileEl.files[0]) {
+    status.textContent = "Pilih file terlebih dahulu.";
+    return;
+  }
+
+  const fd = new FormData();
+  fd.append("file", fileEl.files[0]);
+
+  status.textContent = "Uploading...";
+
+  try {
+    const r = await fetch(API + "/upload", {
+      method: "POST",
+      body: fd
+    });
+
+    const j = await r.json();
+
+    if (j.ok) {
+      status.textContent = "Upload berhasil: " + j.key;
+      fileEl.value = "";
+      loadFiles();
+    } else {
+      status.textContent = "Upload gagal: " + j.error;
+    }
+  } catch (err) {
+    status.textContent = "Error upload: " + err;
+  }
+};
+
+//
+// DELETE
+//
+async function deleteFile(key) {
+  if (!confirm("Hapus file " + key + " ?")) return;
+
+  try {
+    const r = await fetch(API + "/storage/" + key, {
+      method: "DELETE"
+    });
+
+    const j = await r.json();
+    if (j.ok) {
+      alert("File berhasil dihapus.");
+      loadFiles();
+    } else {
+      alert("Gagal menghapus: " + j.error);
+    }
+  } catch (err) {
+    alert("Error: " + err);
+  }
+}
+
+//
+// Refresh button
+//
+document.getElementById("refreshBtn").onclick = loadFiles;
+
+//
+// Load otomatis
+//
+loadFiles();
+</script>
 
 </body>
 </html>
