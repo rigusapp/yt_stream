@@ -266,18 +266,77 @@ document.getElementById("clear").onclick=()=>{
   document.getElementById("log").style.display="none";
 };
 
-document.getElementById("trigger").onclick=async()=>{
-  const payload={
-    video_url:document.getElementById("video").value.trim(),
-    rtmp_url:"rtmp://a.rtmp.youtube.com/live2",
-    start_time:toISO(document.getElementById("datetime").value),
-    duration_seconds:Number(document.getElementById("duration").value),
-    title:document.getElementById("title").value.trim(),
-    description:document.getElementById("description").value.trim(),
-    visibility:document.getElementById("visibility").value,
-    stream_key:document.getElementById("streamKey").value.trim(),
-    looping:document.getElementById("looping").checked
+document.getElementById("trigger").onclick = async () => {
+  const title = document.getElementById("title").value.trim();
+  const description = document.getElementById("description").value.trim();
+  const visibility = document.getElementById("visibility").value;
+  const video_url = document.getElementById("video").value.trim();
+  const stream_key = document.getElementById("streamKey").value.trim();
+  const start_local = document.getElementById("datetime").value;
+  const start_time = toISO(start_local);
+  const duration_seconds = Number(document.getElementById("duration").value);
+  const looping = document.getElementById("looping").checked;
+
+  const payload = {
+    video_url,
+    rtmp_url: "rtmp://a.rtmp.youtube.com/live2",
+    start_time,
+    duration_seconds,
+    title,
+    description,
+    visibility,
+    stream_key,
+    looping
   };
+
+  // Tampilkan payload
+  document.getElementById("payload").style.display = "block";
+  document.getElementById("payload").textContent =
+    JSON.stringify(payload, null, 2)
+      .replace(payload.stream_key, "*****MASKED*****");
+
+  document.getElementById("log").style.display = "block";
+  document.getElementById("log").textContent = "Sending...";
+
+  // =====================================================
+  // 1) SINKRONISASIKAN JADWAL KE KV (Worker Schedule API)
+  // =====================================================
+  try {
+    await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title,
+        description,
+        start_time,
+        duration_seconds,
+        video_url,
+        stream_key,
+        looping,
+        visibility
+      })
+    });
+    console.log("Jadwal berhasil disimpan ke KV");
+  } catch (err) {
+    console.log("Gagal menyimpan jadwal ke KV:", err);
+  }
+
+  // =====================================================
+  // 2) TRIGGER STREAM KE WORKER ENGINE
+  // =====================================================
+  const worker = "https://ytstream-proxy.rigus-apps.workers.dev/";
+  try {
+    const r = await postJSON(worker, {
+      event_type: "stream_trigger",
+      client_payload: payload
+    });
+    document.getElementById("log").textContent =
+      "Worker response: " + r.status + "\n" + r.text;
+  } catch (e) {
+    document.getElementById("log").textContent = "Error: " + e.message;
+  }
+};
+
 
   document.getElementById("payload").style.display="block";
   document.getElementById("payload").textContent=JSON.stringify(payload,null,2)
