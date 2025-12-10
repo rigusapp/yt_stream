@@ -24,13 +24,13 @@ body{
   box-shadow:0 8px 30px rgba(16,24,40,0.06);
 }
 
-/* NAVBAR */
 .nav{
   margin-top:20px;
   display:flex;
   gap:30px;
   border-bottom:1px solid #e5e7eb;
   padding-bottom:12px;
+  margin-bottom:24px;
 }
 
 .nav-item{
@@ -40,13 +40,10 @@ body{
   color:#1f2937;
   padding-bottom:6px;
   border-bottom:2px solid transparent;
-  transition:all .15s ease;
+  transition:.15s ease;
 }
 
-.nav-item:hover{
-  color:#2563eb;
-}
-
+.nav-item:hover{ color:#2563eb; }
 .nav-item.active{
   color:#2563eb;
   border-color:#2563eb;
@@ -67,62 +64,36 @@ body{
 <div class="container">
 
   <h1 style="margin:0;">Monitoring</h1>
-  <p style="margin:6px 0 0; color:#6b7280;">Pantau status sistem, aktivitas worker, dan kondisi livestream Anda secara real-time.</p>
+  <p style="margin:6px 0 0; color:#6b7280;">Status sistem, worker, dan YouTube Live.</p>
 
-  <!-- NAVBAR -->
-<div class="nav">
-  <a href="index.html?v=4" class="nav-item">Dashboard</a>
-  <a href="penyimpanan.html?v=4" class="nav-item">Penyimpanan</a>
-  <a href="jadwal.html?v=4" class="nav-item">Jadwal Live</a>
-  <a href="monitoring.html?v=4" class="nav-item">Monitoring</a>
-  <a href="pengaturan.html?v=4" class="nav-item">Pengaturan</a>
-</div>
+  <div class="nav">
+    <a href="index.html?v=4" class="nav-item">Dashboard</a>
+    <a href="penyimpanan.html?v=4" class="nav-item">Penyimpanan</a>
+    <a href="jadwal.html?v=4" class="nav-item">Jadwal Live</a>
+    <a href="monitoring.html?v=4" class="nav-item">Monitoring</a>
+    <a href="pengaturan.html?v=4" class="nav-item">Pengaturan</a>
+  </div>
 
-
-  <!-- AUTO ACTIVE -->
   <script>
   document.addEventListener("DOMContentLoaded", ()=>{
     const current = location.pathname.split("/").pop();
-    document.querySelectorAll(".nav-item").forEach(nav=>{
-      if(nav.getAttribute("href") === current){
-        nav.classList.add("active");
-      }
+    document.querySelectorAll(".nav-item").forEach(a=>{
+      if(a.href.includes(current)) a.classList.add("active");
     });
   });
   </script>
 
   <div class="card">
-  <h3 style="margin-top:0;">Status Sistem & Livestream</h3>
+    <h3 style="margin-top:0;">Status Monitoring</h3>
 
-  <p style="margin:10px 0 16px;">
-    Informasi berikut menunjukkan kondisi terkini dari layanan yang digunakan untuk menjalankan livestream.
-  </p>
+    <ul>
+      <li>Status GitHub Actions: –</li>
+      <li>Status Cloudflare Worker: –</li>
+      <li>Status YouTube Live: –</li>
+    </ul>
 
-  <ul style="list-style:none; padding:0; margin:0; font-size:15px;">
-    <li style="margin-bottom:10px;">
-      <strong>Cloudflare Worker:</strong>
-      <span style="color:#6b7280;">Menunggu pengecekan…</span>
-    </li>
-
-    <li style="margin-bottom:10px;">
-      <strong>GitHub Actions:</strong>
-      <span style="color:#6b7280;">Belum ada proses berjalan</span>
-    </li>
-
-    <li style="margin-bottom:10px;">
-      <strong>Status YouTube Live:</strong>
-      <span style="color:#6b7280;">Offline</span>
-    </li>
-  </ul>
-
-  <div style="padding:16px; background:#f9fafb; border:1px dashed #d1d5db; border-radius:8px; margin-top:16px;">
-    Fitur monitoring dapat dihubungkan ke API berikut:<br><br>
-    • Cloudflare Worker → Ping endpoint<br>
-    • GitHub Actions → Status workflow<br>
-    • YouTube Live API → Status live & health stream<br>
+    <p>Monitoring dapat diintegrasikan dengan API kapan saja.</p>
   </div>
-</div>
-
 
 </div>
 
