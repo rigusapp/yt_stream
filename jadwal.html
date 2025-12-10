@@ -43,15 +43,10 @@ body{
   transition:all .15s ease;
 }
 
-.nav-item:hover{
-  color:#2563eb;
-}
+.nav-item:hover{ color:#2563eb; }
+.nav-item.active{ color:#2563eb; border-color:#2563eb; }
 
-.nav-item.active{
-  color:#2563eb;
-  border-color:#2563eb;
-}
-
+/* CARD */
 .card{
   background:white;
   padding:20px;
@@ -63,33 +58,40 @@ body{
 table{
   width:100%;
   border-collapse:collapse;
+  margin-top:12px;
 }
 
 th,td{
-  padding:12px 10px;
-  border-bottom:1px solid #e5e7eb;
+  padding:10px 6px;
   text-align:left;
+  border-bottom:1px solid #e5e7eb;
 }
 
-.small{ font-size:13px; color:#6b7280; }
-
 .btn{
-  padding:8px 14px;
+  padding:6px 12px;
+  font-size:14px;
   border-radius:8px;
   border:0;
   cursor:pointer;
   font-weight:600;
 }
 
-.btn.ghost{
-  background:#eff6ff;
-  color:#2563eb;
-}
-
-.btn.danger{
-  background:#dc2626;
+.btn.copy{
+  background:#2563eb;
   color:white;
 }
+
+.btn.disabled{
+  background:#cbd5e1;
+  color:#64748b;
+  cursor:not-allowed;
+}
+
+.btn.del{
+  background:#ef4444;
+  color:white;
+}
+.small{ font-size:13px; color:#6b7280; }
 </style>
 </head>
 
@@ -97,187 +99,155 @@ th,td{
 
 <div class="container">
 
-  <h1 style="margin:0;">Jadwal Live</h1>
-  <p style="margin:6px 0 0; color:#6b7280;">Halaman untuk melihat jadwal livestream.</p>
+<h1 style="margin:0;">Jadwal Live</h1>
+<p style="margin:6px 0 0; color:#6b7280;">Halaman untuk melihat jadwal livestream.</p>
 
-  <!-- NAVBAR -->
-  <div class="nav">
-    <a href="index.html" class="nav-item">Dashboard</a>
-    <a href="penyimpanan.html" class="nav-item">Penyimpanan</a>
-    <a href="jadwal.html" class="nav-item">Jadwal Live</a>
-    <a href="monitoring.html" class="nav-item">Monitoring</a>
-    <a href="pengaturan.html" class="nav-item">Pengaturan</a>
-  </div>
+<!-- NAV -->
+<div class="nav">
+  <a href="index.html" class="nav-item">Dashboard</a>
+  <a href="penyimpanan.html" class="nav-item">Penyimpanan</a>
+  <a href="jadwal.html" class="nav-item">Jadwal Live</a>
+  <a href="monitoring.html" class="nav-item">Monitoring</a>
+  <a href="pengaturan.html" class="nav-item">Pengaturan</a>
+</div>
 
-  <!-- AUTO ACTIVE -->
-  <script>
-  document.addEventListener("DOMContentLoaded", ()=>{
-    const current = location.pathname.split("/").pop();
-    document.querySelectorAll(".nav-item").forEach(nav=>{
-      if(nav.getAttribute("href") === current){
-        nav.classList.add("active");
-      }
-    });
+<script>
+document.addEventListener("DOMContentLoaded", ()=>{
+  const current = location.pathname.split("/").pop();
+  document.querySelectorAll(".nav-item").forEach(nav=>{
+    if(nav.getAttribute("href") === current){
+      nav.classList.add("active");
+    }
   });
-  </script>
+});
+</script>
 
-  <div class="card">
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <button id="btnSync" class="btn ghost">Sync Now</button>
-      <div id="status" class="small">—</div>
-    </div>
+<div class="card">
 
-    <div style="margin-top:12px;overflow:auto">
-      <table>
-        <thead>
-          <tr>
-            <th>Waktu (WIB)</th>
-            <th>Judul</th>
-            <th>Durasi</th>
-            <th>Video</th>
-            <th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody id="tbody">
-          <tr><td colspan="5" class="small">Memuat...</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+<div style="display:flex; justify-content:space-between; align-items:center;">
+  <button id="sync" class="btn copy" style="background:#2563eb;">Sync Now</button>
+  <div class="small" id="status">—</div>
+</div>
+
+<table>
+<thead>
+  <tr>
+    <th>Waktu (WIB)</th>
+    <th>Judul</th>
+    <th>Durasi</th>
+    <th>Video</th>
+    <th>Aksi</th>
+  </tr>
+</thead>
+<tbody id="tbody">
+  <tr><td colspan="5" class="small">Memuat...</td></tr>
+</tbody>
+</table>
 
 </div>
 
+</div>
 
-<!-- SCRIPT -->
 <script>
-const WORKER_URL = "https://yt-scheduler-api.rigus-apps.workers.dev";
+// Worker jadwal
+const API = "https://yt-scheduler-api.rigus-apps.workers.dev";
+
 const $ = id => document.getElementById(id);
 
-async function loadList(){
-  $("status").textContent = "Memuat jadwal...";
-  try {
-    const r = await fetch(WORKER_URL + "/schedule");
-    const j = await r.json();
-    if(!j.ok) throw new Error(j.error);
-    renderTable(j.list || []);
+async function load(){
+  $("status").textContent = "Mengambil data...";
+
+  try{
+    const res = await fetch(API + "/schedule");
+    const json = await res.json();
+
+    if(!json.ok) throw new Error(json.error);
+
+    render(json.list || []);
+
     $("status").textContent = "Terakhir: " + new Date().toLocaleString();
-  } catch(err) {
-    $("status").textContent = "Error: "+err.message;
+  }catch(e){
+    $("status").textContent = "Error: " + e.message;
+    $("tbody").innerHTML = `<tr><td colspan="5" class="small">Gagal memuat.</td></tr>`;
   }
 }
 
-function escapeHtml(s){
-  if(!s) return "";
-  return String(s).replace(/[&<>"']/g, m => ({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
-  }[m]));
-}
-
-/* ============ RENDER TABLE ============ */
-function renderTable(list){
+function render(list){
   const tbody = $("tbody");
-  if(list.length === 0){
-    tbody.innerHTML = '<tr><td colspan="5" class="small">Belum ada jadwal.</td></tr>';
+
+  if(!list.length){
+    tbody.innerHTML = `<tr><td colspan="5" class="small">Belum ada jadwal.</td></tr>`;
     return;
   }
 
   list.sort((a,b)=> new Date(a.start_time) - new Date(b.start_time));
+
   tbody.innerHTML = "";
+
   const now = Date.now();
 
-  for(const item of list){
-    const startUTC = new Date(item.start_time);
-    const startWIB = new Date(startUTC.getTime() + 7*3600*1000);
+  list.forEach(item=>{
+    const dt = new Date(item.start_time);
+    const WIB = new Date(dt.getTime() + 7*3600*1000);
+    const f = WIB.toLocaleString("id-ID",{hour12:false});
 
-    const end = new Date(startUTC.getTime() + (item.duration_seconds * 1000));
-    const isFinished = now > end;
+    const selesai = (now > dt.getTime() + (item.duration_seconds*1000));
 
-    const durMin = Math.floor(item.duration_seconds / 60);
-
-    let tr = document.createElement("tr");
+    const tr = document.createElement("tr");
 
     tr.innerHTML = `
-      <td>${startWIB.toLocaleString("id-ID")}</td>
-
+      <td>${f}</td>
+      <td><b>${item.title}</b><div class="small">${item.description||""}</div></td>
+      <td>${Math.floor(item.duration_seconds/60)}m</td>
+      <td class="small">${item.video_url}</td>
       <td>
-        <strong>${escapeHtml(item.title)}</strong>
-        <div class="small">${escapeHtml(item.description || "")}</div>
-      </td>
+        <button 
+          class="btn ${selesai ? "copy" : "disabled"}"
+          ${selesai ? "" : "disabled"}
+          data-copy="${item.id}"
+        >Copy Stream</button>
 
-      <td>${durMin}m</td>
-
-      <td class="small">${escapeHtml(item.video_url)}</td>
-
-      <td style="text-align:right">
-        ${
-          isFinished
-          ? `<button class="btn ghost" data-copy="${item.id}">Copy Stream</button>`
-          : `<span class="small" style="opacity:.5">Belum selesai</span>`
-        }
-        <button class="btn danger" data-del="${item.id}">Hapus</button>
+        <button 
+          class="btn del" 
+          data-del="${item.id}"
+        >Hapus</button>
       </td>
     `;
 
     tbody.appendChild(tr);
-  }
-
-  /* EVENT COPY */
-  tbody.querySelectorAll("button[data-copy]").forEach(btn=>{
-    btn.onclick = ()=> copyData(btn.dataset.copy);
   });
 
-  /* EVENT DELETE */
-  tbody.querySelectorAll("button[data-del]").forEach(btn=>{
-    btn.onclick = ()=> delItem(btn.dataset.del);
+  // Event copy
+  document.querySelectorAll("[data-copy]").forEach(btn=>{
+    btn.onclick = ()=>{
+      const id = btn.getAttribute("data-copy");
+      if(!id) return;
+
+      // buka dashboard & auto isi
+      window.location.href = "index.html?copy_id=" + id;
+    };
+  });
+
+  // Event hapus
+  document.querySelectorAll("[data-del]").forEach(btn=>{
+    btn.onclick = ()=> del(btn.getAttribute("data-del"));
   });
 }
 
-/* ============ COPY STREAM DATA ============ */
-async function copyData(id){
-  try{
-    const res = await fetch(WORKER_URL + "/schedule");
-    const json = await res.json();
-    const item = json.list.find(x => x.id === id);
-    if(!item){ alert("Data tidak ditemukan"); return; }
-
-    const dt = new Date(item.start_time);
-    const wib = new Date(dt.getTime() + 7*3600*1000);
-
-    const text =
-`Judul : ${item.title}
-Deskripsi : ${item.description || "-"}
-Mulai : ${wib.toLocaleString("id-ID")} WIB
-Durasi : ${Math.floor(item.duration_seconds/60)} menit
-Video : ${item.video_url}
-Visibility : ${item.visibility || "public"}
-Looping : ${item.looping ? "Ya" : "Tidak"}
-Stream Key : ${item.stream_key}`;
-
-    await navigator.clipboard.writeText(text);
-    alert("Berhasil disalin!");
-  }catch(e){
-    alert("Gagal menyalin: "+e.message);
-  }
-}
-
-/* ============ DELETE ITEM ============ */
-async function delItem(id){
+async function del(id){
   if(!confirm("Hapus jadwal ini?")) return;
 
-  const r = await fetch(WORKER_URL + "/schedule/" + id, { method: "DELETE" });
-  const j = await r.json();
+  const res = await fetch(API + "/schedule/" + id,{method:"DELETE"});
+  const j = await res.json();
 
-  if(!j.ok){
-    alert("Gagal hapus.");
-    return;
-  }
-  loadList();
+  if(j.ok) load();
+  else alert("Gagal hapus: "+j.error);
 }
 
-$("btnSync").onclick = ()=> loadList();
+$("sync").onclick = load;
 
-/* INITIAL LOAD */
-loadList();
+// initial load
+load();
 </script>
 
 </body>
