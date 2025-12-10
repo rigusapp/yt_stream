@@ -242,8 +242,9 @@ function renderTable(list){
 }
 
 function gotoEdit(id){
-  alert("Edit dilakukan dari Dashboard.\nSilakan buka Dashboard dan ubah jadwal di sana.");
+  window.location.href = "index.html?edit_id=" + id;
 }
+
 
 async function delItem(id){
   if(!confirm("Hapus jadwal ini?")) return;
