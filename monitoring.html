@@ -24,12 +24,16 @@ body{
   box-shadow:0 8px 30px rgba(16,24,40,0.06);
 }
 
+/* NAVBAR */
 .nav{
   margin-top:20px;
   display:flex;
   gap:30px;
   border-bottom:1px solid #e5e7eb;
   padding-bottom:12px;
+
+  /* FIX PERBEDAAN HALAMAN */
+  margin-bottom:0 !important;
 }
 
 .nav-item{
@@ -39,11 +43,14 @@ body{
   color:#1f2937;
   padding-bottom:6px;
   border-bottom:2px solid transparent;
-  transition:all .15s ease;
+  transition:.15s;
 }
 
 .nav-item:hover{ color:#2563eb; }
-.nav-item.active{ color:#2563eb; border-color:#2563eb; }
+.nav-item.active{
+  color:#2563eb;
+  border-color:#2563eb;
+}
 
 .card{
   background:white;
@@ -62,6 +69,7 @@ body{
   <h1 style="margin:0;">Monitoring</h1>
   <p style="margin:6px 0 0; color:#6b7280;">Status sistem, worker, dan YouTube Live.</p>
 
+  <!-- NAVBAR -->
   <div class="nav">
     <a href="index.html" class="nav-item">Dashboard</a>
     <a href="penyimpanan.html" class="nav-item">Penyimpanan</a>
@@ -70,12 +78,13 @@ body{
     <a href="pengaturan.html" class="nav-item">Pengaturan</a>
   </div>
 
+  <!-- AUTO ACTIVE -->
   <script>
   document.addEventListener("DOMContentLoaded", ()=>{
     const current = location.pathname.split("/").pop();
-    document.querySelectorAll(".nav-item").forEach(a=>{
-      if(a.getAttribute("href") === current){
-        a.classList.add("active");
+    document.querySelectorAll(".nav-item").forEach(nav=>{
+      if(nav.getAttribute("href") === current){
+        nav.classList.add("active");
       }
     });
   });
@@ -83,12 +92,14 @@ body{
 
   <div class="card">
     <h3 style="margin-top:0;">Status Monitoring</h3>
+
     <ul>
       <li>Status GitHub Actions: –</li>
       <li>Status Cloudflare Worker: –</li>
       <li>Status YouTube Live: –</li>
     </ul>
-    <p>Monitoring dapat diintegrasikan dengan API kapan saja.</p>
+
+    Monitoring dapat diintegrasikan dengan API kapan saja.
   </div>
 
 </div>
