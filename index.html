@@ -108,24 +108,11 @@ textarea{ min-height:110px; resize:vertical; }
   margin-top:12px;
 }
 
-/* DATETIME */
 #datetime{
   border:1px solid #e5e7eb;
   border-radius:8px;
   padding:10px;
   font-size:14px;
-}
-
-/* FLATPICKR */
-.flatpickr-calendar{ border-radius:12px!important; }
-.flatpickr-months{
-  background:#2563eb!important;
-  color:white!important;
-}
-.flatpickr-time input{
-  font-size:18px!important;
-  font-weight:600!important;
-  color:#2563eb!important;
 }
 
 .footer{
@@ -135,7 +122,6 @@ textarea{ min-height:110px; resize:vertical; }
 }
 </style>
 </head>
-
 
 <body>
 <div class="container">
@@ -151,107 +137,90 @@ textarea{ min-height:110px; resize:vertical; }
     <a href="pengaturan.html" class="nav-item">Pengaturan</a>
   </div>
 
-  <script>
-  document.addEventListener("DOMContentLoaded", ()=>{
-    const current = location.pathname.split("/").pop();
-    document.querySelectorAll(".nav-item").forEach(nav=>{
-      if(nav.getAttribute("href") === current){
-        nav.classList.add("active");
-      }
-    });
+<script>
+document.addEventListener("DOMContentLoaded", ()=>{
+  const current = location.pathname.split("/").pop();
+  document.querySelectorAll(".nav-item").forEach(nav=>{
+    if(nav.getAttribute("href") === current){
+      nav.classList.add("active");
+    }
   });
-  </script>
+});
+</script>
 
-  <!-- PANEL FORM -->
-  <div class="card">
+<!-- FORM -->
+<div class="card">
 
-    <label>Title</label>
-    <input id="title" class="input" placeholder="Judul Live">
+<label>Title</label>
+<input id="title" class="input" placeholder="Judul Live">
 
-    <label>Description</label>
-    <textarea id="description" class="input" placeholder="Deskripsi singkat..."></textarea>
+<label>Description</label>
+<textarea id="description" class="input" placeholder="Deskripsi singkat..."></textarea>
 
-    <label>Visibility</label>
-    <select id="visibility" class="input">
-      <option value="public">Public</option>
-      <option value="unlisted">Unlisted</option>
-      <option value="private">Private</option>
-    </select>
+<label>Visibility</label>
+<select id="visibility" class="input">
+  <option value="public">Public</option>
+  <option value="unlisted">Unlisted</option>
+  <option value="private">Private</option>
+</select>
 
-    <label>Tanggal & Jam Live (WIB)</label>
-    <input id="datetime" class="input" autocomplete="off" placeholder="Pilih tanggal & jam...">
+<label>Tanggal & Jam Live (WIB)</label>
+<input id="datetime" class="input" autocomplete="off" placeholder="Pilih tanggal & jam...">
 
-    <label>Durasi</label>
-    <select id="duration" class="input">
-      <option value="300">5 menit</option>
-      <option value="420">7 menit</option>
-      <option value="1800">30 menit</option>
-      <option value="3600" selected>1 Jam</option>
-      <option value="7200">2 Jam</option>
-      <option value="10800">3 Jam</option>
-      <option value="14400">4 Jam</option>
-      <option value="18000">5 Jam</option>
-      <option value="21600">6 Jam</option>
-      <option value="25200">7 Jam</option>
-      <option value="28800">8 Jam</option>
-      <option value="32400">9 Jam</option>
-      <option value="36000">10 Jam</option>
-      <option value="39600">11 Jam</option>
-      <option value="43200">12 Jam</option>
-    </select>
+<label>Durasi</label>
+<select id="duration" class="input">
+  <option value="300">5 menit</option>
+  <option value="420">7 menit</option>
+  <option value="1800">30 menit</option>
+  <option value="3600" selected>1 Jam</option>
+  <option value="7200">2 Jam</option>
+</select>
 
-    <label style="margin-top:10px;display:flex;align-items:center;gap:8px;">
-      <input type="checkbox" id="looping">
-      Loop Video (tanpa batas)
-    </label>
+<label style="margin-top:10px;display:flex;align-items:center;gap:8px;">
+  <input type="checkbox" id="looping"> Loop Video
+</label>
 
-    <label>Video URL</label>
-    <input id="video" class="input" placeholder="https://.../video.mp4">
+<label>Video URL</label>
+<input id="video" class="input" placeholder="https://.../video.mp4">
 
-    <label>Stream Key</label>
-    <input id="streamKey" class="input" placeholder="xxxx-xxxx">
+<label>Stream Key</label>
+<input id="streamKey" class="input" placeholder="xxxx-xxxx">
 
-    <div style="display:flex;gap:10px;margin-top:14px">
-      <button id="trigger" class="btn">Trigger Stream</button>
-      <button id="clear" class="btn ghost">Clear</button>
-    </div>
-
-    <p class="small" style="margin-top:10px;">
-      Catatan: Stream key dikirim ke Worker. Jangan bagikan stream key Anda.
-    </p>
-  </div>
-
-
-  <!-- PANEL LOG -->
-  <div class="card">
-    <h3 style="margin-top:0;">Preview & Log</h3>
-    <div class="small">Payload yang akan dikirim ke Worker:</div>
-    <pre id="payload" class="debug"></pre>
-    <div id="log" class="debug"></div>
-  </div>
-
-  <!-- PANEL QUICK ACTIONS -->
-  <div class="card">
-    <div class="small">Quick Actions</div>
-    <button id="test" class="btn ghost" style="width:100%;margin-top:10px">Test Connection</button>
-    <div class="small" style="margin-top:6px;">Gunakan Test untuk memastikan Worker merespon 204.</div>
-  </div>
-
-  <div class="footer">Built for you — Professional SaaS.</div>
+<div style="display:flex;gap:10px;margin-top:14px">
+  <button id="trigger" class="btn">Trigger Stream</button>
+  <button id="clear" class="btn ghost">Clear</button>
+</div>
 
 </div>
 
+<!-- LOG -->
+<div class="card">
+  <h3 style="margin-top:0;">Preview & Log</h3>
+  <pre id="payload" class="debug"></pre>
+  <div id="log" class="debug"></div>
+</div>
 
-<!-- ========== JAVASCRIPT FIXED & UPDATED ========== -->
+<!-- TEST -->
+<div class="card">
+  <div class="small">Quick Actions</div>
+  <button id="test" class="btn ghost" style="width:100%;margin-top:10px">Test Connection</button>
+</div>
+
+<div class="footer">Built for you — Professional SaaS.</div>
+
+</div>
+
+<!-- ======================== -->
+<!-- JAVASCRIPT UTAMA -->
+<!-- ======================== -->
 <script>
 
-// FIX: Fungsi konversi WIB → UTC dengan template literal benar
 function toISO(datetime){
   if(!datetime) return "";
   const [date, time] = datetime.split(" ");
-  const [day, month, year] = date.split("/");
-  const local = new Date(`${year}-${month}-${day}T${time}:00`);
-  const utc = new Date(local.getTime() - (7 * 3600 * 1000));
+  const [d,m,y] = date.split("/");
+  const local = new Date(`${y}-${m}-${d}T${time}:00`);
+  const utc = new Date(local.getTime() - 7*3600*1000);
   return utc.toISOString().split(".")[0] + "Z";
 }
 
@@ -264,150 +233,107 @@ async function postJSON(url, body){
   return {ok:res.ok,status:res.status,text:await res.text()};
 }
 
-// CLEAR FORM
 document.getElementById("clear").onclick = () => {
-  document.getElementById("video").value="";
-  document.getElementById("streamKey").value="";
-  document.getElementById("title").value="";
-  document.getElementById("description").value="";
+  ["video","streamKey","title","description"].forEach(id=>document.getElementById(id).value="");
   document.getElementById("visibility").value="public";
   document.getElementById("payload").style.display="none";
   document.getElementById("log").style.display="none";
 };
 
-
-// MAIN TRIGGER STREAM (SUDAH DITAMBAHKAN PENYIMPANAN JADWAL)
 document.getElementById("trigger").onclick = async () => {
 
-  const title = document.getElementById("title").value.trim();
-  const description = document.getElementById("description").value.trim();
-  const visibility = document.getElementById("visibility").value;
-  const video_url = document.getElementById("video").value.trim();
-  const stream_key = document.getElementById("streamKey").value.trim();
-  const start_local = document.getElementById("datetime").value;
-  const start_time = toISO(start_local);
-  const duration_seconds = Number(document.getElementById("duration").value);
-  const looping = document.getElementById("looping").checked;
+  const title = title.value.trim();
+  const description = description.value.trim();
+  const visibility = visibility.value;
+  const video_url = video.value.trim();
+  const stream_key = streamKey.value.trim();
+  const duration_seconds = Number(duration.value);
+  const looping = loopingElem.checked;
+  const start_time = toISO(datetime.value);
 
   const payload = {
-    video_url,
-    rtmp_url:"rtmp://a.rtmp.youtube.com/live2",
-    start_time,
-    duration_seconds,
     title,
     description,
     visibility,
+    video_url,
     stream_key,
-    looping
+    start_time,
+    duration_seconds,
+    looping,
+    rtmp_url:"rtmp://a.rtmp.youtube.com/live2"
   };
 
-  document.getElementById("payload").style.display="block";
-  document.getElementById("payload").textContent =
-    JSON.stringify(payload,null,2).replace(stream_key,"*****MASKED*****");
+  payloadEl.style.display="block";
+  payloadEl.textContent = JSON.stringify(payload,null,2).replace(stream_key,"*****MASKED*****");
 
-  document.getElementById("log").style.display="block";
-  document.getElementById("log").textContent = "Sending...";
+  logEl.style.display="block";
+  logEl.textContent="Saving schedule...";
 
-  // =============================
-  // 1) SIMPAN JADWAL KE CLOUDFARE KV
-  // =============================
-  try {
-    await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule", {
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({
-        title,
-        description,
-        start_time,
-        duration_seconds,
-        video_url,
-        visibility,
-        looping
-      })
-    });
-  } catch (e) {
-    console.log("Gagal simpan jadwal:", e);
-  }
+  // SIMPAN JADWAL (dengan stream_key)
+  await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule",{
+    method:"POST",
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(payload)
+  });
 
-  // =============================
-  // 2) TRIGGER STREAM ENGINE
-  // =============================
-  const worker = "https://ytstream-proxy.rigus-apps.workers.dev/";
+  logEl.textContent="Triggering stream...";
 
-  try{
-    const r = await postJSON(worker,{
-      event_type:"stream_trigger",
-      client_payload:payload
-    });
-    document.getElementById("log").textContent =
-      "Worker response: "+r.status+"\n"+r.text;
-  }catch(e){
-    document.getElementById("log").textContent = "Error: "+e.message;
-  }
+  const worker="https://ytstream-proxy.rigus-apps.workers.dev/";
+  const r = await postJSON(worker,{event_type:"stream_trigger",client_payload:payload});
+  logEl.textContent = "Worker response: "+r.status+"\n"+r.text;
 };
 
-
-// TEST CONNECTION
+// TEST
 document.getElementById("test").onclick = async () => {
   const worker="https://ytstream-proxy.rigus-apps.workers.dev/";
-  try{
-    const r=await fetch(worker,{method:"OPTIONS"});
-    alert("Worker OPTIONS status: "+r.status);
-  }catch(e){
-    alert("Worker test failed: "+e.message);
-  }
+  const r = await fetch(worker,{method:"OPTIONS"});
+  alert("Worker OPTIONS status: " + r.status);
 };
 
 </script>
 
-  </script>
 
 <!-- ======================== -->
-<!-- MODE EDIT DARI JADWAL.HTML -->
+<!-- MODE EDIT (untuk jadwal.html) -->
 <!-- ======================== -->
 <script>
 document.addEventListener("DOMContentLoaded", async ()=>{
 
   const url = new URL(window.location.href);
-  const editId = url.searchParams.get("edit_id");
-  if(!editId) return;
+  const id = url.searchParams.get("edit_id");
+  if(!id) return;
 
-  // Ambil semua jadwal dari Worker
   try {
-    const res = await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule");
-    const json = await res.json();
-    if(!json.ok) throw new Error(json.error);
+    const r = await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule");
+    const j = await r.json();
+    const item = (j.list||[]).find(x=>x.id===id);
 
-    const item = (json.list || []).find(x => x.id === editId);
     if(!item){
-      alert("Jadwal tidak ditemukan.");
+      alert("Jadwal tidak ditemukan");
       return;
     }
 
-    // AUTO ISI FORM
-    document.getElementById("title").value = item.title || "";
-    document.getElementById("description").value = item.description || "";
-    document.getElementById("video").value = item.video_url || "";
-    document.getElementById("streamKey").value = item.stream_key || "";
-    document.getElementById("duration").value = item.duration_seconds || 3600;
-    document.getElementById("looping").checked = !!item.looping;
+    title.value = item.title;
+    description.value = item.description;
+    video.value = item.video_url;
+    streamKey.value = item.stream_key || "";
+    duration.value = item.duration_seconds;
+    loopingElem.checked = !!item.looping;
 
-    // Konversi ISO → WIB
+    // ISO → WIB
     const dt = new Date(item.start_time);
-    const local = new Date(dt.getTime() + (7 * 3600 * 1000));
-    const formatted = local.toISOString().slice(0, 16).replace("T", " ");
+    const wib = new Date(dt.getTime() + 7*3600*1000)
+      .toISOString().slice(0,16).replace("T"," ");
+    datetime.value = wib;
 
-    document.getElementById("datetime").value = formatted;
-
-
+  } catch(e){
+    alert("Gagal load data: " + e.message);
+  }
 });
 </script>
 
-  
-
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
 <script>
 flatpickr("#datetime",{enableTime:true,dateFormat:"d/m/Y H:i",time_24hr:true});
 </script>
