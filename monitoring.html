@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<title>Monitoring</title>
+<title>Penyimpanan</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap" rel="stylesheet">
 
@@ -24,10 +24,6 @@ body{
   box-shadow:0 8px 30px rgba(16,24,40,0.06);
 }
 
-/* IDENTIK PENGATURAN */
-h1{ margin:0 !important; padding:0 !important; }
-p{ margin:6px 0 0 !important; padding:0 !important; }
-
 /* NAVBAR */
 .nav{
   margin-top:20px;
@@ -35,20 +31,26 @@ p{ margin:6px 0 0 !important; padding:0 !important; }
   gap:30px;
   border-bottom:1px solid #e5e7eb;
   padding-bottom:12px;
-  margin-bottom:0 !important;
 }
 
 .nav-item{
   font-size:15px;
   font-weight:600;
-  color:#1f2937;
   text-decoration:none;
+  color:#1f2937;
   padding-bottom:6px;
   border-bottom:2px solid transparent;
+  transition:all .15s ease;
 }
 
-.nav-item:hover{ color:#2563eb; }
-.nav-item.active{ color:#2563eb; border-color:#2563eb; }
+.nav-item:hover{
+  color:#2563eb;
+}
+
+.nav-item.active{
+  color:#2563eb;
+  border-color:#2563eb;
+}
 
 .card{
   background:white;
@@ -58,15 +60,16 @@ p{ margin:6px 0 0 !important; padding:0 !important; }
   margin-top:24px;
 }
 </style>
-
 </head>
+
 <body>
 
 <div class="container">
 
-  <h1>Monitoring</h1>
-  <p>Status sistem, worker, dan YouTube Live.</p>
+  <h1 style="margin:0;">Penyimpanan</h1>
+  <p style="margin:6px 0 0; color:#6b7280;">Halaman untuk mengelola data tersimpan.</p>
 
+  <!-- NAVBAR -->
   <div class="nav">
     <a href="index.html" class="nav-item">Dashboard</a>
     <a href="penyimpanan.html" class="nav-item">Penyimpanan</a>
@@ -75,25 +78,37 @@ p{ margin:6px 0 0 !important; padding:0 !important; }
     <a href="pengaturan.html" class="nav-item">Pengaturan</a>
   </div>
 
+  <!-- AUTO ACTIVE -->
   <script>
-  document.addEventListener("DOMContentLoaded",()=>{
-    const current = location.pathname.split('/').pop();
-    document.querySelectorAll('.nav-item').forEach(n=>{
-      if(n.getAttribute('href')===current) n.classList.add('active');
+  document.addEventListener("DOMContentLoaded", ()=>{
+    const current = location.pathname.split("/").pop();
+    document.querySelectorAll(".nav-item").forEach(nav=>{
+      if(nav.getAttribute("href") === current){
+        nav.classList.add("active");
+      }
     });
   });
   </script>
 
   <div class="card">
-    <h3 style="margin-top:0;">Status Monitoring</h3>
-
+    <h3 style="margin-top:0;">Data Penyimpanan</h3>
+    <p>Di sini Anda dapat menyimpan:</p>
     <ul>
-      <li>Status GitHub Actions: –</li>
-      <li>Status Cloudflare Worker: –</li>
-      <li>Status YouTube Live: –</li>
+      <li>Riwayat stream</li>
+      <li>Playlist video</li>
+      <li>Konfigurasi preset</li>
+      <li>Metadata untuk YouTube Live</li>
     </ul>
 
-    <p>Monitoring dapat diintegrasikan dengan API kapan saja.</p>
+    <p>Saat ini halaman masih kosong. Jika Anda ingin penyimpanan otomatis menggunakan:</p>
+    <ul>
+      <li>Cloudflare R2</li>
+      <li>KV Storage</li>
+      <li>LocalStorage</li>
+      <li>GitHub Storage</li>
+    </ul>
+
+    Saya siap bangunkan backend-nya kapan saja.
   </div>
 
 </div>
