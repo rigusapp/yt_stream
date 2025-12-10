@@ -7,72 +7,33 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap" rel="stylesheet">
 
 <style>
-body{
-  font-family:'Inter',sans-serif;
-  background:#f4f7fb;
-  margin:0;
-  padding:0;
-  color:#0f172a;
-}
-.container{
-  max-width:980px;
-  margin:36px auto;
-  padding:28px;
-  background:white;
-  border-radius:12px;
-  box-shadow:0 8px 30px rgba(16,24,40,0.06);
-}
-.nav{
-  margin-top:20px;
-  display:flex;
-  gap:30px;
-  border-bottom:1px solid #e5e7eb;
-  padding-bottom:12px;
-}
-.nav-item{
-  font-size:15px;
-  font-weight:600;
-  text-decoration:none;
-  color:#1f2937;
-  padding-bottom:6px;
-  border-bottom:2px solid transparent;
-  transition:all .15s ease;
-}
-.nav-item:hover{ color:#2563eb; }
-.nav-item.active{ color:#2563eb; border-color:#2563eb; }
-
-.card{
-  background:white;
-  padding:20px;
-  border-radius:10px;
-  border:1px solid #e5e7eb;
-  margin-top:24px;
-}
-
-label{ display:block;font-weight:600;margin-top:12px;font-size:13px; }
-.input, select, textarea{
-  width:100%; padding:10px; border-radius:8px; border:1px solid #e5e7eb;
-  font-size:14px; background:white;
-}
-textarea{ min-height:110px; resize:vertical; }
-
-.btn{ display:inline-flex;align-items:center;gap:10px;padding:10px 14px;background:#2563eb;color:white;border-radius:10px;border:0;cursor:pointer;font-weight:700; }
-.btn.ghost{ background:transparent;color:#2563eb;border:1px solid #dbeafe; }
-
-.debug{
-  background:#0b1220;color:#bfe7b0;padding:12px;border-radius:8px;
-  font-family:monospace;white-space:pre-wrap;display:none;margin-top:12px;
-}
-.footer{ margin-top:24px;color:#6b7280;font-size:13px; }
+body{font-family:'Inter',sans-serif;background:#f4f7fb;margin:0;padding:0;color:#0f172a;}
+.container{max-width:980px;margin:36px auto;padding:28px;background:white;border-radius:12px;
+box-shadow:0 8px 30px rgba(16,24,40,0.06);}
+.nav{margin-top:20px;display:flex;gap:30px;border-bottom:1px solid #e5e7eb;padding-bottom:12px;}
+.nav-item{font-size:15px;font-weight:600;text-decoration:none;color:#1f2937;padding-bottom:6px;
+border-bottom:2px solid transparent;transition:.15s;}
+.nav-item:hover{color:#2563eb;}
+.nav-item.active{color:#2563eb;border-color:#2563eb;}
+.card{background:#fff;padding:20px;border-radius:10px;border:1px solid #e5e7eb;margin-top:24px;}
+label{display:block;font-weight:600;margin-top:12px;font-size:13px;}
+.input,select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #e5e7eb;
+font-size:14px;background:#fff;}
+textarea{min-height:110px;resize:vertical;}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;background:#2563eb;
+color:white;border-radius:10px;border:0;cursor:pointer;font-weight:700;}
+.btn.ghost{background:transparent;color:#2563eb;border:1px solid #dbeafe;}
+.debug{background:#0b1220;color:#bfe7b0;padding:12px;border-radius:8px;font-family:monospace;
+white-space:pre-wrap;display:none;margin-top:12px;}
+.footer{margin-top:24px;color:#6b7280;font-size:13px;}
 </style>
 </head>
 
 <body>
 
 <div class="container">
-
-<h1 style="margin:0;">YT Stream — Professional</h1>
-<p style="margin:6px 0 0; color:#6b7280;">Dashboard profesional untuk mengatur livestream YouTube.</p>
+<h1>YT Stream — Professional</h1>
+<p style="margin:6px 0 0;color:#6b7280;">Dashboard profesional untuk livestream YouTube</p>
 
 <div class="nav">
   <a href="index.html" class="nav-item">Dashboard</a>
@@ -95,43 +56,42 @@ document.addEventListener("DOMContentLoaded", ()=>{
 <div class="card">
 
 <label>Title</label>
-<input id="title" class="input">
+<input id="inp_title" class="input">
 
 <label>Description</label>
-<textarea id="description" class="input"></textarea>
+<textarea id="inp_desc" class="input"></textarea>
 
 <label>Visibility</label>
-<select id="visibility" class="input">
+<select id="inp_vis" class="input">
   <option value="public">Public</option>
   <option value="unlisted">Unlisted</option>
   <option value="private">Private</option>
 </select>
 
 <label>Tanggal & Jam Live (WIB)</label>
-<input id="datetime" class="input" autocomplete="off">
+<input id="inp_time" class="input" autocomplete="off" placeholder="11/12/2025 12:00">
 
 <label>Durasi</label>
-<select id="duration" class="input">
+<select id="inp_dur" class="input">
   <option value="300">5 menit</option>
   <option value="1800">30 menit</option>
   <option value="3600" selected>1 Jam</option>
   <option value="7200">2 Jam</option>
-  <option value="10800">3 Jam</option>
 </select>
 
 <label style="margin-top:10px;display:flex;align-items:center;gap:8px;">
-  <input type="checkbox" id="looping"> Loop Video
+  <input type="checkbox" id="inp_loop"> Loop Video
 </label>
 
 <label>Video URL</label>
-<input id="video" class="input">
+<input id="inp_video" class="input">
 
 <label>Stream Key</label>
-<input id="streamKey" class="input">
+<input id="inp_key" class="input">
 
 <div style="display:flex;gap:10px;margin-top:14px">
-  <button id="trigger" class="btn">Trigger Stream</button>
-  <button id="clear" class="btn ghost">Clear</button>
+  <button id="btn_trigger" class="btn">Trigger Stream</button>
+  <button id="btn_clear" class="btn ghost">Clear</button>
 </div>
 
 </div>
@@ -143,17 +103,19 @@ document.addEventListener("DOMContentLoaded", ()=>{
 </div>
 
 <div class="footer">Built for you — Professional SaaS.</div>
-
 </div>
 
-<!-- SCRIPT FINAL -->
 <script>
-
-// FIX WAKTU WIB TANPA DIUBAH KE UTC
-function toISO(datetime){
-  if(!datetime) return "";
-  const [date, time] = datetime.split(" ");
-  const [d,m,y] = date.split("/");
+// ----------------------------
+// FIX WAKTU *TANPA KONVERSI*
+// Worker menyimpan seperti:
+// 2025-12-11T12:00:00+07:00
+// ----------------------------
+function toISO_WIB(str){
+  if(!str) return "";
+  // format input: DD/MM/YYYY HH:mm
+  let [d,m,y] = str.split(" ")[0].split("/");
+  let time = str.split(" ")[1];
   return `${y}-${m}-${d}T${time}:00+07:00`;
 }
 
@@ -166,64 +128,55 @@ async function postJSON(url, body){
   return {ok:res.ok,status:res.status,text:await res.text()};
 }
 
-document.getElementById("clear").onclick = ()=>{
-  document.getElementById("video").value="";
-  document.getElementById("streamKey").value="";
-  document.getElementById("title").value="";
-  document.getElementById("description").value="";
-  document.getElementById("visibility").value="public";
-  document.getElementById("payload").style.display="none";
-  document.getElementById("log").style.display="none";
+// CLEAR
+btn_clear.onclick = ()=>{
+  inp_title.value = "";
+  inp_desc.value = "";
+  inp_video.value = "";
+  inp_key.value = "";
+  inp_vis.value = "public";
+  payload.style.display = "none";
+  log.style.display = "none";
 };
 
-document.getElementById("trigger").onclick = async ()=>{
+// TRIGGER STREAM
+btn_trigger.onclick = async ()=>{
 
-  const titleVal = document.getElementById("title").value.trim();
-  const descVal = document.getElementById("description").value.trim();
-  const visibilityVal = document.getElementById("visibility").value;
-  const video_url = document.getElementById("video").value.trim();
-  const stream_key = document.getElementById("streamKey").value.trim();
-  const start_time = toISO(document.getElementById("datetime").value);
-  const duration_seconds = Number(document.getElementById("duration").value);
-  const loopingVal = document.getElementById("looping").checked;
-
-  const payload = {
-    video_url,
-    title: titleVal,
-    description: descVal,
-    visibility: visibilityVal,
-    stream_key,
-    start_time,
-    duration_seconds,
-    looping: loopingVal,
+  const payloadData = {
+    title: inp_title.value.trim(),
+    description: inp_desc.value.trim(),
+    visibility: inp_vis.value,
+    video_url: inp_video.value.trim(),
+    stream_key: inp_key.value.trim(),
+    start_time: toISO_WIB(inp_time.value),
+    duration_seconds: Number(inp_dur.value),
+    looping: inp_loop.checked,
     rtmp_url:"rtmp://a.rtmp.youtube.com/live2"
   };
 
-  const payloadEl = document.getElementById("payload");
-  const logEl = document.getElementById("log");
+  payload.style.display = "block";
+  payload.textContent = JSON.stringify(payloadData,null,2);
 
-  payloadEl.textContent = JSON.stringify(payload,null,2).replace(stream_key,"*****MASKED*****");
-  payloadEl.style.display="block";
-  logEl.style.display="block";
-  logEl.textContent = "Sending...";
+  log.style.display = "block";
+  log.textContent = "Sending...";
 
-  // Simpan jadwal
+  // SIMPAN KE KV
   await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule",{
     method:"POST",
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify(payload)
+    body:JSON.stringify(payloadData)
   });
 
-  // Trigger Worker
-  const r = await postJSON(
-    "https://ytstream-proxy.rigus-apps.workers.dev/",
-    { event_type:"stream_trigger", client_payload:payload }
-  );
+  // TRIGGER ENGINE
+  const r = await postJSON("https://ytstream-proxy.rigus-apps.workers.dev/",{
+    event_type:"stream_trigger",
+    client_payload:payloadData
+  });
 
-  logEl.textContent = "Worker response: "+r.status+"\n"+r.text;
+  log.textContent = "Worker response: "+r.status+"\n"+r.text;
 };
 
-// AUTO FILL untuk copy stream
+// COPY STREAM MODE
 (async ()=>{
   const url = new URL(location.href);
   const copyId = url.searchParams.get("copy_id");
@@ -234,24 +187,24 @@ document.getElementById("trigger").onclick = async ()=>{
   const item = (j.list||[]).find(x=>x.id===copyId);
   if(!item) return;
 
-  document.getElementById("title").value = item.title;
-  document.getElementById("description").value = item.description;
-  document.getElementById("video").value = item.video_url;
-  document.getElementById("streamKey").value = item.stream_key;
-  document.getElementById("duration").value = item.duration_seconds;
-  document.getElementById("looping").checked = !!item.looping;
+  inp_title.value = item.title;
+  inp_desc.value = item.description;
+  inp_video.value = item.video_url;
+  inp_key.value = item.stream_key;
+  inp_dur.value = item.duration_seconds;
+  inp_loop.checked = item.looping;
 
+  // convert WIB+07:00 ke input form
   const dt = new Date(item.start_time);
-  const local = new Date(dt.getTime() + 7*3600*1000);
-  const f = local.toISOString().slice(0,16).replace("T"," ");
-  document.getElementById("datetime").value = f;
+  const t = `${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}/${dt.getFullYear()} ${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')}`;
+  inp_time.value = t;
 })();
 </script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
-flatpickr("#datetime",{enableTime:true,dateFormat:"d/m/Y H:i",time_24hr:true});
+flatpickr("#inp_time",{enableTime:true,dateFormat:"d/m/Y H:i",time_24hr:true});
 </script>
 
 </body>
