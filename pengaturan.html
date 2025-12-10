@@ -7,46 +7,64 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap" rel="stylesheet">
 
 <style>
-body{font-family:'Inter',sans-serif;background:#f4f7fb;margin:0;padding:0;color:#0f172a;}
-.container{max-width:980px;margin:36px auto;padding:28px;background:white;border-radius:12px;
-box-shadow:0 8px 30px rgba(16,24,40,0.06);}
+body{
+  font-family:'Inter',sans-serif;
+  background:#f4f7fb;
+  margin:0;
+  padding:0;
+  color:#0f172a;
+}
 
+.container{
+  max-width:980px;
+  margin:36px auto;
+  padding:28px;
+  background:white;
+  border-radius:12px;
+  box-shadow:0 8px 30px rgba(16,24,40,0.06);
+}
+
+/* NAVBAR */
 .nav{
   margin-top:20px;
   display:flex;
-  gap:24px;
+  gap:30px;
   border-bottom:1px solid #e5e7eb;
-  padding-bottom:14px;
+  padding-bottom:12px;
 }
 
 .nav-item{
   font-size:15px;
   font-weight:600;
   text-decoration:none;
-  color:#374151;
-  padding:6px 0;
+  color:#1f2937;
+  padding-bottom:6px;
   border-bottom:2px solid transparent;
+  transition:all .15s ease;
 }
 
+.nav-item:hover{ color:#2563eb; }
 .nav-item.active{
   color:#2563eb;
   border-color:#2563eb;
 }
 
-.input{
-  padding:10px;
-  width:300px;
-  border-radius:8px;
-  border:1px solid #ddd;
-  margin-top:6px;
-}
-
+/* CARD */
 .card{
   background:white;
   padding:20px;
   border-radius:10px;
   border:1px solid #e5e7eb;
   margin-top:24px;
+}
+
+.input{
+  width:100%;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #e5e7eb;
+  font-size:14px;
+  margin-top:6px;
 }
 </style>
 </head>
@@ -55,8 +73,8 @@ box-shadow:0 8px 30px rgba(16,24,40,0.06);}
 
 <div class="container">
 
-  <h1 style="margin:0;">Pengaturan Sistem</h1>
-  <p style="margin-top:6px;color:#6b7280;">Atur preferensi aplikasi.</p>
+  <h1 style="margin:0;">Pengaturan</h1>
+  <p style="margin:6px 0 0; color:#6b7280;">Atur preferensi dan konfigurasi aplikasi.</p>
 
   <!-- NAVBAR -->
   <div class="nav">
@@ -67,59 +85,38 @@ box-shadow:0 8px 30px rgba(16,24,40,0.06);}
     <a href="pengaturan.html" class="nav-item">Pengaturan</a>
   </div>
 
+  <!-- AUTO ACTIVE -->
   <script>
   document.addEventListener("DOMContentLoaded", ()=>{
     const current = location.pathname.split("/").pop();
-    document.querySelectorAll(".nav-item").forEach(a=>{
-      if(a.getAttribute("href") === current){
-        a.classList.add("active");
+    document.querySelectorAll(".nav-item").forEach(nav=>{
+      if(nav.getAttribute("href") === current){
+        nav.classList.add("active");
       }
     });
   });
   </script>
 
   <div class="card">
-    <label>Worker URL</label><br>
-    <input id="workerUrl" class="input" placeholder="https://...workers.dev/">
+    <h3 style="margin-top:0;">Pengaturan Aplikasi</h3>
 
-    <br><br>
-    <label>Default Stream Key</label><br>
-    <input id="defaultKey" class="input">
+    <label>Worker URL</label>
+    <input class="input" placeholder="https://your-worker-url.workers.dev/">
 
-    <br><br>
-    <label>Default Video URL</label><br>
-    <input id="defaultVideo" class="input">
+    <label>Default Stream Key</label>
+    <input class="input" placeholder="xxxxxxxxxxxxx">
 
-    <br><br>
-    <label style="display:flex;align-items:center;gap:6px;">
-      <input type="checkbox" id="darkMode">
-      Mode Gelap
+    <label>Default Video URL</label>
+    <input class="input" placeholder="https://.../video.mp4">
+
+    <label style="margin-top:14px;">
+      <input type="checkbox"> Mode Gelap (Dark Mode)
     </label>
 
-    <br><br>
-    <button onclick="save()" style="padding:10px 16px;background:#2563eb;color:white;border:0;border-radius:8px;font-weight:600;">
-      Simpan Pengaturan
-    </button>
+    <p style="margin-top:12px;">Pengaturan belum disimpan. Anda bisa menambahkan backend kapan saja.</p>
   </div>
 
 </div>
-
-<script>
-function save(){
-  localStorage.setItem("workerUrl", document.getElementById("workerUrl").value);
-  localStorage.setItem("defaultKey", document.getElementById("defaultKey").value);
-  localStorage.setItem("defaultVideo", document.getElementById("defaultVideo").value);
-  localStorage.setItem("darkMode", document.getElementById("darkMode").checked);
-  alert("Pengaturan disimpan.");
-}
-
-window.onload = ()=>{
-  document.getElementById("workerUrl").value = localStorage.getItem("workerUrl") || "";
-  document.getElementById("defaultKey").value = localStorage.getItem("defaultKey") || "";
-  document.getElementById("defaultVideo").value = localStorage.getItem("defaultVideo") || "";
-  document.getElementById("darkMode").checked = localStorage.getItem("darkMode") === "true";
-};
-</script>
 
 </body>
 </html>
