@@ -67,7 +67,7 @@ body{
 <div class="container">
 
   <h1 style="margin:0;">Jadwal Live</h1>
-  <p style="margin:6px 0 0; color:#6b7280;">Halaman Jadwal Live.</p>
+  <p style="margin:6px 0 0; color:#6b7280;">Kelola dan lihat daftar jadwal livestream yang telah Anda buat.</p>
 
   <!-- NAVBAR -->
   <div class="nav">
@@ -91,25 +91,28 @@ body{
   </script>
 
   <div class="card">
-    <h3 style="margin-top:0;">Data Penyimpanan</h3>
-    <p>Di sini Anda dapat menyimpan:</p>
-    <ul>
-      <li>Riwayat stream</li>
-      <li>Playlist video</li>
-      <li>Konfigurasi preset</li>
-      <li>Metadata untuk YouTube Live</li>
-    </ul>
+  <h3 style="margin-top:0;">Daftar Jadwal Live</h3>
 
-    <p>Saat ini halaman masih kosong. Jika Anda ingin penyimpanan otomatis menggunakan:</p>
-    <ul>
-      <li>Cloudflare R2</li>
-      <li>KV Storage</li>
-      <li>LocalStorage</li>
-      <li>GitHub Storage</li>
-    </ul>
+  <p style="margin:10px 0 16px;">
+    Semua jadwal livestream yang Anda buat akan muncul di sini.
+  </p>
 
-    Saya siap bangunkan backend-nya kapan saja.
+  <div style="padding:16px; background:#f9fafb; border:1px dashed #d1d5db; border-radius:8px;">
+    <strong>Belum ada jadwal.</strong>
+    <br> Anda dapat membuat jadwal baru dari halaman Dashboard dengan mengisi formulir livestream.
   </div>
+
+  <p style="margin-top:16px; color:#6b7280;">
+    Fitur ini dapat dikembangkan untuk mengambil data otomatis dari:
+    <ul style="margin-top:8px; color:#6b7280;">
+      <li>Cloudflare KV (jadwal tersimpan)</li>
+      <li>Cloudflare R2 (metadata video)</li>
+      <li>GitHub Storage</li>
+      <li>LocalStorage browser</li>
+    </ul>
+  </p>
+</div>
+
 
 </div>
 
