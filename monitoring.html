@@ -67,7 +67,7 @@ body{
 <div class="container">
 
   <h1 style="margin:0;">Monitoring</h1>
-  <p style="margin:6px 0 0; color:#6b7280;">Halaman Monitoring.</p>
+  <p style="margin:6px 0 0; color:#6b7280;">Pantau status sistem, aktivitas worker, dan kondisi livestream Anda secara real-time.</p>
 
   <!-- NAVBAR -->
   <div class="nav">
@@ -91,25 +91,37 @@ body{
   </script>
 
   <div class="card">
-    <h3 style="margin-top:0;">Data Penyimpanan</h3>
-    <p>Di sini Anda dapat menyimpan:</p>
-    <ul>
-      <li>Riwayat stream</li>
-      <li>Playlist video</li>
-      <li>Konfigurasi preset</li>
-      <li>Metadata untuk YouTube Live</li>
-    </ul>
+  <h3 style="margin-top:0;">Status Sistem & Livestream</h3>
 
-    <p>Saat ini halaman masih kosong. Jika Anda ingin penyimpanan otomatis menggunakan:</p>
-    <ul>
-      <li>Cloudflare R2</li>
-      <li>KV Storage</li>
-      <li>LocalStorage</li>
-      <li>GitHub Storage</li>
-    </ul>
+  <p style="margin:10px 0 16px;">
+    Informasi berikut menunjukkan kondisi terkini dari layanan yang digunakan untuk menjalankan livestream.
+  </p>
 
-    Saya siap bangunkan backend-nya kapan saja.
+  <ul style="list-style:none; padding:0; margin:0; font-size:15px;">
+    <li style="margin-bottom:10px;">
+      <strong>Cloudflare Worker:</strong>
+      <span style="color:#6b7280;">Menunggu pengecekan…</span>
+    </li>
+
+    <li style="margin-bottom:10px;">
+      <strong>GitHub Actions:</strong>
+      <span style="color:#6b7280;">Belum ada proses berjalan</span>
+    </li>
+
+    <li style="margin-bottom:10px;">
+      <strong>Status YouTube Live:</strong>
+      <span style="color:#6b7280;">Offline</span>
+    </li>
+  </ul>
+
+  <div style="padding:16px; background:#f9fafb; border:1px dashed #d1d5db; border-radius:8px; margin-top:16px;">
+    Fitur monitoring dapat dihubungkan ke API berikut:<br><br>
+    • Cloudflare Worker → Ping endpoint<br>
+    • GitHub Actions → Status workflow<br>
+    • YouTube Live API → Status live & health stream<br>
   </div>
+</div>
+
 
 </div>
 
