@@ -38,7 +38,6 @@ body{
   border-bottom:2px solid transparent;
   transition:all .15s ease;
 }
-.nav-item:hover{ color:#2563eb; }
 .nav-item.active{ color:#2563eb; border-color:#2563eb; }
 .card{
   background:white;
@@ -75,11 +74,10 @@ th,td{
 </head>
 
 <body>
-
 <div class="container">
 
-  <h1 style="margin:0;">Penyimpanan</h1>
-  <p style="margin:6px 0 0; color:#6b7280;">Halaman untuk mengelola data tersimpan.</p>
+  <h1>Penyimpanan</h1>
+  <p class="small">Halaman untuk mengelola data tersimpan.</p>
 
   <div class="nav">
     <a href="index.html" class="nav-item">Dashboard</a>
@@ -90,17 +88,15 @@ th,td{
   </div>
 
   <div class="card">
-    <h3 style="margin-top:0;">Upload & Convert Video ke Cloudflare R2</h3>
-    <hr style="margin:20px 0; border:0; border-top:1px solid #e5e7eb;">
-
-    <input id="fileInput" type="file" style="margin-top:10px;">
+    <h3>Upload Video Disini</h3>
+    <input id="fileInput" type="file">
 
     <div style="display:flex; gap:10px; margin-top:10px;">
       <button id="uploadBtn" class="btn blue">Upload</button>
       <button id="refreshBtn" class="btn gray">Refresh</button>
     </div>
 
-    <p id="uploadStatus" class="small" style="margin-top:10px;"></p>
+    <p id="uploadStatus" class="small"></p>
 
     <table>
       <thead>
@@ -110,99 +106,88 @@ th,td{
           <th>Aksi</th>
         </tr>
       </thead>
-      <tbody id="storageTbody">
-        <tr><td colspan="3" class="small">Memuat...</td></tr>
+      <tbody id="fileList">
+        <tr><td colspan="3">Memuat...</td></tr>
       </tbody>
     </table>
-
   </div>
 </div>
 
 <script>
-// ========= KONFIG =========
+// URL Replit untuk Faststart + Upload R2
+const REPLIT_UPLOAD_API = "https://26dd6d56-c0d8-4b20-b07d-bae16f37a698-00-154zx0u9lm7i4.sisko.replit.dev/convert";
+
+// Worker API untuk load list
 const WORKER_API = "https://yt-scheduler-api.rigus-apps.workers.dev";
-const REPLIT_CONVERTER = "https://26dd6d56-c0d8-4b20-b07d-bae16f37a698-00-154zx0u9lm7i4.sisko.replit.dev/convert";
 
-// ========= LOAD FILES DARI R2 =========
-async function loadFiles() {
-  const tbody = document.getElementById("storageTbody");
-  tbody.innerHTML = `<tr><td colspan="3" class="small">Memuat...</td></tr>`;
+// ---------------------
+// Load List File
+// ---------------------
+async function loadFiles(){
+    const tbody = document.getElementById("fileList");
+    tbody.innerHTML = "<tr><td colspan='3'>Memuat...</td></tr>";
 
-  const r = await fetch(WORKER_API + "/storage");
-  const j = await r.json();
+    const r = await fetch(WORKER_API + "/storage");
+    const j = await r.json();
 
-  tbody.innerHTML = "";
+    if (!j.ok){
+        tbody.innerHTML = "<tr><td colspan='3'>Gagal memuat</td></tr>";
+        return;
+    }
 
-  j.list.forEach(item => {
-    const publicUrl = WORKER_API + "/public/" + item.key;
-
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${item.key}</td>
-      <td>${Math.round(item.size/1024)} KB</td>
-      <td>
-        <button class="btn gray" onclick="copyLink('${publicUrl}')">Copy</button>
-        <button class="btn red" onclick="deleteFile('${item.key}')">Hapus</button>
-      </td>
-    `;
-
-    tbody.appendChild(tr);
-  });
+    tbody.innerHTML = "";
+    j.list.forEach(f=>{
+        const url = WORKER_API + "/public/" + f.key;
+        tbody.innerHTML += `
+            <tr>
+              <td>${f.key}</td>
+              <td>${Math.round(f.size/1024)} KB</td>
+              <td>
+                <button class="btn gray" onclick="navigator.clipboard.writeText('${url}')">Copy</button>
+                <button class="btn red" onclick="deleteFile('${f.key}')">Hapus</button>
+              </td>
+            </tr>
+        `;
+    });
 }
 
-function copyLink(url){
-  navigator.clipboard.writeText(url);
-  alert("Link disalin:\n" + url);
-}
-
-async function deleteFile(key){
-  await fetch(WORKER_API + "/storage/" + key, { method:"DELETE" });
-  loadFiles();
-}
-
-// ========= UPLOAD FILE (LEWAT REPLIT) =========
+// ---------------------
+// Upload + Convert
+// ---------------------
 document.getElementById("uploadBtn").onclick = async () => {
-  const file = document.getElementById("fileInput").files[0];
-  const status = document.getElementById("uploadStatus");
+    const file = document.getElementById("fileInput").files[0];
+    const status = document.getElementById("uploadStatus");
 
-  if (!file){
-    status.textContent = "Pilih file terlebih dahulu.";
-    return;
-  }
+    if (!file){
+        status.textContent = "Pilih file terlebih dahulu.";
+        return;
+    }
 
-  status.textContent = "Mengonversi ke Faststart…";
+    status.textContent = "Mengonversi & upload ke R2...";
 
-  // Step 1 → Kirim ke Replit untuk konversi
-  const fd = new FormData();
-  fd.append("video", file);
+    const fd = new FormData();
+    fd.append("video", file);
 
-  const convReq = await fetch(REPLIT_CONVERTER, { method:"POST", body: fd });
-  const convRes = await convReq.json();
+    const r = await fetch(REPLIT_UPLOAD_API, {
+        method: "POST",
+        body: fd
+    });
 
-  if (!convRes.url) {
-    status.textContent = "Gagal konversi video.";
-    return;
-  }
+    const j = await r.json();
 
-  status.textContent = "Mengupload video ke R2…";
-
-  // Step 2 → Kirim URL hasil konversi ke Worker untuk upload R2
-  const uploadReq = await fetch(WORKER_API + "/upload-url", {
-    method:"POST",
-    headers: { "Content-Type":"application/json" },
-    body: JSON.stringify({ url: convRes.url })
-  });
-
-  const uploadRes = await uploadReq.json();
-
-  if (!uploadRes.ok){
-    status.textContent = "Gagal upload ke Cloudflare R2.";
-    return;
-  }
-
-  status.textContent = "Upload selesai!";
-  loadFiles();
+    if (j.status === "success"){
+        status.textContent = "Berhasil upload!";
+        loadFiles();
+    } else {
+        status.textContent = "Gagal: " + j.error;
+    }
 };
+
+// ---------------------
+async function deleteFile(key){
+    await fetch(WORKER_API + "/storage/" + key, { method:"DELETE" });
+    loadFiles();
+}
 
 document.getElementById("refreshBtn").onclick = loadFiles;
 loadFiles();
