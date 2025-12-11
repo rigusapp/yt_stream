@@ -1,10 +1,9 @@
 <!doctype html>
 <html lang="id">
 <head>
-<meta charset="utf-8"/>
+<meta charset="utf-8">
 <title>Penyimpanan</title>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap" rel="stylesheet">
 
 <style>
@@ -16,42 +15,40 @@ body{
   color:#0f172a;
 }
 .container{
-  max-width:1080px;
-  margin:40px auto;
+  max-width:980px;
+  margin:36px auto;
   padding:28px;
   background:white;
-  border-radius:14px;
-  box-shadow:0 8px 30px rgba(16,24,40,.08);
+  border-radius:12px;
+  box-shadow:0 8px 30px rgba(16,24,40,0.06);
 }
 .nav{
-  margin-top:25px;
+  margin-top:20px;
   display:flex;
-  gap:32px;
+  gap:30px;
   border-bottom:1px solid #e5e7eb;
   padding-bottom:12px;
 }
 .nav-item{
-  font-size:16px;
+  font-size:15px;
   font-weight:600;
   text-decoration:none;
   color:#1f2937;
   padding-bottom:6px;
   border-bottom:2px solid transparent;
-  transition:.2s;
+  transition:all .15s ease;
 }
-.nav-item.active{
-  color:#2563eb;
-  border-color:#2563eb;
-}
+.nav-item:hover{ color:#2563eb; }
+.nav-item.active{ color:#2563eb; border-color:#2563eb; }
 .card{
   background:white;
-  padding:26px;
-  border-radius:12px;
+  padding:20px;
+  border-radius:10px;
   border:1px solid #e5e7eb;
-  margin-top:26px;
+  margin-top:24px;
 }
 .btn{
-  padding:10px 18px;
+  padding:8px 16px;
   border-radius:8px;
   font-weight:600;
   cursor:pointer;
@@ -63,13 +60,17 @@ body{
 table{
   width:100%;
   border-collapse:collapse;
-  margin-top:18px;
+  margin-top:14px;
 }
 th,td{
-  padding:12px;
+  padding:10px 8px;
   border-bottom:1px solid #e5e7eb;
+  text-align:left;
 }
-.small{ font-size:14px; color:#6b7280; }
+.small{
+  font-size:14px;
+  color:#6b7280;
+}
 </style>
 </head>
 
@@ -77,126 +78,130 @@ th,td{
 
 <div class="container">
 
-<h1>Penyimpanan</h1>
-<p class="small">Halaman untuk mengelola data tersimpan.</p>
+  <h1 style="margin:0;">Penyimpanan</h1>
+  <p style="margin:6px 0 0; color:#6b7280;">Halaman untuk mengelola data tersimpan.</p>
 
-<div class="nav">
-  <a href="index.html" class="nav-item">Dashboard</a>
-  <a href="penyimpanan.html" class="nav-item active">Penyimpanan</a>
-  <a href="jadwal.html" class="nav-item">Jadwal Live</a>
-  <a href="monitoring.html" class="nav-item">Monitoring</a>
-  <a href="pengaturan.html" class="nav-item">Pengaturan</a>
-</div>
-
-<div class="card">
-  <h3>Upload & Convert Video ke Cloudflare R2</h3>
-
-  <input id="fileInput" type="file"/>
-
-  <div style="margin-top:15px; display:flex; gap:14px;">
-    <button id="uploadBtn" class="btn blue">Upload</button>
-    <button id="refreshBtn" class="btn gray">Refresh</button>
+  <div class="nav">
+    <a href="index.html" class="nav-item">Dashboard</a>
+    <a href="penyimpanan.html" class="nav-item active">Penyimpanan</a>
+    <a href="jadwal.html" class="nav-item">Jadwal Live</a>
+    <a href="monitoring.html" class="nav-item">Monitoring</a>
+    <a href="pengaturan.html" class="nav-item">Pengaturan</a>
   </div>
 
-  <p id="uploadStatus" class="small" style="margin-top:12px;"></p>
+  <div class="card">
+    <h3 style="margin-top:0;">Upload & Convert Video ke Cloudflare R2</h3>
+    <hr style="margin:20px 0; border:0; border-top:1px solid #e5e7eb;">
 
-  <table>
-    <thead>
-      <tr>
-        <th>Nama File</th>
-        <th>Ukuran</th>
-        <th>Aksi</th>
-      </tr>
-    </thead>
-    <tbody id="storageTbody">
-      <tr><td colspan="3" class="small">Memuat...</td></tr>
-    </tbody>
-  </table>
-</div>
-</div>
+    <input id="fileInput" type="file" style="margin-top:10px;">
 
-<script src="https://unpkg.com/@ffmpeg/ffmpeg@0.12.2/dist/ffmpeg.min.js"></script>
+    <div style="display:flex; gap:10px; margin-top:10px;">
+      <button id="uploadBtn" class="btn blue">Upload</button>
+      <button id="refreshBtn" class="btn gray">Refresh</button>
+    </div>
+
+    <p id="uploadStatus" class="small" style="margin-top:10px;"></p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nama File</th>
+          <th>Ukuran</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="storageTbody">
+        <tr><td colspan="3" class="small">Memuat...</td></tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
 
 <script>
-const API_ENDPOINT = "https://yt-scheduler-api.rigus-apps.workers.dev"; // GANTI INI
+const WORKER = "https://yt-scheduler-api.rigus-apps.workers.dev";
+const REPLIT_CONVERTER = "https://26dd6d56-c0d8-4b20-b07d-bae16f37a698-00-154zx0u9lm7i4.sisko.replit.dev/convert"; // ← ganti URL Replit Anda
 
-async function convertFaststart(file){
-  const { createFFmpeg, fetchFile } = FFmpeg;
-  const ffmpeg = createFFmpeg({ log:false });
-  await ffmpeg.load();
-
-  ffmpeg.FS("writeFile","input.mp4",await fetchFile(file));
-  await ffmpeg.run("-i","input.mp4","-movflags","+faststart","-c","copy","output.mp4");
-
-  const out = ffmpeg.FS("readFile","output.mp4");
-  return new File([out.buffer], file.name, { type:"video/mp4" });
-}
-
-async function loadFiles(){
+async function loadFiles() {
   const tbody = document.getElementById("storageTbody");
   tbody.innerHTML = `<tr><td colspan="3" class="small">Memuat...</td></tr>`;
 
-  let r = await fetch(API_ENDPOINT + "/storage");
-  let j = await r.json();
-
-  if(!j.ok){
-    tbody.innerHTML = `<tr><td colspan="3">Gagal memuat</td></tr>`;
-    return;
-  }
+  const r = await fetch(WORKER + "/storage");
+  const j = await r.json();
 
   tbody.innerHTML = "";
 
-  j.list.forEach(x=>{
-    const url = API_ENDPOINT + "/public/" + x.key;
+  j.list.forEach(item => {
+    const url = WORKER + "/public/" + item.key;
     const tr = document.createElement("tr");
+
     tr.innerHTML = `
-      <td>${x.key}</td>
-      <td>${Math.round(x.size/1024)} KB</td>
+      <td>${item.key}</td>
+      <td>${Math.round(item.size/1024)} KB</td>
       <td>
         <button class="btn gray" onclick="copyLink('${url}')">Copy</button>
-        <button class="btn red" onclick="deleteFile('${x.key}')">Hapus</button>
+        <button class="btn red" onclick="deleteFile('${item.key}')">Hapus</button>
       </td>
     `;
+
     tbody.appendChild(tr);
   });
 }
 
-function copyLink(url){ navigator.clipboard.writeText(url); alert("Link disalin:\n" + url); }
+function copyLink(url){
+  navigator.clipboard.writeText(url);
+  alert("Link disalin:\n" + url);
+}
 
 async function deleteFile(key){
-  await fetch(API_ENDPOINT + "/storage/" + key, { method:"DELETE" });
+  await fetch(WORKER + "/storage/" + key, { method:"DELETE" });
   loadFiles();
 }
 
-document.getElementById("uploadBtn").onclick = async ()=>{
-  const f = document.getElementById("fileInput").files[0];
-  if(!f) return alert("Pilih file terlebih dahulu");
+document.getElementById("uploadBtn").onclick = async () => {
+  const file = document.getElementById("fileInput").files[0];
+  const status = document.getElementById("uploadStatus");
 
-  let file = f;
-
-  if(f.type === "video/mp4"){
-    document.getElementById("uploadStatus").textContent="Mengonversi…";
-    file = await convertFaststart(f);
+  if (!file){
+    status.textContent = "Pilih file terlebih dahulu.";
+    return;
   }
 
+  status.textContent = "Mengonversi...";
+
+  // 1. Upload ke Replit untuk konversi Faststart
   const fd = new FormData();
   fd.append("file", file);
 
-  document.getElementById("uploadStatus").textContent="Meng-upload…";
+  const convRes = await fetch(REPLIT_CONVERTER, { method:"POST", body: fd });
+  const conv = await convRes.json();
 
-  let r = await fetch(API_ENDPOINT + "/upload", { method:"POST", body:fd });
-  let j = await r.json();
-
-  if(j.ok){
-    document.getElementById("uploadStatus").textContent = "Upload selesai";
-    loadFiles();
-  } else {
-    document.getElementById("uploadStatus").textContent = "Upload gagal: " + j.error;
+  if (!conv.ok){
+    status.textContent = "Gagal konversi: " + conv.error;
+    return;
   }
+
+  status.textContent = "Mengupload ke Cloudflare R2...";
+
+  // 2. Replit mengembalikan URL file hasil Faststart
+  const uploadRes = await fetch(WORKER + "/upload-url", {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ url: conv.file })
+  });
+
+  const up = await uploadRes.json();
+
+  if (!up.ok){
+    status.textContent = "Upload gagal: " + up.error;
+    return;
+  }
+
+  status.textContent = "Upload selesai!";
+  loadFiles();
 };
 
 document.getElementById("refreshBtn").onclick = loadFiles;
-
 loadFiles();
 </script>
 
