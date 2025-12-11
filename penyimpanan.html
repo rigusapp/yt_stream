@@ -119,27 +119,29 @@ th,td{
 </div>
 
 <script>
-const WORKER = "https://yt-scheduler-api.rigus-apps.workers.dev";
-const REPLIT_CONVERTER = "https://26dd6d56-c0d8-4b20-b07d-bae16f37a698-00-154zx0u9lm7i4.sisko.replit.dev/convert"; // ← ganti URL Replit Anda
+// ========= KONFIG =========
+const WORKER_API = "https://yt-scheduler-api.rigus-apps.workers.dev";
+const REPLIT_CONVERTER = "https://26dd6d56-c0d8-4b20-b07d-bae16f37a698-00-154zx0u9lm7i4.sisko.replit.dev/convert";
 
+// ========= LOAD FILES DARI R2 =========
 async function loadFiles() {
   const tbody = document.getElementById("storageTbody");
   tbody.innerHTML = `<tr><td colspan="3" class="small">Memuat...</td></tr>`;
 
-  const r = await fetch(WORKER + "/storage");
+  const r = await fetch(WORKER_API + "/storage");
   const j = await r.json();
 
   tbody.innerHTML = "";
 
   j.list.forEach(item => {
-    const url = WORKER + "/public/" + item.key;
-    const tr = document.createElement("tr");
+    const publicUrl = WORKER_API + "/public/" + item.key;
 
+    const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>${item.key}</td>
       <td>${Math.round(item.size/1024)} KB</td>
       <td>
-        <button class="btn gray" onclick="copyLink('${url}')">Copy</button>
+        <button class="btn gray" onclick="copyLink('${publicUrl}')">Copy</button>
         <button class="btn red" onclick="deleteFile('${item.key}')">Hapus</button>
       </td>
     `;
@@ -154,10 +156,11 @@ function copyLink(url){
 }
 
 async function deleteFile(key){
-  await fetch(WORKER + "/storage/" + key, { method:"DELETE" });
+  await fetch(WORKER_API + "/storage/" + key, { method:"DELETE" });
   loadFiles();
 }
 
+// ========= UPLOAD FILE (LEWAT REPLIT) =========
 document.getElementById("uploadBtn").onclick = async () => {
   const file = document.getElementById("fileInput").files[0];
   const status = document.getElementById("uploadStatus");
@@ -167,33 +170,33 @@ document.getElementById("uploadBtn").onclick = async () => {
     return;
   }
 
-  status.textContent = "Mengonversi...";
+  status.textContent = "Mengonversi ke Faststart…";
 
-  // 1. Upload ke Replit untuk konversi Faststart
+  // Step 1 → Kirim ke Replit untuk konversi
   const fd = new FormData();
-  fd.append("file", file);
+  fd.append("video", file);
 
-  const convRes = await fetch(REPLIT_CONVERTER, { method:"POST", body: fd });
-  const conv = await convRes.json();
+  const convReq = await fetch(REPLIT_CONVERTER, { method:"POST", body: fd });
+  const convRes = await convReq.json();
 
-  if (!conv.ok){
-    status.textContent = "Gagal konversi: " + conv.error;
+  if (!convRes.url) {
+    status.textContent = "Gagal konversi video.";
     return;
   }
 
-  status.textContent = "Mengupload ke Cloudflare R2...";
+  status.textContent = "Mengupload video ke R2…";
 
-  // 2. Replit mengembalikan URL file hasil Faststart
-  const uploadRes = await fetch(WORKER + "/upload-url", {
+  // Step 2 → Kirim URL hasil konversi ke Worker untuk upload R2
+  const uploadReq = await fetch(WORKER_API + "/upload-url", {
     method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({ url: conv.file })
+    headers: { "Content-Type":"application/json" },
+    body: JSON.stringify({ url: convRes.url })
   });
 
-  const up = await uploadRes.json();
+  const uploadRes = await uploadReq.json();
 
-  if (!up.ok){
-    status.textContent = "Upload gagal: " + up.error;
+  if (!uploadRes.ok){
+    status.textContent = "Gagal upload ke Cloudflare R2.";
     return;
   }
 
