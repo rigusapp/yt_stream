@@ -127,7 +127,11 @@ async function loadFiles(){
     const tbody = document.getElementById("fileList");
     tbody.innerHTML = "<tr><td colspan='3'>Memuat...</td></tr>";
 
-    const r = await fetch(WORKER_API + "/storage");
+    const r = await fetch(WORKER_API + "/storage", {
+  method: "GET",
+  cache: "no-store",
+});
+
     const j = await r.json();
 
     if (!j.ok){
