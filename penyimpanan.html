@@ -38,6 +38,7 @@ body{
   border-bottom:2px solid transparent;
   transition:all .15s ease;
 }
+.nav-item:hover{ color:#2563eb; }
 .nav-item.active{ color:#2563eb; border-color:#2563eb; }
 .card{
   background:white;
@@ -74,10 +75,11 @@ th,td{
 </head>
 
 <body>
+
 <div class="container">
 
-  <h1>Penyimpanan</h1>
-  <p class="small">Halaman untuk mengelola data tersimpan.</p>
+  <h1 style="margin:0;">Penyimpanan</h1>
+  <p style="margin:6px 0 0; color:#6b7280;">Halaman untuk mengelola data tersimpan.</p>
 
   <div class="nav">
     <a href="index.html" class="nav-item">Dashboard</a>
@@ -88,7 +90,9 @@ th,td{
   </div>
 
   <div class="card">
-    <h3>Upload Video Disini</h3>
+    <h3 style="margin-top:0;">Upload Video Disini</h3>
+    <hr style="margin:20px 0; border:0; border-top:1px solid #e5e7eb;">
+
     <input id="fileInput" type="file">
 
     <div style="display:flex; gap:10px; margin-top:10px;">
@@ -96,7 +100,7 @@ th,td{
       <button id="refreshBtn" class="btn gray">Refresh</button>
     </div>
 
-    <p id="uploadStatus" class="small"></p>
+    <p id="uploadStatus" class="small" style="margin-top:10px;"></p>
 
     <table>
       <thead>
@@ -106,94 +110,118 @@ th,td{
           <th>Aksi</th>
         </tr>
       </thead>
-      <tbody id="fileList">
-        <tr><td colspan="3">Memuat...</td></tr>
+      <tbody id="storageTbody">
+        <tr><td colspan="3" class="small">Memuat...</td></tr>
       </tbody>
     </table>
+
   </div>
 </div>
 
 <script>
-// URL Replit untuk Faststart + Upload R2
-const REPLIT_UPLOAD_API = "https://26dd6d56-c0d8-4b20-b07d-bae16f37a698-00-154zx0u9lm7i4.sisko.replit.dev/convert";
-
-// Worker API untuk load list
 const WORKER_API = "https://yt-scheduler-api.rigus-apps.workers.dev";
+const REPLIT_CONVERTER = "https://26dd6d56-c0d8-4b20-b07d-bae16f37a698-00-154zx0u9lm7i4.sisko.replit.dev/convert";
 
-// ---------------------
-// Load List File
-// ---------------------
+// =============================================
+// LOAD LIST VIDEO
+// =============================================
 async function loadFiles(){
-    const tbody = document.getElementById("fileList");
-    tbody.innerHTML = "<tr><td colspan='3'>Memuat...</td></tr>";
+  const tbody = document.getElementById("storageTbody");
+  tbody.innerHTML = `<tr><td colspan="3" class="small">Memuat...</td></tr>`;
 
-    const r = await fetch(WORKER_API + "/storage", {
-  method: "GET",
-  cache: "no-store",
-});
-
+  try {
+    const r = await fetch(WORKER_API + "/storage");
     const j = await r.json();
 
-    if (!j.ok){
-        tbody.innerHTML = "<tr><td colspan='3'>Gagal memuat</td></tr>";
-        return;
+    if(!j.ok){
+      tbody.innerHTML = `<tr><td colspan="3" class="small">Gagal memuat</td></tr>`;
+      return;
     }
 
     tbody.innerHTML = "";
-    j.list.forEach(f=>{
-        const url = WORKER_API + "/public/" + f.key;
-        tbody.innerHTML += `
-            <tr>
-              <td>${f.key}</td>
-              <td>${Math.round(f.size/1024)} KB</td>
-              <td>
-                <button class="btn gray" onclick="navigator.clipboard.writeText('${url}')">Copy</button>
-                <button class="btn red" onclick="deleteFile('${f.key}')">Hapus</button>
-              </td>
-            </tr>
-        `;
+
+    j.list.forEach(item=>{
+      const publicUrl = WORKER_API + "/public/" + item.key;
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${item.key}</td>
+        <td>${Math.round(item.size/1024)} KB</td>
+        <td>
+          <button class="btn gray" onclick="copyLink('${publicUrl}')">Copy</button>
+          <button class="btn red" onclick="deleteFile('${item.key}')">Hapus</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
     });
+
+  } catch (e){
+    tbody.innerHTML = `<tr><td colspan="3" class="small">Error: ${e}</td></tr>`;
+  }
 }
 
-// ---------------------
-// Upload + Convert
-// ---------------------
+// =============================================
+// COPY URL
+// =============================================
+function copyLink(url){
+  navigator.clipboard.writeText(url);
+  alert("Link disalin!");
+}
+
+// =============================================
+// HAPUS FILE
+// =============================================
+async function deleteFile(key){
+  if(!confirm("Hapus file ini?")) return;
+
+  const r = await fetch(WORKER_API + "/storage/" + key, { method:"DELETE" });
+  const j = await r.json();
+
+  if(j.ok) loadFiles();
+  else alert("Gagal menghapus");
+}
+
+// =============================================
+// UPLOAD & CONVERT
+// =============================================
 document.getElementById("uploadBtn").onclick = async () => {
-    const file = document.getElementById("fileInput").files[0];
-    const status = document.getElementById("uploadStatus");
+  const f = document.getElementById("fileInput").files[0];
+  const status = document.getElementById("uploadStatus");
 
-    if (!file){
-        status.textContent = "Pilih file terlebih dahulu.";
-        return;
-    }
+  if(!f){
+    status.textContent = "Pilih file terlebih dahulu!";
+    return;
+  }
 
-    status.textContent = "Mengonversi & upload ke R2...";
+  status.textContent = "Mengonversi & upload ke R2...";
 
-    const fd = new FormData();
-    fd.append("video", file);
+  let form = new FormData();
+  form.append("video", f);
 
-    const r = await fetch(REPLIT_UPLOAD_API, {
-        method: "POST",
-        body: fd
+  try {
+    const r = await fetch(REPLIT_CONVERTER, {
+      method:"POST",
+      body:form
     });
 
     const j = await r.json();
 
-    if (j.status === "success"){
-        status.textContent = "Berhasil upload!";
-        loadFiles();
-    } else {
-        status.textContent = "Gagal: " + j.error;
+    if(!j.ok){
+      status.textContent = "Gagal: " + j.error;
+      return;
     }
+
+    status.textContent = "Upload selesai: " + j.key;
+
+    loadFiles(); // refresh list otomatis
+
+  } catch (e){
+    status.textContent = "ERROR: " + e;
+  }
 };
 
-// ---------------------
-async function deleteFile(key){
-    await fetch(WORKER_API + "/storage/" + key, { method:"DELETE" });
-    loadFiles();
-}
-
 document.getElementById("refreshBtn").onclick = loadFiles;
+
 loadFiles();
 </script>
 
