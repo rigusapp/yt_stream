@@ -75,14 +75,20 @@ th,td{
   color:#6b7280;
 }
 
-/* preview video kecil */
+/* Preview kecil lebih cepat */
 .preview{
-  width:120px;
-  height:70px;
+  width:90px;
+  height:50px;
   object-fit:cover;
-  border-radius:6px;
-  background:black;
-  pointer-events:none; /* tidak bisa di klik */
+  border-radius:4px;
+  background:#000;
+  border:1px solid #222;
+
+  /* Disable interaction */
+  pointer-events:none;
+
+  /* Improve performance */
+  aspect-ratio:16/9;
 }
 </style>
 </head>
@@ -90,7 +96,6 @@ th,td{
 <body>
 
 <div class="container">
-
   <h1 style="margin:0;">Penyimpanan</h1>
   <p style="margin:6px 0 0; color:#6b7280;">Halaman untuk mengelola video di R2.</p>
 
@@ -101,6 +106,7 @@ th,td{
     <a href="monitoring.html" class="nav-item">Monitoring</a>
     <a href="pengaturan.html" class="nav-item">Pengaturan</a>
   </div>
+
 
   <div class="card">
     <h3 style="margin-top:0;">Upload Video Disini</h3>
@@ -127,9 +133,9 @@ th,td{
         <tr><td colspan="4" class="small">Memuat...</td></tr>
       </tbody>
     </table>
-
   </div>
 </div>
+
 
 <script>
 const WORKER_API = "https://yt-scheduler-api.rigus-apps.workers.dev";
@@ -150,10 +156,21 @@ async function loadFiles(){
     tbody.innerHTML += `
       <tr>
         <td>
-          <video class="preview" src="${videoUrl}" muted preload="metadata"></video>
+          <video class="preview"
+            src="${videoUrl}"
+
+            preload="metadata"
+
+            muted
+            playsinline
+            disablepictureinpicture
+            controlslist="nodownload nofullscreen noremoteplayback">
+          </video>
         </td>
+
         <td>${item.key}</td>
         <td>${Math.round(item.size/1024)} KB</td>
+
         <td>
           <button class="btn gray" onclick="navigator.clipboard.writeText('${videoUrl}')">Copy</button>
           <button class="btn red" onclick="deleteFile('${item.key}')">Hapus</button>
@@ -163,20 +180,23 @@ async function loadFiles(){
   });
 }
 
+
 async function deleteFile(key){
   if(!confirm("Hapus file ini?")) return;
   await fetch(WORKER_API + "/storage/" + key, { method:"DELETE" });
   loadFiles();
 }
 
+
 document.getElementById("uploadBtn").onclick = async () => {
   const f = document.getElementById("fileInput").files[0];
   const status = document.getElementById("uploadStatus");
+
   if(!f){ status.textContent = "Pilih file dulu"; return; }
 
   status.textContent = "Mengonversi...";
 
-  let form = new FormData();
+  const form = new FormData();
   form.append("video", f);
 
   try {
@@ -190,13 +210,13 @@ document.getElementById("uploadBtn").onclick = async () => {
     }
 
     const url = match[1];
-    const blob = await fetch(url).then(res=>res.blob());
+    const blob = await fetch(url).then(res => res.blob());
 
     const form2 = new FormData();
-    form2.append("file", new File([blob], Date.now()+".mp4", { type: blob.type || "video/mp4" }));
+    form2.append("file", blob, Date.now()+".mp4");
 
-    const up = await fetch(WORKER_API + "/upload", { method:"POST", body:form2 });
-    const j = await up.json();
+    const r2 = await fetch(WORKER_API + "/upload", { method:"POST", body:form2 });
+    const j = await r2.json();
 
     if(j.ok){
       status.textContent = "Upload selesai!";
@@ -205,10 +225,11 @@ document.getElementById("uploadBtn").onclick = async () => {
       status.textContent = "Gagal upload: " + j.error;
     }
 
-  } catch (e){
+  } catch (e) {
     status.textContent = "ERROR: " + e;
   }
 };
+
 
 document.getElementById("refreshBtn").onclick = loadFiles;
 
