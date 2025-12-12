@@ -7,25 +7,96 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap" rel="stylesheet">
 
 <style>
-body{font-family:'Inter',sans-serif;background:#f4f7fb;margin:0;padding:0;color:#0f172a;}
-.container{max-width:980px;margin:36px auto;padding:28px;background:white;border-radius:12px;
-box-shadow:0 8px 30px rgba(16,24,40,0.06);}
-.nav{margin-top:20px;display:flex;gap:30px;border-bottom:1px solid #e5e7eb;padding-bottom:12px;}
-.nav-item{font-size:15px;font-weight:600;text-decoration:none;color:#1f2937;padding-bottom:6px;
-border-bottom:2px solid transparent;transition:.15s;}
+body{
+    font-family:'Inter',sans-serif;
+    background:#f4f7fb;
+    margin:0;padding:0;
+    color:#0f172a;
+}
+.container{
+    max-width:980px;
+    margin:36px auto;
+    padding:28px;
+    background:white;
+    border-radius:12px;
+    box-shadow:0 8px 30px rgba(16,24,40,0.06);
+}
+.nav{
+    margin-top:20px;
+    display:flex;
+    gap:30px;
+    border-bottom:1px solid #e5e7eb;
+    padding-bottom:12px;
+}
+.nav-item{
+    font-size:15px;
+    font-weight:600;
+    text-decoration:none;
+    color:#1f2937;
+    padding-bottom:6px;
+    border-bottom:2px solid transparent;
+    transition:.15s ease;
+}
 .nav-item:hover{color:#2563eb;}
 .nav-item.active{color:#2563eb;border-color:#2563eb;}
-.card{background:white;padding:20px;border-radius:10px;border:1px solid #e5e7eb;margin-top:24px;}
-label{display:block;font-weight:600;margin-top:12px;font-size:13px;}
-.input,select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #e5e7eb;
-font-size:14px;background:white;}
-textarea{min-height:110px;resize:vertical;}
-.btn{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;background:#2563eb;color:white;
-border-radius:10px;border:0;cursor:pointer;font-weight:700;}
-.btn.ghost{background:transparent;color:#2563eb;border:1px solid #dbeafe;}
-.debug{background:#0b1220;color:#bfe7b0;padding:12px;border-radius:8px;font-family:monospace;
-white-space:pre-wrap;display:none;margin-top:12px;}
-.footer{margin-top:24px;color:#6b7280;font-size:13px;}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    border:1px solid #e5e7eb;
+    margin-top:24px;
+}
+label{
+    display:block;
+    font-weight:600;
+    margin-top:12px;
+    font-size:13px;
+}
+.input, select, textarea{
+    width:100%;
+    padding:10px;
+    border-radius:8px;
+    border:1px solid #e5e7eb;
+    font-size:14px;
+    background:white;
+}
+textarea{
+    min-height:110px;
+    resize:vertical;
+}
+.btn{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 14px;
+    background:#2563eb;
+    color:white;
+    border-radius:10px;
+    border:0;
+    cursor:pointer;
+    font-weight:700;
+}
+.btn.ghost{
+    background:transparent;
+    color:#2563eb;
+    border:1px solid #dbeafe;
+}
+.debug{
+    background:#0b1220;
+    color:#bfe7b0;
+    padding:12px;
+    border-radius:8px;
+    font-family:monospace;
+    white-space:pre-wrap;
+    display:none;
+    margin-top:12px;
+}
+.footer{
+    margin-top:24px;
+    color:#6b7280;
+    font-size:13px;
+}
 </style>
 </head>
 
@@ -36,23 +107,26 @@ white-space:pre-wrap;display:none;margin-top:12px;}
 <p style="margin:6px 0 0;color:#6b7280;">Dashboard profesional untuk livestream YouTube</p>
 
 <div class="nav">
-  <a href="index.html" class="nav-item">Dashboard</a>
-  <a href="penyimpanan.html" class="nav-item">Penyimpanan</a>
-  <a href="jadwal.html" class="nav-item">Jadwal Live</a>
-  <a href="monitoring.html" class="nav-item">Monitoring</a>
-  <a href="pengaturan.html" class="nav-item">Pengaturan</a>
+    <a href="index.html" class="nav-item active">Dashboard</a>
+    <a href="penyimpanan.html" class="nav-item">Penyimpanan</a>
+    <a href="jadwal.html" class="nav-item">Jadwal Live</a>
+    <a href="monitoring.html" class="nav-item">Monitoring</a>
+    <a href="pengaturan.html" class="nav-item">Pengaturan</a>
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded",()=>{
-  const cur = location.pathname.split("/").pop();
-  document.querySelectorAll(".nav-item").forEach(a=>{
-    if(a.getAttribute("href")===cur) a.classList.add("active");
-  });
+    const cur = location.pathname.split("/").pop();
+    document.querySelectorAll(".nav-item").forEach(a=>{
+        if(a.getAttribute("href")===cur) a.classList.add("active");
+    });
 });
 </script>
 
-<!-- FORM -->
+<!-- ========================= -->
+<!--          FORM             -->
+<!-- ========================= -->
+
 <div class="card">
 
 <label>Title</label>
@@ -63,9 +137,9 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 <label>Visibility</label>
 <select id="inp_vis" class="input">
-  <option value="public">Public</option>
-  <option value="unlisted">Unlisted</option>
-  <option value="private">Private</option>
+    <option value="public">Public</option>
+    <option value="unlisted">Unlisted</option>
+    <option value="private">Private</option>
 </select>
 
 <label>Tanggal & Jam Live (WIB)</label>
@@ -73,61 +147,70 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 <label>Durasi</label>
 <select id="inp_dur" class="input">
-  <option value="300">5 menit</option>
-  <option value="1800">30 menit</option>
-  <option value="3600" selected>1 Jam</option>
-  <option value="7200">2 Jam</option>
-  <option value="10800">3 Jam</option>
-  <option value="14400">4 Jam</option>
-  <option value="18000">5 Jam</option>
-  <option value="21600">6 Jam</option>
-  <option value="25200">7 Jam</option>
-  <option value="28800">8 Jam</option>
-  <option value="32400">9 Jam</option>
-  <option value="36000">10 Jam</option>
-  <option value="39600">11 Jam</option>
-  <option value="43200">12 Jam</option>
+    <option value="300">5 menit</option>
+    <option value="1800">30 menit</option>
+    <option value="3600" selected>1 Jam</option>
+    <option value="7200">2 Jam</option>
+    <option value="10800">3 Jam</option>
+    <option value="14400">4 Jam</option>
+    <option value="18000">5 Jam</option>
+    <option value="21600">6 Jam</option>
+    <option value="25200">7 Jam</option>
+    <option value="28800">8 Jam</option>
+    <option value="32400">9 Jam</option>
+    <option value="36000">10 Jam</option>
+    <option value="39600">11 Jam</option>
+    <option value="43200">12 Jam</option>
 </select>
 
 <label style="margin-top:10px;display:flex;align-items:center;gap:8px;">
-  <input type="checkbox" id="inp_loop"> Loop Video
+    <input type="checkbox" id="inp_loop"> Loop Video
 </label>
 
-<!-- 🎯 Sumber Video -->
+<!-- ========================= -->
+<!--      SUMBER VIDEO         -->
+<!-- ========================= -->
+
 <label>Sumber Video</label>
 <select id="video_source" class="input">
-  <option value="url">Video URL Manual</option>
-  <option value="gdrive">Google Drive</option>
-  <option value="storage">Penyimpanan R2</option>
+    <option value="url">Video URL Manual</option>
+    <option value="gdrive">Google Drive</option>
+    <option value="storage">Penyimpanan R2</option>
 </select>
 
-<!-- Input manual -->
-<label id="label_video_url">Video URL</label>
-<input id="inp_video" class="input">
+<!-- Input Manual -->
+<div id="box_manual">
+    <label>Video URL</label>
+    <input id="inp_video" class="input" placeholder="https://website.com/video.mp4">
+</div>
 
 <!-- Google Drive -->
 <div id="gdrive_box" style="display:none;">
-  <label>Google Drive Link</label>
-  <input id="inp_gdrive" class="input" placeholder="https://drive.google.com/file/d/...">
+    <label>Google Drive Link</label>
+    <input id="inp_gdrive" class="input" placeholder="https://drive.google.com/file/d/...">
 </div>
 
 <!-- R2 Storage -->
 <div id="storage_box" style="display:none;">
-  <label>Pilih Video dari Penyimpanan</label>
-  <select id="inp_storage" class="input">
-    <option value="">Memuat...</option>
-  </select>
+    <label>Pilih Video dari Penyimpanan</label>
+    <select id="inp_storage" class="input">
+        <option value="">Memuat...</option>
+    </select>
 </div>
 
 <label>Stream Key</label>
 <input id="inp_key" class="input">
 
-<div style="display:flex;gap:10px;margin-top:14px">
-  <button id="btn_trigger" class="btn">Trigger Stream</button>
-  <button id="btn_clear" class="btn ghost">Clear</button>
+<div style="display:flex;gap:10px;margin-top:14px;">
+    <button id="btn_trigger" class="btn">Trigger Stream</button>
+    <button id="btn_clear" class="btn ghost">Clear</button>
 </div>
 
 </div>
+
+<!-- ========================= -->
+<!--         LOG AREA          -->
+<!-- ========================= -->
 
 <div class="card">
 <h3>Preview & Log</h3>
@@ -144,172 +227,179 @@ document.addEventListener("DOMContentLoaded",()=>{
 // Helper WIB
 // =============================
 function toISO_WIB(str){
-  if(!str) return "";
-  let [d,m,y] = str.split(" ")[0].split("/");
-  let time = str.split(" ")[1];
-  return `${y}-${m}-${d}T${time}:00+07:00`;
+    if(!str) return "";
+    let [d,m,y] = str.split(" ")[0].split("/");
+    let time = str.split(" ")[1];
+    return `${y}-${m}-${d}T${time}:00+07:00`;
 }
 
 // =============================
 // VIDEO SOURCE HANDLER
 // =============================
 const srcSelect = document.getElementById("video_source");
+const box_manual = document.getElementById("box_manual");
 const boxGDrive = document.getElementById("gdrive_box");
 const boxStorage = document.getElementById("storage_box");
+
 const inputVideo = document.getElementById("inp_video");
 const inputGDrive = document.getElementById("inp_gdrive");
 const inputStorage = document.getElementById("inp_storage");
 
 srcSelect.onchange = () => {
-  const v = srcSelect.value;
+    const v = srcSelect.value;
 
-  // Reset
-  boxGDrive.style.display = "none";
-  boxStorage.style.display = "none";
-  inputVideo.disabled = false;
+    // Hide all
+    box_manual.style.display = "none";
+    boxGDrive.style.display = "none";
+    boxStorage.style.display = "none";
 
-  if(v === "url"){
-    inputVideo.placeholder = "https://website.com/video.mp4";
-  }
-  else if(v === "gdrive"){
-    boxGDrive.style.display = "block";
-    inputVideo.disabled = true;
-  }
-  else if(v === "storage"){
-    boxStorage.style.display = "block";
-    inputVideo.disabled = true;
-    loadStorageVideos();
-  }
+    if(v === "url"){
+        box_manual.style.display = "block";
+    }
+    else if(v === "gdrive"){
+        boxGDrive.style.display = "block";
+    }
+    else if(v === "storage"){
+        boxStorage.style.display = "block";
+        loadStorageVideos();
+    }
 };
 
 // =============================
-// LOAD R2 STORAGE LIST
+// LOAD R2 LIST
 // =============================
 async function loadStorageVideos(){
-  inputStorage.innerHTML = `<option>Memuat...</option>`;
-  const r = await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/storage");
-  const j = await r.json();
+    inputStorage.innerHTML = `<option>Memuat...</option>`;
+    const r = await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/storage");
+    const j = await r.json();
 
-  inputStorage.innerHTML = `<option value="">-- Pilih Video --</option>`;
+    inputStorage.innerHTML = `<option value="">-- Pilih Video --</option>`;
 
-  j.list.forEach(item=>{
-    const publicUrl = "https://yt-scheduler-api.rigus-apps.workers.dev/public/" + item.key;
-    inputStorage.innerHTML += `<option value="${publicUrl}">${item.key}</option>`;
-  });
+    j.list.forEach(item=>{
+        const url = "https://yt-scheduler-api.rigus-apps.workers.dev/public/" + item.key;
+        inputStorage.innerHTML += `<option value="${url}">${item.key}</option>`;
+    });
 }
 
 // =============================
-// Convert Google Drive to direct MP4
+// Convert GDrive
 // =============================
 function convertDriveLink(url){
-  const match = url.match(/\/d\/(.*?)\//);
-  if(!match) return "";
-  return `https://drive.google.com/uc?export=download&id=${match[1]}`;
+    const match = url.match(/\/d\/(.*?)\//);
+    if(!match) return "";
+    return `https://drive.google.com/uc?export=download&id=${match[1]}`;
 }
 
 // =============================
-// Clear form
+// CLEAR FORM
 // =============================
 btn_clear.onclick = ()=>{
-  inp_title.value = "";
-  inp_desc.value = "";
-  inp_video.value = "";
-  inp_key.value = "";
-  inp_vis.value = "public";
-  inp_gdrive.value = "";
-  payload.style.display = "none";
-  log.style.display = "none";
+    inp_title.value = "";
+    inp_desc.value = "";
+    inp_video.value = "";
+    inp_key.value = "";
+    inp_vis.value = "public";
+    inp_gdrive.value = "";
+    payload.style.display = "none";
+    log.style.display = "none";
 };
 
 // =============================
 // Trigger Stream
 // =============================
 async function postJSON(url, body){
-  const res = await fetch(url,{
-    method:"POST",
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify(body)
-  });
-  return {ok:res.ok,status:res.status,text:await res.text()};
+    const res = await fetch(url,{
+        method:"POST",
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(body)
+    });
+    return {ok:res.ok,status:res.status,text:await res.text()};
 }
 
 btn_trigger.onclick = async ()=>{
 
-  // Tentukan sumber video final:
-  let finalVideo = inp_video.value.trim();
+    // Tentukan final video URL berdasarkan sumber
+    let finalVideo = "";
 
-  if(srcSelect.value === "gdrive"){
-    finalVideo = convertDriveLink(inp_gdrive.value.trim());
-  }
-  else if(srcSelect.value === "storage"){
-    finalVideo = inputStorage.value.trim();
-  }
+    if(srcSelect.value === "url"){
+        finalVideo = inp_video.value.trim();
+    }
+    else if(srcSelect.value === "gdrive"){
+        finalVideo = convertDriveLink(inp_gdrive.value.trim());
+    }
+    else if(srcSelect.value === "storage"){
+        finalVideo = inputStorage.value.trim();
+    }
 
-  const payloadData = {
-    title: inp_title.value.trim(),
-    description: inp_desc.value.trim(),
-    visibility: inp_vis.value,
-    video_url: finalVideo,
-    stream_key: inp_key.value.trim(),
-    start_time: toISO_WIB(inp_time.value),
-    duration_seconds: Number(inp_dur.value),
-    looping: inp_loop.checked,
-    rtmp_url:"rtmp://a.rtmp.youtube.com/live2"
-  };
+    const payloadData = {
+        title: inp_title.value.trim(),
+        description: inp_desc.value.trim(),
+        visibility: inp_vis.value,
+        video_url: finalVideo,
+        stream_key: inp_key.value.trim(),
+        start_time: toISO_WIB(inp_time.value),
+        duration_seconds: Number(inp_dur.value),
+        looping: inp_loop.checked,
+        rtmp_url:"rtmp://a.rtmp.youtube.com/live2"
+    };
 
-  payload.style.display = "block";
-  payload.textContent = JSON.stringify(
-    {...payloadData, stream_key:"*****MASKED*****"},
-    null,2
-  );
+    payload.style.display = "block";
+    payload.textContent = JSON.stringify(
+        {...payloadData, stream_key:"*****MASKED*****"},
+        null,2
+    );
 
-  log.style.display = "block";
-  log.textContent = "Sending...";
+    log.style.display = "block";
+    log.textContent = "Sending...";
 
-  await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule",{
-    method:"POST",
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify(payloadData)
-  });
+    await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule",{
+        method:"POST",
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(payloadData)
+    });
 
-  const r = await postJSON(
-    "https://ytstream-proxy.rigus-apps.workers.dev/",
-    { event_type:"stream_trigger", client_payload:payloadData }
-  );
+    const r = await postJSON(
+        "https://ytstream-proxy.rigus-apps.workers.dev/",
+        { event_type:"stream_trigger", client_payload:payloadData }
+    );
 
-  log.textContent = "Worker response: "+r.status+"\n"+r.text;
+    log.textContent = "Worker response: "+r.status+"\n"+r.text;
 };
 
 // =============================
-// COPY STREAM MODE (jadwal → index)
+// Copy from jadwal
 // =============================
 (async ()=>{
-  const url = new URL(location.href);
-  const copyId = url.searchParams.get("copy_id");
-  if(!copyId) return;
+    const url = new URL(location.href);
+    const copyId = url.searchParams.get("copy_id");
+    if(!copyId) return;
 
-  const res = await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule");
-  const j = await res.json();
-  const item = (j.list||[]).find(x=>x.id===copyId);
-  if(!item) return;
+    const res = await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule");
+    const j = await res.json();
+    const item = (j.list||[]).find(x=>x.id===copyId);
+    if(!item) return;
 
-  inp_title.value = item.title;
-  inp_desc.value = item.description;
-  inp_video.value = item.video_url;
-  inp_key.value = item.stream_key;
-  inp_dur.value = item.duration_seconds;
-  inp_loop.checked = item.looping;
+    inp_title.value = item.title;
+    inp_desc.value = item.description;
+    inp_video.value = item.video_url;
+    inp_key.value = item.stream_key;
+    inp_dur.value = item.duration_seconds;
+    inp_loop.checked = item.looping;
 
-  const dt = new Date(item.start_time);
-  const t = `${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}/${dt.getFullYear()} ${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')}`;
-  inp_time.value = t;
+    const dt = new Date(item.start_time);
+    const t = `${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}/${dt.getFullYear()} ${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')}`;
+    inp_time.value = t;
 })();
 </script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
-flatpickr("#inp_time",{enableTime:true,dateFormat:"d/m/Y H:i",time_24hr:true});
+flatpickr("#inp_time",{
+    enableTime:true,
+    dateFormat:"d/m/Y H:i",
+    time_24hr:true
+});
 </script>
 
 </body>
