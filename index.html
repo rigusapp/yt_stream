@@ -9,36 +9,30 @@
 <style>
 body{
     font-family:'Inter',sans-serif;
-    background:#f1f5f9;
+    background:#eef3f8;
     margin:0;padding:0;
     color:#0f172a;
 }
-
-/* Container Premium */
 .container{
-    max-width:760px;
-    margin:28px auto;
-    padding:20px;
+    max-width:980px;
+    margin:36px auto;
+    padding:28px;
     background:white;
     border-radius:16px;
-    box-shadow:0 8px 28px rgba(0,0,0,0.06);
+    box-shadow:0 10px 40px rgba(16,24,40,0.08);
 }
-
-/* Navigation */
 .nav{
     margin-top:20px;
     display:flex;
-    gap:22px;
-    border-bottom:1px solid #e2e8f0;
+    gap:30px;
+    border-bottom:1px solid #e5e7eb;
     padding-bottom:12px;
-    overflow-x:auto;
 }
 .nav-item{
-    white-space:nowrap;
     font-size:15px;
     font-weight:600;
     text-decoration:none;
-    color:#1e293b;
+    color:#1f2937;
     padding-bottom:6px;
     border-bottom:2px solid transparent;
     transition:.15s ease;
@@ -48,31 +42,39 @@ body{
 
 .card{
     background:white;
-    padding:20px;
-    border-radius:12px;
-    border:1px solid #e2e8f0;
-    margin-top:20px;
+    padding:24px 10px;
+    border-radius:14px;
+    border:1px solid #e5e7eb;
+    margin-top:28px;
 }
+
+.card-inner{
+    max-width:680px;
+    margin:0 auto;
+}
+
 label{
     display:block;
     font-weight:600;
-    margin-top:14px;
+    margin-top:16px;
     font-size:14px;
 }
+
 .input, select, textarea{
     width:100%;
-    padding:12px;
+    padding:12px 14px;
     border-radius:10px;
-    border:1px solid #e2e8f0;
+    border:1px solid #d6d9e0;
     font-size:15px;
     background:white;
+    box-sizing:border-box;
 }
+
 textarea{
-    min-height:120px;
+    min-height:130px;
     resize:vertical;
 }
 
-/* Buttons */
 .btn{
     display:inline-flex;
     align-items:center;
@@ -80,45 +82,50 @@ textarea{
     padding:12px 18px;
     background:#2563eb;
     color:white;
-    border-radius:10px;
+    border-radius:12px;
     border:0;
     cursor:pointer;
     font-weight:700;
     font-size:15px;
 }
+
 .btn.ghost{
     background:transparent;
     color:#2563eb;
-    border:1px solid #bfdbfe;
+    border:1px solid #dbeafe;
 }
 
-/* Debug Area */
 .debug{
-    background:#0f172a;
-    color:#c6f6d5;
-    padding:14px;
-    border-radius:10px;
+    background:#0b1220;
+    color:#bfe7b0;
+    padding:12px;
+    border-radius:8px;
     font-family:monospace;
     white-space:pre-wrap;
     display:none;
     margin-top:12px;
-    font-size:13px;
 }
 
-/* Footer */
 .footer{
     margin-top:24px;
-    color:#64748b;
+    color:#6b7280;
     font-size:13px;
     text-align:center;
 }
 
-/* Mobile Fix */
-@media(max-width:600px){
-    .container{padding:14px;}
-    .nav{gap:16px;}
-    label{font-size:13px;}
-    .btn{width:100%;justify-content:center;}
+@media(max-width:720px){
+    .container{
+        margin:12px;
+        padding:18px;
+    }
+    .nav{
+        gap:18px;
+        overflow-x:auto;
+        padding-bottom:8px;
+    }
+    .card{
+        padding:20px 4px;
+    }
 }
 </style>
 </head>
@@ -126,8 +133,8 @@ textarea{
 <body>
 <div class="container">
 
-<h1 style="font-size:26px;margin:0;">YT Stream — Professional</h1>
-<p style="margin:6px 0 0;color:#64748b;">Dashboard profesional untuk livestream YouTube</p>
+<h1>YT Stream — Professional</h1>
+<p style="margin:6px 0 0;color:#6b7280;">Dashboard profesional untuk livestream YouTube</p>
 
 <div class="nav">
     <a href="index.html" class="nav-item active">Dashboard</a>
@@ -146,8 +153,12 @@ document.addEventListener("DOMContentLoaded",()=>{
 });
 </script>
 
-<!-- FORM -->
+<!-- ========================= -->
+<!--          FORM             -->
+<!-- ========================= -->
+
 <div class="card">
+<div class="card-inner">
 
 <label>Title</label>
 <input id="inp_title" class="input">
@@ -187,6 +198,10 @@ document.addEventListener("DOMContentLoaded",()=>{
     <input type="checkbox" id="inp_loop"> Loop Video
 </label>
 
+<!-- ========================= -->
+<!--      SUMBER VIDEO         -->
+<!-- ========================= -->
+
 <label>Sumber Video</label>
 <select id="video_source" class="input">
     <option value="url">Video URL Manual</option>
@@ -194,7 +209,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     <option value="storage">Penyimpanan</option>
 </select>
 
-<!-- Manual -->
+<!-- Input Manual -->
 <div id="box_manual">
     <label>Video URL</label>
     <input id="inp_video" class="input" placeholder="https://website.com/video.mp4">
@@ -217,18 +232,24 @@ document.addEventListener("DOMContentLoaded",()=>{
 <label>Stream Key</label>
 <input id="inp_key" class="input">
 
-<div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;">
+<div style="display:flex;gap:10px;margin-top:14px;">
     <button id="btn_trigger" class="btn">Stream Now</button>
     <button id="btn_clear" class="btn ghost">Clear</button>
 </div>
 
 </div>
+</div>
 
-<!-- LOG -->
+<!-- ========================= -->
+<!--         LOG AREA          -->
+<!-- ========================= -->
+
 <div class="card">
-<h3 style="margin-top:0;">Preview & Log</h3>
+<div class="card-inner">
+<h3>Preview & Log</h3>
 <pre id="payload" class="debug"></pre>
 <div id="log" class="debug"></div>
+</div>
 </div>
 
 <div class="footer">Built for you — Buana Media</div>
@@ -236,6 +257,9 @@ document.addEventListener("DOMContentLoaded",()=>{
 </div>
 
 <script>
+// =============================
+// Helper WIB
+// =============================
 function toISO_WIB(str){
     if(!str) return "";
     let [d,m,y] = str.split(" ")[0].split("/");
@@ -243,6 +267,9 @@ function toISO_WIB(str){
     return `${y}-${m}-${d}T${time}:00+07:00`;
 }
 
+// =============================
+// VIDEO SOURCE HANDLER
+// =============================
 const srcSelect = document.getElementById("video_source");
 const box_manual = document.getElementById("box_manual");
 const boxGDrive = document.getElementById("gdrive_box");
@@ -259,32 +286,46 @@ srcSelect.onchange = () => {
     boxGDrive.style.display = "none";
     boxStorage.style.display = "none";
 
-    if(v === "url") box_manual.style.display = "block";
-    else if(v === "gdrive") boxGDrive.style.display = "block";
+    if(v === "url"){
+        box_manual.style.display = "block";
+    }
+    else if(v === "gdrive"){
+        boxGDrive.style.display = "block";
+    }
     else if(v === "storage"){
         boxStorage.style.display = "block";
         loadStorageVideos();
     }
 };
 
+// =============================
+// LOAD R2 LIST
+// =============================
 async function loadStorageVideos(){
     inputStorage.innerHTML = `<option>Memuat...</option>`;
     const r = await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/storage");
     const j = await r.json();
 
     inputStorage.innerHTML = `<option value="">-- Pilih Video --</option>`;
+
     j.list.forEach(item=>{
         const url = "https://yt-scheduler-api.rigus-apps.workers.dev/public/" + item.key;
         inputStorage.innerHTML += `<option value="${url}">${item.key}</option>`;
     });
 }
 
+// =============================
+// Convert GDrive
+// =============================
 function convertDriveLink(url){
     const match = url.match(/\/d\/(.*?)\//);
     if(!match) return "";
     return `https://drive.google.com/uc?export=download&id=${match[1]}`;
 }
 
+// =============================
+// CLEAR FORM
+// =============================
 btn_clear.onclick = ()=>{
     inp_title.value = "";
     inp_desc.value = "";
@@ -296,6 +337,9 @@ btn_clear.onclick = ()=>{
     log.style.display = "none";
 };
 
+// =============================
+// Trigger Stream
+// =============================
 async function postJSON(url, body){
     const res = await fetch(url,{
         method:"POST",
@@ -306,6 +350,7 @@ async function postJSON(url, body){
 }
 
 btn_trigger.onclick = async ()=>{
+
     let finalVideo = "";
 
     if(srcSelect.value === "url"){
@@ -353,6 +398,9 @@ btn_trigger.onclick = async ()=>{
     log.textContent = "Worker response: "+r.status+"\n"+r.text;
 };
 
+// =============================
+// Copy from jadwal
+// =============================
 (async ()=>{
     const url = new URL(location.href);
     const copyId = url.searchParams.get("copy_id");
