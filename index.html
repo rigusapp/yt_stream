@@ -175,7 +175,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 <select id="video_source" class="input">
     <option value="url">Video URL Manual</option>
     <option value="gdrive">Google Drive</option>
-    <option value="storage">Penyimpanan R2</option>
+    <option value="storage">Penyimpanan</option>
 </select>
 
 <!-- Input Manual -->
@@ -202,7 +202,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 <input id="inp_key" class="input">
 
 <div style="display:flex;gap:10px;margin-top:14px;">
-    <button id="btn_trigger" class="btn">Trigger Stream</button>
+    <button id="btn_trigger" class="btn">Stream Now</button>
     <button id="btn_clear" class="btn ghost">Clear</button>
 </div>
 
@@ -218,7 +218,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 <div id="log" class="debug"></div>
 </div>
 
-<div class="footer">Built for you — Professional SaaS.</div>
+<div class="footer">Built for you — Buana Media</div>
 
 </div>
 
@@ -266,7 +266,7 @@ srcSelect.onchange = () => {
 };
 
 // =============================
-// LOAD R2 LIST
+// LOAD STORAGE LIST
 // =============================
 async function loadStorageVideos(){
     inputStorage.innerHTML = `<option>Memuat...</option>`;
@@ -305,7 +305,7 @@ btn_clear.onclick = ()=>{
 };
 
 // =============================
-// Trigger Stream
+// Stream Now
 // =============================
 async function postJSON(url, body){
     const res = await fetch(url,{
@@ -318,7 +318,6 @@ async function postJSON(url, body){
 
 btn_trigger.onclick = async ()=>{
 
-    // Tentukan final video URL berdasarkan sumber
     let finalVideo = "";
 
     if(srcSelect.value === "url"){
