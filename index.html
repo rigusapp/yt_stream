@@ -93,8 +93,31 @@ document.addEventListener("DOMContentLoaded",()=>{
   <input type="checkbox" id="inp_loop"> Loop Video
 </label>
 
-<label>Video URL</label>
+<!-- 🎯 Sumber Video -->
+<label>Sumber Video</label>
+<select id="video_source" class="input">
+  <option value="url">Video URL Manual</option>
+  <option value="gdrive">Google Drive</option>
+  <option value="storage">Penyimpanan R2</option>
+</select>
+
+<!-- Input manual -->
+<label id="label_video_url">Video URL</label>
 <input id="inp_video" class="input">
+
+<!-- Google Drive -->
+<div id="gdrive_box" style="display:none;">
+  <label>Google Drive Link</label>
+  <input id="inp_gdrive" class="input" placeholder="https://drive.google.com/file/d/...">
+</div>
+
+<!-- R2 Storage -->
+<div id="storage_box" style="display:none;">
+  <label>Pilih Video dari Penyimpanan</label>
+  <select id="inp_storage" class="input">
+    <option value="">Memuat...</option>
+  </select>
+</div>
 
 <label>Stream Key</label>
 <input id="inp_key" class="input">
@@ -118,7 +141,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 <script>
 // =============================
-// FIX WAKTU WIB
+// Helper WIB
 // =============================
 function toISO_WIB(str){
   if(!str) return "";
@@ -127,6 +150,80 @@ function toISO_WIB(str){
   return `${y}-${m}-${d}T${time}:00+07:00`;
 }
 
+// =============================
+// VIDEO SOURCE HANDLER
+// =============================
+const srcSelect = document.getElementById("video_source");
+const boxGDrive = document.getElementById("gdrive_box");
+const boxStorage = document.getElementById("storage_box");
+const inputVideo = document.getElementById("inp_video");
+const inputGDrive = document.getElementById("inp_gdrive");
+const inputStorage = document.getElementById("inp_storage");
+
+srcSelect.onchange = () => {
+  const v = srcSelect.value;
+
+  // Reset
+  boxGDrive.style.display = "none";
+  boxStorage.style.display = "none";
+  inputVideo.disabled = false;
+
+  if(v === "url"){
+    inputVideo.placeholder = "https://website.com/video.mp4";
+  }
+  else if(v === "gdrive"){
+    boxGDrive.style.display = "block";
+    inputVideo.disabled = true;
+  }
+  else if(v === "storage"){
+    boxStorage.style.display = "block";
+    inputVideo.disabled = true;
+    loadStorageVideos();
+  }
+};
+
+// =============================
+// LOAD R2 STORAGE LIST
+// =============================
+async function loadStorageVideos(){
+  inputStorage.innerHTML = `<option>Memuat...</option>`;
+  const r = await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/storage");
+  const j = await r.json();
+
+  inputStorage.innerHTML = `<option value="">-- Pilih Video --</option>`;
+
+  j.list.forEach(item=>{
+    const publicUrl = "https://yt-scheduler-api.rigus-apps.workers.dev/public/" + item.key;
+    inputStorage.innerHTML += `<option value="${publicUrl}">${item.key}</option>`;
+  });
+}
+
+// =============================
+// Convert Google Drive to direct MP4
+// =============================
+function convertDriveLink(url){
+  const match = url.match(/\/d\/(.*?)\//);
+  if(!match) return "";
+  return `https://drive.google.com/uc?export=download&id=${match[1]}`;
+}
+
+// =============================
+// Clear form
+// =============================
+btn_clear.onclick = ()=>{
+  inp_title.value = "";
+  inp_desc.value = "";
+  inp_video.value = "";
+  inp_key.value = "";
+  inp_vis.value = "public";
+  inp_gdrive.value = "";
+  payload.style.display = "none";
+  log.style.display = "none";
+};
+
+// =============================
+// Trigger Stream
+// =============================
 async function postJSON(url, body){
   const res = await fetch(url,{
     method:"POST",
@@ -136,25 +233,23 @@ async function postJSON(url, body){
   return {ok:res.ok,status:res.status,text:await res.text()};
 }
 
-// CLEAR
-btn_clear.onclick = ()=>{
-  inp_title.value = "";
-  inp_desc.value = "";
-  inp_video.value = "";
-  inp_key.value = "";
-  inp_vis.value = "public";
-  payload.style.display = "none";
-  log.style.display = "none";
-};
-
-// TRIGGER STREAM
 btn_trigger.onclick = async ()=>{
+
+  // Tentukan sumber video final:
+  let finalVideo = inp_video.value.trim();
+
+  if(srcSelect.value === "gdrive"){
+    finalVideo = convertDriveLink(inp_gdrive.value.trim());
+  }
+  else if(srcSelect.value === "storage"){
+    finalVideo = inputStorage.value.trim();
+  }
 
   const payloadData = {
     title: inp_title.value.trim(),
     description: inp_desc.value.trim(),
     visibility: inp_vis.value,
-    video_url: inp_video.value.trim(),
+    video_url: finalVideo,
     stream_key: inp_key.value.trim(),
     start_time: toISO_WIB(inp_time.value),
     duration_seconds: Number(inp_dur.value),
@@ -162,26 +257,21 @@ btn_trigger.onclick = async ()=>{
     rtmp_url:"rtmp://a.rtmp.youtube.com/live2"
   };
 
-  // SHOW PAYLOAD
   payload.style.display = "block";
-  payload.textContent = JSON.stringify(payloadData,null,2)
-    .replace(payloadData.stream_key,"*****MASKED*****");
+  payload.textContent = JSON.stringify(
+    {...payloadData, stream_key:"*****MASKED*****"},
+    null,2
+  );
 
   log.style.display = "block";
   log.textContent = "Sending...";
 
-  // ================================
-  // 1) Simpan jadwal KE Cloudflare KV
-  // ================================
   await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule",{
     method:"POST",
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify(payloadData)
   });
 
-  // ================================
-  // 2) Trigger FFmpeg ke YouTube
-  // ================================
   const r = await postJSON(
     "https://ytstream-proxy.rigus-apps.workers.dev/",
     { event_type:"stream_trigger", client_payload:payloadData }
@@ -190,7 +280,9 @@ btn_trigger.onclick = async ()=>{
   log.textContent = "Worker response: "+r.status+"\n"+r.text;
 };
 
-// COPY STREAM MODE (jadwal -> index)
+// =============================
+// COPY STREAM MODE (jadwal → index)
+// =============================
 (async ()=>{
   const url = new URL(location.href);
   const copyId = url.searchParams.get("copy_id");
@@ -208,7 +300,6 @@ btn_trigger.onclick = async ()=>{
   inp_dur.value = item.duration_seconds;
   inp_loop.checked = item.looping;
 
-  // WIB FULL
   const dt = new Date(item.start_time);
   const t = `${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}/${dt.getFullYear()} ${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')}`;
   inp_time.value = t;
