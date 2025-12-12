@@ -7,7 +7,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap" rel="stylesheet">
 
 <style>
-/* (Tampilan tetap persis seperti sebelumnya) */
 body{
   font-family:'Inter',sans-serif;
   background:#f4f7fb;
@@ -37,10 +36,11 @@ body{
   color:#1f2937;
   padding-bottom:6px;
   border-bottom:2px solid transparent;
-  transition:.15s ease;
+  transition:all .15s ease;
 }
 .nav-item:hover{ color:#2563eb; }
 .nav-item.active{ color:#2563eb; border-color:#2563eb; }
+
 .card{
   background:white;
   padding:20px;
@@ -58,6 +58,7 @@ body{
 .btn.blue{ background:#2563eb; color:white; }
 .btn.red{ background:#e11d48; color:white; }
 .btn.gray{ background:#e5e7eb; color:#1f2937; }
+
 table{
   width:100%;
   border-collapse:collapse;
@@ -79,117 +80,145 @@ th,td{
 
 <div class="container">
 
-<h1>Penyimpanan</h1>
-<p class="small">Halaman untuk mengelola file video.</p>
+  <h1 style="margin:0;">Penyimpanan</h1>
+  <p style="margin:6px 0 0; color:#6b7280;">Halaman untuk mengelola data tersimpan.</p>
 
-<div class="nav">
-  <a href="index.html" class="nav-item">Dashboard</a>
-  <a href="penyimpanan.html" class="nav-item active">Penyimpanan</a>
-  <a href="jadwal.html" class="nav-item">Jadwal Live</a>
-  <a href="monitoring.html" class="nav-item">Monitoring</a>
-  <a href="pengaturan.html" class="nav-item">Pengaturan</a>
-</div>
+  <div class="nav">
+    <a href="index.html" class="nav-item">Dashboard</a>
+    <a href="penyimpanan.html" class="nav-item active">Penyimpanan</a>
+    <a href="jadwal.html" class="nav-item">Jadwal Live</a>
+    <a href="monitoring.html" class="nav-item">Monitoring</a>
+    <a href="pengaturan.html" class="nav-item">Pengaturan</a>
+  </div>
 
-<div class="card">
-  <h3>Upload File</h3>
-  <input type="file" id="fileInput">
-  <button class="btn blue" id="uploadBtn">Upload</button>
-  <p id="uploadStatus" class="small"></p>
+  <div class="card">
+    <h3 style="margin-top:0;">Upload Video Disini</h3>
+    <hr style="margin:20px 0; border:0; border-top:1px solid #e5e7eb;">
 
-  <table>
-    <thead>
-      <tr>
-        <th>Nama</th>
-        <th>Ukuran</th>
-        <th>Aksi</th>
-      </tr>
-    </thead>
-    <tbody id="storageTbody">
-      <tr><td colspan="3">Memuat...</td></tr>
-    </tbody>
-  </table>
-</div>
+    <input id="fileInput" type="file">
 
+    <div style="display:flex; gap:10px; margin-top:10px;">
+      <button id="uploadBtn" class="btn blue">Upload</button>
+      <button id="refreshBtn" class="btn gray">Refresh</button>
+    </div>
+
+    <p id="uploadStatus" class="small" style="margin-top:10px;"></p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nama File</th>
+          <th>Ukuran</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="storageTbody">
+        <tr><td colspan="3" class="small">Memuat...</td></tr>
+      </tbody>
+    </table>
+
+  </div>
 </div>
 
 <script>
 const WORKER_API = "https://yt-scheduler-api.rigus-apps.workers.dev";
 const REPLIT_CONVERTER = "https://26dd6d56-c0d8-4b20-b07d-bae16f37a698-00-154zx0u9lm7i4.sisko.replit.dev/convert";
 
+// =============================================
+// LOAD LIST VIDEO
+// =============================================
 async function loadFiles(){
   const tbody = document.getElementById("storageTbody");
-  tbody.innerHTML = `<tr><td colspan='3'>Memuat...</td></tr>`;
+  tbody.innerHTML = `<tr><td colspan="3" class="small">Memuat...</td></tr>`;
 
-  const r = await fetch(WORKER_API + "/storage");
-  const j = await r.json();
+  try {
+    const r = await fetch(WORKER_API + "/storage");
+    const j = await r.json();
 
-  tbody.innerHTML = "";
+    if(!j.ok){
+      tbody.innerHTML = `<tr><td colspan="3" class="small">Gagal memuat</td></tr>`;
+      return;
+    }
 
-  j.list.forEach(item=>{
-    const link = WORKER_API + "/public/" + item.key;
-    tbody.innerHTML += `
-      <tr>
+    tbody.innerHTML = "";
+
+    j.list.forEach(item=>{
+      const publicUrl = WORKER_API + "/public/" + item.key;
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
         <td>${item.key}</td>
         <td>${Math.round(item.size/1024)} KB</td>
         <td>
-          <button class="btn gray" onclick="navigator.clipboard.writeText('${link}')">Copy</button>
+          <button class="btn gray" onclick="copyLink('${publicUrl}')">Copy</button>
           <button class="btn red" onclick="deleteFile('${item.key}')">Hapus</button>
         </td>
-      </tr>
-    `;
-  });
+      `;
+      tbody.appendChild(tr);
+    });
+
+  } catch (e){
+    tbody.innerHTML = `<tr><td colspan="3" class="small">Error: ${e}</td></tr>`;
+  }
 }
 
+// COPY URL
+function copyLink(url){
+  navigator.clipboard.writeText(url);
+  alert("Link disalin!");
+}
+
+// DELETE FILE
 async function deleteFile(key){
   if(!confirm("Hapus file ini?")) return;
-  await fetch(WORKER_API + "/storage/" + key, { method:"DELETE" });
-  loadFiles();
+
+  const r = await fetch(WORKER_API + "/storage/" + key, { method:"DELETE" });
+  const j = await r.json();
+
+  if(j.ok) loadFiles();
+  else alert("Gagal menghapus");
 }
 
-// ==========================================
-// INI ADALAH CARA ASLI YANG BERHASIL KEMARIN
-// ==========================================
+// =============================================
+// UPLOAD & CONVERT (VERSI ASLI)
+// =============================================
 document.getElementById("uploadBtn").onclick = async () => {
   const f = document.getElementById("fileInput").files[0];
   const status = document.getElementById("uploadStatus");
-  if(!f){ status.textContent = "Pilih file"; return; }
 
-  status.textContent = "Uploading to converter...";
+  if(!f){
+    status.textContent = "Pilih file terlebih dahulu!";
+    return;
+  }
 
-  // 1. Kirim ke converter (hasil berupa HTML)
+  status.textContent = "Mengonversi & upload ke R2...";
+
   let form = new FormData();
   form.append("video", f);
 
-  const r = await fetch(REPLIT_CONVERTER, {
-    method:"POST",
-    body:form
-  });
+  try {
+    const r = await fetch(REPLIT_CONVERTER, {
+      method:"POST",
+      body:form
+    });
 
-  // Ambil file video hasil convert dari link "Open Video"
-  const html = await r.text();
-  const match = html.match(/href="(.*?)"/);
-  if(!match){ status.textContent = "Convert gagal."; return; }
+    const j = await r.json();
 
-  const convertedUrl = match[1];
+    if(!j.ok){
+      status.textContent = "Gagal: " + j.error;
+      return;
+    }
 
-  // Ambil blob hasil convert
-  const blob = await fetch(convertedUrl).then(res => res.blob());
+    status.textContent = "Upload selesai: " + j.key;
 
-  // 2. Kirim ke Worker
-  let form2 = new FormData();
-  form2.append("file", new File([blob], "converted.mp4"));
+    loadFiles();
 
-  const r2 = await fetch(WORKER_API + "/upload", {
-    method:"POST",
-    body:form2
-  });
-
-  const j2 = await r2.json();
-
-  status.textContent = "Upload selesai: " + j2.key;
-
-  loadFiles();
+  } catch (e){
+    status.textContent = "ERROR: " + e;
+  }
 };
+
+document.getElementById("refreshBtn").onclick = loadFiles;
 
 loadFiles();
 </script>
