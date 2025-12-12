@@ -75,7 +75,7 @@ th,td{
   color:#6b7280;
 }
 
-/* Ultra-small preview */
+/* Ultra-small video preview */
 .preview{
   width:70px;
   height:40px;
@@ -83,11 +83,7 @@ th,td{
   border-radius:4px;
   background:#000;
   border:1px solid #222;
-
-  /* Disable interaction */
-  pointer-events:none;
-
-  /* Improve performance */
+  pointer-events:none; /* tidak bisa diklik */
   aspect-ratio:16/9;
 }
 </style>
@@ -107,12 +103,10 @@ th,td{
     <a href="pengaturan.html" class="nav-item">Pengaturan</a>
   </div>
 
-
   <div class="card">
     <h3 style="margin-top:0;">Upload Video Disini</h3>
 
     <input id="fileInput" type="file">
-
     <div style="display:flex; gap:10px; margin-top:10px;">
       <button id="uploadBtn" class="btn blue">Upload</button>
       <button id="refreshBtn" class="btn gray">Refresh</button>
@@ -136,7 +130,6 @@ th,td{
   </div>
 </div>
 
-
 <script>
 const WORKER_API = "https://yt-scheduler-api.rigus-apps.workers.dev";
 const REPLIT_CONVERTER = "https://26dd6d56-c0d8-4b20-b07d-bae16f37a698-00-154zx0u9lm7i4.sisko.replit.dev/convert";
@@ -145,37 +138,42 @@ async function loadFiles(){
   const tbody = document.getElementById("storageTbody");
   tbody.innerHTML = `<tr><td colspan="4">Memuat...</td></tr>`;
 
-  const r = await fetch(WORKER_API + "/storage");
-  const j = await r.json();
+  try {
+    const r = await fetch(WORKER_API + "/storage");
+    const j = await r.json();
 
-  tbody.innerHTML = "";
+    tbody.innerHTML = "";
 
-  j.list.forEach(item=>{
-    const videoUrl = WORKER_API + "/public/" + item.key;
+    j.list.forEach(item=>{
+      const videoUrl = WORKER_API + "/public/" + item.key;
 
-    tbody.innerinnerHTML += `
-      <tr>
-        <td>
-          <video class="preview"
-            src="${videoUrl}"
-            preload="metadata"
-            muted
-            playsinline
-            disablepictureinpicture
-            controlslist="nodownload nofullscreen noremoteplayback">
-          </video>
-        </td>
+      tbody.innerHTML += `
+        <tr>
+          <td>
+            <video class="preview"
+              src="${videoUrl}"
+              preload="metadata"
+              muted
+              playsinline
+              disablepictureinpicture
+              controlslist="nodownload nofullscreen noremoteplayback">
+            </video>
+          </td>
 
-        <td>${item.key}</td>
-        <td>${Math.round(item.size/1024)} KB</td>
+          <td>${item.key}</td>
+          <td>${Math.round(item.size/1024)} KB</td>
 
-        <td>
-          <button class="btn gray" onclick="navigator.clipboard.writeText('${videoUrl}')">Copy</button>
-          <button class="btn red" onclick="deleteFile('${item.key}')">Hapus</button>
-        </td>
-      </tr>
-    `;
-  });
+          <td>
+            <button class="btn gray" onclick="navigator.clipboard.writeText('${videoUrl}')">Copy</button>
+            <button class="btn red" onclick="deleteFile('${item.key}')">Hapus</button>
+          </td>
+        </tr>
+      `;
+    });
+
+  } catch (e) {
+    tbody.innerHTML = `<tr><td colspan="4">Gagal memuat data</td></tr>`;
+  }
 }
 
 async function deleteFile(key){
@@ -188,7 +186,10 @@ document.getElementById("uploadBtn").onclick = async () => {
   const f = document.getElementById("fileInput").files[0];
   const status = document.getElementById("uploadStatus");
 
-  if(!f){ status.textContent = "Pilih file dulu"; return; }
+  if(!f){
+    status.textContent = "Pilih file dulu!";
+    return;
+  }
 
   status.textContent = "Mengonversi...";
 
@@ -198,10 +199,10 @@ document.getElementById("uploadBtn").onclick = async () => {
   try {
     const r = await fetch(REPLIT_CONVERTER, { method:"POST", body:form });
     const html = await r.text();
-    const match = html.match(/href="(.*?)"/);
 
+    const match = html.match(/href="(.*?)"/);
     if(!match){
-      status.textContent = "Convert gagal (tidak menemukan link)";
+      status.textContent = "Convert gagal (link tidak ditemukan)";
       return;
     }
 
@@ -209,7 +210,7 @@ document.getElementById("uploadBtn").onclick = async () => {
     const blob = await fetch(url).then(res => res.blob());
 
     const form2 = new FormData();
-    form2.append("file", blob, Date.now()+".mp4");
+    form2.append("file", blob, Date.now() + ".mp4");
 
     const r2 = await fetch(WORKER_API + "/upload", { method:"POST", body:form2 });
     const j = await r2.json();
@@ -218,10 +219,10 @@ document.getElementById("uploadBtn").onclick = async () => {
       status.textContent = "Upload selesai!";
       loadFiles();
     } else {
-      status.textContent = "Gagal upload: " + j.error;
+      status.textContent = "Upload gagal: " + j.error;
     }
 
-  } catch (e) {
+  } catch (e){
     status.textContent = "ERROR: " + e;
   }
 };
