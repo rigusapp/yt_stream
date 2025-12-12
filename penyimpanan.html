@@ -75,7 +75,7 @@ th,td{
   color:#6b7280;
 }
 
-/* Ultra-small preview */
+/* Ultra-small video preview */
 .preview{
   width:70px;
   height:40px;
@@ -201,12 +201,13 @@ document.getElementById("uploadBtn").onclick = async () => {
 
     const match = html.match(/href="(.*?)"/);
 
-    /* ======== PERMINTAAN ANDA: UBAH TEKS INI SAJA ======== */
+    /* === FIX SESUAI PERMINTAAN ANDA === */
     if(!match){
       status.textContent = "Upload sukses";
+      loadFiles();   // langsung update tampilan
       return;
     }
-    /* ===================================================== */
+    /* ================================= */
 
     const url = match[1];
     const blob = await fetch(url).then(res => res.blob());
