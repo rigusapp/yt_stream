@@ -1,437 +1,235 @@
 <!doctype html>
 <html lang="id">
 <head>
-<meta charset="utf-8"/>
-<title>YT Stream — Professional</title>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="utf-8">
+<title>Penyimpanan</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap" rel="stylesheet">
 
 <style>
 body{
-    font-family:'Inter',sans-serif;
-    background:#eef3f8;
-    margin:0;padding:0;
-    color:#0f172a;
+  font-family:'Inter',sans-serif;
+  background:#f4f7fb;
+  margin:0;
+  padding:0;
+  color:#0f172a;
 }
 .container{
-    max-width:980px;
-    margin:36px auto;
-    padding:28px;
-    background:white;
-    border-radius:16px;
-    box-shadow:0 10px 40px rgba(16,24,40,0.08);
+  max-width:980px;
+  margin:36px auto;
+  padding:28px;
+  background:white;
+  border-radius:12px;
+  box-shadow:0 8px 30px rgba(16,24,40,0.06);
 }
 .nav{
-    margin-top:20px;
-    display:flex;
-    gap:30px;
-    border-bottom:1px solid #e5e7eb;
-    padding-bottom:12px;
+  margin-top:20px;
+  display:flex;
+  gap:30px;
+  border-bottom:1px solid #e5e7eb;
+  padding-bottom:12px;
 }
 .nav-item{
-    font-size:15px;
-    font-weight:600;
-    text-decoration:none;
-    color:#1f2937;
-    padding-bottom:6px;
-    border-bottom:2px solid transparent;
-    transition:.15s ease;
+  font-size:15px;
+  font-weight:600;
+  text-decoration:none;
+  color:#1f2937;
+  padding-bottom:6px;
+  border-bottom:2px solid transparent;
+  transition:.15s ease;
 }
-.nav-item:hover{color:#2563eb;}
-.nav-item.active{color:#2563eb;border-color:#2563eb;}
+.nav-item:hover{ color:#2563eb; }
+.nav-item.active{ color:#2563eb; border-color:#2563eb; }
 
 .card{
-    background:white;
-    padding:24px 10px;
-    border-radius:14px;
-    border:1px solid #e5e7eb;
-    margin-top:28px;
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  border:1px solid #e5e7eb;
+  margin-top:24px;
 }
-
-.card-inner{
-    max-width:680px;
-    margin:0 auto;
-}
-
-label{
-    display:block;
-    font-weight:600;
-    margin-top:16px;
-    font-size:14px;
-}
-
-.input, select, textarea{
-    width:100%;
-    padding:12px 14px;
-    border-radius:10px;
-    border:1px solid #d6d9e0;
-    font-size:15px;
-    background:white;
-    box-sizing:border-box;
-}
-
-textarea{
-    min-height:130px;
-    resize:vertical;
-}
-
 .btn{
-    display:inline-flex;
-    align-items:center;
-    gap:10px;
-    padding:12px 18px;
-    background:#2563eb;
-    color:white;
-    border-radius:12px;
-    border:0;
-    cursor:pointer;
-    font-weight:700;
-    font-size:15px;
+  padding:8px 16px;
+  border-radius:8px;
+  font-weight:600;
+  cursor:pointer;
+  border:0;
+}
+.btn.blue{ background:#2563eb; color:white; }
+.btn.red{ background:#e11d48; color:white; }
+.btn.gray{ background:#e5e7eb; color:#1f2937; }
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:14px;
+}
+th,td{
+  padding:10px 8px;
+  border-bottom:1px solid #e5e7eb;
+  text-align:left;
+  vertical-align:middle;
+}
+.small{
+  font-size:14px;
+  color:#6b7280;
 }
 
-.btn.ghost{
-    background:transparent;
-    color:#2563eb;
-    border:1px solid #dbeafe;
-}
-
-.debug{
-    background:#0b1220;
-    color:#bfe7b0;
-    padding:12px;
-    border-radius:8px;
-    font-family:monospace;
-    white-space:pre-wrap;
-    display:none;
-    margin-top:12px;
-}
-
-.footer{
-    margin-top:24px;
-    color:#6b7280;
-    font-size:13px;
-    text-align:center;
-}
-
-@media(max-width:720px){
-    .container{
-        margin:12px;
-        padding:18px;
-    }
-    .nav{
-        gap:18px;
-        overflow-x:auto;
-        padding-bottom:8px;
-    }
-    .card{
-        padding:20px 4px;
-    }
+/* Ultra-small video preview */
+.preview{
+  width:70px;
+  height:40px;
+  object-fit:cover;
+  border-radius:4px;
+  background:#000;
+  border:1px solid #222;
+  pointer-events:none; /* tidak bisa diklik */
+  aspect-ratio:16/9;
 }
 </style>
 </head>
 
 <body>
+
 <div class="container">
+  <h1 style="margin:0;">Penyimpanan</h1>
+  <p style="margin:6px 0 0; color:#6b7280;">Halaman untuk mengelola video di R2.</p>
 
-<h1>YT Stream — Professional</h1>
-<p style="margin:6px 0 0;color:#6b7280;">Dashboard profesional untuk livestream YouTube</p>
-
-<div class="nav">
-    <a href="index.html" class="nav-item active">Dashboard</a>
-    <a href="penyimpanan.html" class="nav-item">Penyimpanan</a>
+  <div class="nav">
+    <a href="index.html" class="nav-item">Dashboard</a>
+    <a href="penyimpanan.html" class="nav-item active">Penyimpanan</a>
     <a href="jadwal.html" class="nav-item">Jadwal Live</a>
     <a href="monitoring.html" class="nav-item">Monitoring</a>
     <a href="pengaturan.html" class="nav-item">Pengaturan</a>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0;">Upload Video Disini</h3>
+
+    <input id="fileInput" type="file">
+    <div style="display:flex; gap:10px; margin-top:10px;">
+      <button id="uploadBtn" class="btn blue">Upload</button>
+      <button id="refreshBtn" class="btn gray">Refresh</button>
+    </div>
+
+    <p id="uploadStatus" class="small" style="margin-top:10px;"></p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Preview</th>
+          <th>Nama File</th>
+          <th>Ukuran</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="storageTbody">
+        <tr><td colspan="4" class="small">Memuat...</td></tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded",()=>{
-    const cur = location.pathname.split("/").pop();
-    document.querySelectorAll(".nav-item").forEach(a=>{
-        if(a.getAttribute("href")===cur) a.classList.add("active");
-    });
-});
-</script>
+const WORKER_API = "https://yt-scheduler-api.rigus-apps.workers.dev";
+const REPLIT_CONVERTER = "https://26dd6d56-c0d8-4b20-b07d-bae16f37a698-00-154zx0u9lm7i4.sisko.replit.dev/convert";
 
-<!-- ========================= -->
-<!--          FORM             -->
-<!-- ========================= -->
+async function loadFiles(){
+  const tbody = document.getElementById("storageTbody");
+  tbody.innerHTML = `<tr><td colspan="4">Memuat...</td></tr>`;
 
-<div class="card">
-<div class="card-inner">
-
-<label>Title</label>
-<input id="inp_title" class="input">
-
-<label>Description</label>
-<textarea id="inp_desc" class="input"></textarea>
-
-<label>Visibility</label>
-<select id="inp_vis" class="input">
-    <option value="public">Public</option>
-    <option value="unlisted">Unlisted</option>
-    <option value="private">Private</option>
-</select>
-
-<label>Tanggal & Jam Live (WIB)</label>
-<input id="inp_time" class="input" autocomplete="off" placeholder="11/12/2025 12:00">
-
-<label>Durasi</label>
-<select id="inp_dur" class="input">
-    <option value="300">5 menit</option>
-    <option value="1800">30 menit</option>
-    <option value="3600" selected>1 Jam</option>
-    <option value="7200">2 Jam</option>
-    <option value="10800">3 Jam</option>
-    <option value="14400">4 Jam</option>
-    <option value="18000">5 Jam</option>
-    <option value="21600">6 Jam</option>
-    <option value="25200">7 Jam</option>
-    <option value="28800">8 Jam</option>
-    <option value="32400">9 Jam</option>
-    <option value="36000">10 Jam</option>
-    <option value="39600">11 Jam</option>
-    <option value="43200">12 Jam</option>
-</select>
-
-<label style="margin-top:10px;display:flex;align-items:center;gap:8px;">
-    <input type="checkbox" id="inp_loop"> Loop Video
-</label>
-
-<!-- ========================= -->
-<!--      SUMBER VIDEO         -->
-<!-- ========================= -->
-
-<label>Sumber Video</label>
-<select id="video_source" class="input">
-    <option value="url">Video URL Manual</option>
-    <option value="gdrive">Google Drive</option>
-    <option value="storage">Penyimpanan</option>
-</select>
-
-<!-- Input Manual -->
-<div id="box_manual">
-    <label>Video URL</label>
-    <input id="inp_video" class="input" placeholder="https://website.com/video.mp4">
-</div>
-
-<!-- Google Drive -->
-<div id="gdrive_box" style="display:none;">
-    <label>Google Drive Link</label>
-    <input id="inp_gdrive" class="input" placeholder="https://drive.google.com/file/d/...">
-</div>
-
-<!-- R2 Storage -->
-<div id="storage_box" style="display:none;">
-    <label>Pilih Video dari Penyimpanan</label>
-    <select id="inp_storage" class="input">
-        <option value="">Memuat...</option>
-    </select>
-</div>
-
-<label>Stream Key</label>
-<input id="inp_key" class="input">
-
-<div style="display:flex;gap:10px;margin-top:14px;">
-    <button id="btn_trigger" class="btn">Stream Now</button>
-    <button id="btn_clear" class="btn ghost">Clear</button>
-</div>
-
-</div>
-</div>
-
-<!-- ========================= -->
-<!--         LOG AREA          -->
-<!-- ========================= -->
-
-<div class="card">
-<div class="card-inner">
-<h3>Preview & Log</h3>
-<pre id="payload" class="debug"></pre>
-<div id="log" class="debug"></div>
-</div>
-</div>
-
-<div class="footer">Built for you — Buana Media</div>
-
-</div>
-
-<script>
-// =============================
-// Helper WIB
-// =============================
-function toISO_WIB(str){
-    if(!str) return "";
-    let [d,m,y] = str.split(" ")[0].split("/");
-    let time = str.split(" ")[1];
-    return `${y}-${m}-${d}T${time}:00+07:00`;
-}
-
-// =============================
-// VIDEO SOURCE HANDLER
-// =============================
-const srcSelect = document.getElementById("video_source");
-const box_manual = document.getElementById("box_manual");
-const boxGDrive = document.getElementById("gdrive_box");
-const boxStorage = document.getElementById("storage_box");
-
-const inputVideo = document.getElementById("inp_video");
-const inputGDrive = document.getElementById("inp_gdrive");
-const inputStorage = document.getElementById("inp_storage");
-
-srcSelect.onchange = () => {
-    const v = srcSelect.value;
-
-    box_manual.style.display = "none";
-    boxGDrive.style.display = "none";
-    boxStorage.style.display = "none";
-
-    if(v === "url"){
-        box_manual.style.display = "block";
-    }
-    else if(v === "gdrive"){
-        boxGDrive.style.display = "block";
-    }
-    else if(v === "storage"){
-        boxStorage.style.display = "block";
-        loadStorageVideos();
-    }
-};
-
-// =============================
-// LOAD R2 LIST
-// =============================
-async function loadStorageVideos(){
-    inputStorage.innerHTML = `<option>Memuat...</option>`;
-    const r = await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/storage");
+  try {
+    const r = await fetch(WORKER_API + "/storage");
     const j = await r.json();
 
-    inputStorage.innerHTML = `<option value="">-- Pilih Video --</option>`;
+    tbody.innerHTML = "";
 
     j.list.forEach(item=>{
-        const url = "https://yt-scheduler-api.rigus-apps.workers.dev/public/" + item.key;
-        inputStorage.innerHTML += `<option value="${url}">${item.key}</option>`;
+      const videoUrl = WORKER_API + "/public/" + item.key;
+
+      tbody.innerHTML += `
+        <tr>
+          <td>
+            <video class="preview"
+              src="${videoUrl}"
+              preload="metadata"
+              muted
+              playsinline
+              disablepictureinpicture
+              controlslist="nodownload nofullscreen noremoteplayback">
+            </video>
+          </td>
+
+          <td>${item.key}</td>
+          <td>${Math.round(item.size/1024)} KB</td>
+
+          <td>
+            <button class="btn gray" onclick="navigator.clipboard.writeText('${videoUrl}')">Copy</button>
+            <button class="btn red" onclick="deleteFile('${item.key}')">Hapus</button>
+          </td>
+        </tr>
+      `;
     });
+
+  } catch (e) {
+    tbody.innerHTML = `<tr><td colspan="4">Gagal memuat data</td></tr>`;
+  }
 }
 
-// =============================
-// Convert GDrive
-// =============================
-function convertDriveLink(url){
-    const match = url.match(/\/d\/(.*?)\//);
-    if(!match) return "";
-    return `https://drive.google.com/uc?export=download&id=${match[1]}`;
+async function deleteFile(key){
+  if(!confirm("Hapus file ini?")) return;
+  await fetch(WORKER_API + "/storage/" + key, { method:"DELETE" });
+  loadFiles();
 }
 
-// =============================
-// CLEAR FORM
-// =============================
-btn_clear.onclick = ()=>{
-    inp_title.value = "";
-    inp_desc.value = "";
-    inp_video.value = "";
-    inp_key.value = "";
-    inp_vis.value = "public";
-    inp_gdrive.value = "";
-    payload.style.display = "none";
-    log.style.display = "none";
+document.getElementById("uploadBtn").onclick = async () => {
+  const f = document.getElementById("fileInput").files[0];
+  const status = document.getElementById("uploadStatus");
+
+  if(!f){
+    status.textContent = "Pilih file dulu!";
+    return;
+  }
+
+  status.textContent = "Mengonversi...";
+
+  const form = new FormData();
+  form.append("video", f);
+
+  try {
+    const r = await fetch(REPLIT_CONVERTER, { method:"POST", body:form });
+    const html = await r.text();
+
+    const match = html.match(/href="(.*?)"/);
+    if(!match){
+      status.textContent = "Convert gagal (link tidak ditemukan)";
+      return;
+    }
+
+    const url = match[1];
+    const blob = await fetch(url).then(res => res.blob());
+
+    const form2 = new FormData();
+    form2.append("file", blob, Date.now() + ".mp4");
+
+    const r2 = await fetch(WORKER_API + "/upload", { method:"POST", body:form2 });
+    const j = await r2.json();
+
+    if(j.ok){
+      status.textContent = "Upload selesai!";
+      loadFiles();
+    } else {
+      status.textContent = "Upload gagal: " + j.error;
+    }
+
+  } catch (e){
+    status.textContent = "ERROR: " + e;
+  }
 };
 
-// =============================
-// Trigger Stream
-// =============================
-async function postJSON(url, body){
-    const res = await fetch(url,{
-        method:"POST",
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify(body)
-    });
-    return {ok:res.ok,status:res.status,text:await res.text()};
-}
+document.getElementById("refreshBtn").onclick = loadFiles;
 
-btn_trigger.onclick = async ()=>{
-
-    let finalVideo = "";
-
-    if(srcSelect.value === "url"){
-        finalVideo = inp_video.value.trim();
-    }
-    else if(srcSelect.value === "gdrive"){
-        finalVideo = convertDriveLink(inp_gdrive.value.trim());
-    }
-    else if(srcSelect.value === "storage"){
-        finalVideo = inputStorage.value.trim();
-    }
-
-    const payloadData = {
-        title: inp_title.value.trim(),
-        description: inp_desc.value.trim(),
-        visibility: inp_vis.value,
-        video_url: finalVideo,
-        stream_key: inp_key.value.trim(),
-        start_time: toISO_WIB(inp_time.value),
-        duration_seconds: Number(inp_dur.value),
-        looping: inp_loop.checked,
-        rtmp_url:"rtmp://a.rtmp.youtube.com/live2"
-    };
-
-    payload.style.display = "block";
-    payload.textContent = JSON.stringify(
-        {...payloadData, stream_key:"*****MASKED*****"},
-        null,2
-    );
-
-    log.style.display = "block";
-    log.textContent = "Sending...";
-
-    await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule",{
-        method:"POST",
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify(payloadData)
-    });
-
-    const r = await postJSON(
-        "https://ytstream-proxy.rigus-apps.workers.dev/",
-        { event_type:"stream_trigger", client_payload:payloadData }
-    );
-
-    log.textContent = "Worker response: "+r.status+"\n"+r.text;
-};
-
-// =============================
-// Copy from jadwal
-// =============================
-(async ()=>{
-    const url = new URL(location.href);
-    const copyId = url.searchParams.get("copy_id");
-    if(!copyId) return;
-
-    const res = await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule");
-    const j = await res.json();
-    const item = (j.list||[]).find(x=>x.id===copyId);
-    if(!item) return;
-
-    inp_title.value = item.title;
-    inp_desc.value = item.description;
-    inp_video.value = item.video_url;
-    inp_key.value = item.stream_key;
-    inp_dur.value = item.duration_seconds;
-    inp_loop.checked = item.looping;
-
-    const dt = new Date(item.start_time);
-    const t = `${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}/${dt.getFullYear()} ${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')}`;
-    inp_time.value = t;
-})();
-</script>
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script>
-flatpickr("#inp_time",{
-    enableTime:true,
-    dateFormat:"d/m/Y H:i",
-    time_24hr:true
-});
+loadFiles();
 </script>
 
 </body>
