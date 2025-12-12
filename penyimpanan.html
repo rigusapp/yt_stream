@@ -36,11 +36,10 @@ body{
   color:#1f2937;
   padding-bottom:6px;
   border-bottom:2px solid transparent;
-  transition:.15s ease;
+  transition:all .15s ease;
 }
 .nav-item:hover{ color:#2563eb; }
 .nav-item.active{ color:#2563eb; border-color:#2563eb; }
-
 .card{
   background:white;
   padding:20px;
@@ -58,7 +57,6 @@ body{
 .btn.blue{ background:#2563eb; color:white; }
 .btn.red{ background:#e11d48; color:white; }
 .btn.gray{ background:#e5e7eb; color:#1f2937; }
-
 table{
   width:100%;
   border-collapse:collapse;
@@ -122,6 +120,7 @@ th,td{
 
 <script>
 const WORKER_API = "https://yt-scheduler-api.rigus-apps.workers.dev";
+const REPLIT_CONVERTER = "https://26dd6d56-c0d8-4b20-b07d-bae16f37a698-00-154zx0u9lm7i4.sisko.replit.dev/convert";
 
 // =============================================
 // LOAD LIST VIDEO
@@ -183,8 +182,7 @@ async function deleteFile(key){
 }
 
 // =============================================
-// UPLOAD: Browser → Worker → Converter → Worker → R2
-// (Versi FULL sesuai worker.js final)
+// UPLOAD & CONVERT
 // =============================================
 document.getElementById("uploadBtn").onclick = async () => {
   const f = document.getElementById("fileInput").files[0];
@@ -195,27 +193,27 @@ document.getElementById("uploadBtn").onclick = async () => {
     return;
   }
 
-  status.textContent = "Mengupload & mengonversi...";
+  status.textContent = "Mengonversi & upload ke R2...";
 
   let form = new FormData();
-  form.append("file", f);
+  form.append("video", f);
 
   try {
-    // 1. Kirim ke Worker (Worker yang mengirim ke Converter)
-    const r = await fetch(WORKER_API + "/upload", {
+    const r = await fetch(REPLIT_CONVERTER, {
       method:"POST",
-      body: form
+      body:form
     });
 
     const j = await r.json();
 
     if(!j.ok){
-      status.textContent = "Gagal upload: " + j.error;
+      status.textContent = "Gagal: " + j.error;
       return;
     }
 
     status.textContent = "Upload selesai: " + j.key;
-    loadFiles();
+
+    loadFiles(); // refresh list otomatis
 
   } catch (e){
     status.textContent = "ERROR: " + e;
