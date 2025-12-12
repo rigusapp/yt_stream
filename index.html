@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="id">
 <head>
+<script src="auth.js"></script>
 <meta charset="utf-8"/>
 <title>YT Stream — Professional</title>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
@@ -369,6 +370,72 @@ btn_trigger.onclick = async ()=>{
     log.textContent = "Worker response: "+r.status+"\n"+r.text;
 };
 
+
+// ======================================================
+//            COPY DATA DARI JADWAL.HTML
+// ======================================================
+(function(){
+
+    const url = new URL(location.href);
+    let copyId = url.searchParams.get("copy_id");
+
+    if(!copyId){
+        copyId = localStorage.getItem("copy_id");
+    }
+
+    if(!copyId) return;
+
+    localStorage.removeItem("copy_id");
+
+    fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule")
+        .then(r=>r.json())
+        .then(j=>{
+            const item = (j.list || []).find(x => x.id === copyId);
+            if(!item) return;
+
+            inp_title.value = item.title;
+            inp_desc.value = item.description;
+            inp_vis.value = item.visibility || "public";
+
+            inp_dur.value = item.duration_seconds;
+            inp_loop.checked = item.looping;
+
+            // sumber video
+            if(item.video_url.includes("/public/")){
+                video_source.value = "storage";
+                box_manual.style.display = "none";
+                boxGDrive.style.display = "none";
+                boxStorage.style.display = "block";
+                inp_storage.innerHTML =
+                    `<option value="${item.video_url}">${item.video_url}</option>`;
+            }
+            else if(item.video_url.includes("drive.google.com")){
+                video_source.value = "gdrive";
+                box_manual.style.display = "none";
+                boxStorage.style.display = "none";
+                boxGDrive.style.display = "block";
+                inp_gdrive.value = item.video_url;
+            }
+            else{
+                video_source.value = "url";
+                boxGDrive.style.display = "none";
+                boxStorage.style.display = "none";
+                box_manual.style.display = "block";
+                inp_video.value = item.video_url;
+            }
+
+            const dt = new Date(item.start_time);
+            inp_time.value =
+                `${String(dt.getDate()).padStart(2,'0')}/`+
+                `${String(dt.getMonth()+1).padStart(2,'0')}/`+
+                `${dt.getFullYear()} `+
+                `${String(dt.getHours()).padStart(2,'0')}:`+
+                `${String(dt.getMinutes()).padStart(2,'0')}`;
+
+            inp_key.value = item.stream_key;
+        });
+
+})();
 </script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
