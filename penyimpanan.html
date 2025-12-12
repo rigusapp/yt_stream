@@ -5,25 +5,94 @@
 <title>Penyimpanan</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap" rel="stylesheet">
+
 <style>
-body{font-family:'Inter',sans-serif;background:#f4f7fb;margin:0;padding:0;color:#0f172a}
-.container{max-width:980px;margin:36px auto;padding:28px;background:white;border-radius:12px;box-shadow:0 8px 30px rgba(16,24,40,0.06)}
-.nav{margin-top:20px;display:flex;gap:30px;border-bottom:1px solid #e5e7eb;padding-bottom:12px}
-.nav-item{font-size:15px;font-weight:600;text-decoration:none;color:#1f2937;padding-bottom:6px;border-bottom:2px solid transparent;transition:.15s ease}
-.nav-item:hover{color:#2563eb} .nav-item.active{color:#2563eb;border-color:#2563eb}
-.card{background:white;padding:20px;border-radius:10px;border:1px solid #e5e7eb;margin-top:24px}
-.btn{padding:8px 16px;border-radius:8px;font-weight:600;cursor:pointer;border:0}
-.btn.blue{background:#2563eb;color:white}.btn.red{background:#e11d48;color:white}.btn.gray{background:#e5e7eb;color:#1f2937}
-table{width:100%;border-collapse:collapse;margin-top:14px}th,td{padding:10px 8px;border-bottom:1px solid #e5e7eb;text-align:left;vertical-align:middle}
-.small{font-size:14px;color:#6b7280}
-.thumb-img{width:120px;height:70px;object-fit:cover;border-radius:6px;border:1px solid #ddd;background:#000}
-.status{margin-top:8px;color:#374151}
+body{
+  font-family:'Inter',sans-serif;
+  background:#f4f7fb;
+  margin:0;
+  padding:0;
+  color:#0f172a;
+}
+.container{
+  max-width:980px;
+  margin:36px auto;
+  padding:28px;
+  background:white;
+  border-radius:12px;
+  box-shadow:0 8px 30px rgba(16,24,40,0.06);
+}
+.nav{
+  margin-top:20px;
+  display:flex;
+  gap:30px;
+  border-bottom:1px solid #e5e7eb;
+  padding-bottom:12px;
+}
+.nav-item{
+  font-size:15px;
+  font-weight:600;
+  text-decoration:none;
+  color:#1f2937;
+  padding-bottom:6px;
+  border-bottom:2px solid transparent;
+  transition:.15s ease;
+}
+.nav-item:hover{ color:#2563eb; }
+.nav-item.active{ color:#2563eb; border-color:#2563eb; }
+
+.card{
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  border:1px solid #e5e7eb;
+  margin-top:24px;
+}
+.btn{
+  padding:8px 16px;
+  border-radius:8px;
+  font-weight:600;
+  cursor:pointer;
+  border:0;
+}
+.btn.blue{ background:#2563eb; color:white; }
+.btn.red{ background:#e11d48; color:white; }
+.btn.gray{ background:#e5e7eb; color:#1f2937; }
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:14px;
+}
+th,td{
+  padding:10px 8px;
+  border-bottom:1px solid #e5e7eb;
+  text-align:left;
+  vertical-align:middle;
+}
+.small{
+  font-size:14px;
+  color:#6b7280;
+}
+
+/* preview video kecil */
+.preview{
+  width:120px;
+  height:70px;
+  object-fit:cover;
+  border-radius:6px;
+  background:black;
+  pointer-events:none; /* tidak bisa di klik */
+}
 </style>
 </head>
+
 <body>
+
 <div class="container">
-  <h1 style="margin:0">Penyimpanan</h1>
-  <p class="small" style="margin:6px 0 0">Halaman untuk mengelola video & thumbnail.</p>
+
+  <h1 style="margin:0;">Penyimpanan</h1>
+  <p style="margin:6px 0 0; color:#6b7280;">Halaman untuk mengelola video di R2.</p>
 
   <div class="nav">
     <a href="index.html" class="nav-item">Dashboard</a>
@@ -34,20 +103,31 @@ table{width:100%;border-collapse:collapse;margin-top:14px}th,td{padding:10px 8px
   </div>
 
   <div class="card">
-    <h3 style="margin-top:0">Upload Video</h3>
-    <input id="fileInput" type="file" accept="video/*">
-    <div style="display:flex;gap:10px;margin-top:10px">
-      <button id="uploadBtn" class="btn blue">Upload (convert → save)</button>
+    <h3 style="margin-top:0;">Upload Video Disini</h3>
+
+    <input id="fileInput" type="file">
+
+    <div style="display:flex; gap:10px; margin-top:10px;">
+      <button id="uploadBtn" class="btn blue">Upload</button>
       <button id="refreshBtn" class="btn gray">Refresh</button>
     </div>
-    <div id="uploadStatus" class="status"></div>
+
+    <p id="uploadStatus" class="small" style="margin-top:10px;"></p>
 
     <table>
       <thead>
-        <tr><th>Preview</th><th>Nama File</th><th>Ukuran</th><th>Aksi</th></tr>
+        <tr>
+          <th>Preview</th>
+          <th>Nama File</th>
+          <th>Ukuran</th>
+          <th>Aksi</th>
+        </tr>
       </thead>
-      <tbody id="storageTbody"><tr><td colspan="4" class="small">Memuat...</td></tr></tbody>
+      <tbody id="storageTbody">
+        <tr><td colspan="4" class="small">Memuat...</td></tr>
+      </tbody>
     </table>
+
   </div>
 </div>
 
@@ -55,170 +135,85 @@ table{width:100%;border-collapse:collapse;margin-top:14px}th,td{padding:10px 8px
 const WORKER_API = "https://yt-scheduler-api.rigus-apps.workers.dev";
 const REPLIT_CONVERTER = "https://26dd6d56-c0d8-4b20-b07d-bae16f37a698-00-154zx0u9lm7i4.sisko.replit.dev/convert";
 
-// helper: create thumbnail image Blob from local File (capture frame at 0.1s)
-function createThumbnailBlob(file, width = 320, height = 180) {
-  return new Promise((resolve, reject) => {
-    const url = URL.createObjectURL(file);
-    const video = document.createElement("video");
-    video.preload = "metadata";
-    video.muted = true;
-    video.src = url;
-    video.playsInline = true;
-
-    // when metadata loaded, seek to small time
-    video.addEventListener("loadedmetadata", () => {
-      const seekTo = Math.min(0.1, Math.max(0.0, video.duration * 0.01));
-      // seeking
-      const handler = () => {
-        try {
-          const canvas = document.createElement("canvas");
-          // scale to requested size while preserving aspect ratio
-          const ar = video.videoWidth / video.videoHeight || (width/height);
-          let w = width, h = height;
-          if (video.videoWidth && video.videoHeight) {
-            if (video.videoWidth / video.videoHeight > width / height) {
-              // wider -> limit by width
-              w = width;
-              h = Math.round(width / ar);
-            } else {
-              h = height;
-              w = Math.round(height * ar);
-            }
-          }
-          canvas.width = w;
-          canvas.height = h;
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(video, 0, 0, w, h);
-          canvas.toBlob((blob) => {
-            URL.revokeObjectURL(url);
-            if (blob) resolve(blob);
-            else reject(new Error("Gagal membuat thumbnail"));
-          }, "image/jpeg", 0.75);
-        } catch (e) {
-          URL.revokeObjectURL(url);
-          reject(e);
-        } finally {
-          video.removeEventListener("seeked", handler);
-        }
-      };
-      video.addEventListener("seeked", handler);
-      // some browsers require a slight positive seek time
-      try { video.currentTime = seekTo; } catch (e) { handler(); }
-    });
-
-    video.addEventListener("error", (e) => {
-      URL.revokeObjectURL(url);
-      reject(new Error("Gagal load video untuk thumbnail"));
-    });
-  });
-}
-
 async function loadFiles(){
   const tbody = document.getElementById("storageTbody");
-  tbody.innerHTML = `<tr><td colspan="4" class="small">Memuat...</td></tr>`;
+  tbody.innerHTML = `<tr><td colspan="4">Memuat...</td></tr>`;
 
-  try {
-    const r = await fetch(WORKER_API + "/storage");
-    const j = await r.json();
-    if(!j.ok){ tbody.innerHTML = `<tr><td colspan="4" class="small">Gagal memuat</td></tr>`; return; }
+  const r = await fetch(WORKER_API + "/storage");
+  const j = await r.json();
 
-    tbody.innerHTML = "";
-    j.list.forEach(item=>{
-      const videoUrl = WORKER_API + "/public/" + item.key;
-      const thumbHtml = item.thumbnail_url
-        ? `<img class="thumb-img" src="${item.thumbnail_url}" alt="thumb">`
-        : `<div class="thumb-img" style="display:flex;align-items:center;justify-content:center;background:#111;color:#fff;border-radius:6px">🎬</div>`;
+  tbody.innerHTML = "";
 
-      tbody.innerHTML += `
-        <tr>
-          <td>${thumbHtml}</td>
-          <td>${item.key}</td>
-          <td>${Math.round(item.size/1024)} KB</td>
-          <td>
-            <button class="btn gray" onclick="navigator.clipboard.writeText('${videoUrl}')">Copy</button>
-            <button class="btn red" onclick="deleteFile('${item.key}')">Hapus</button>
-          </td>
-        </tr>
-      `;
-    });
-  } catch (e) {
-    document.getElementById("storageTbody").innerHTML = `<tr><td colspan="4" class="small">Error: ${e}</td></tr>`;
-  }
+  j.list.forEach(item=>{
+    const videoUrl = WORKER_API + "/public/" + item.key;
+
+    tbody.innerHTML += `
+      <tr>
+        <td>
+          <video class="preview" src="${videoUrl}" muted preload="metadata"></video>
+        </td>
+        <td>${item.key}</td>
+        <td>${Math.round(item.size/1024)} KB</td>
+        <td>
+          <button class="btn gray" onclick="navigator.clipboard.writeText('${videoUrl}')">Copy</button>
+          <button class="btn red" onclick="deleteFile('${item.key}')">Hapus</button>
+        </td>
+      </tr>
+    `;
+  });
 }
 
 async function deleteFile(key){
   if(!confirm("Hapus file ini?")) return;
-  const r = await fetch(WORKER_API + "/storage/" + encodeURIComponent(key), { method: "DELETE" });
-  const j = await r.json();
-  if(j.ok) loadFiles();
-  else alert("Gagal menghapus: " + (j.error || "unknown"));
+  await fetch(WORKER_API + "/storage/" + key, { method:"DELETE" });
+  loadFiles();
 }
-
-document.getElementById("refreshBtn").onclick = loadFiles;
 
 document.getElementById("uploadBtn").onclick = async () => {
   const f = document.getElementById("fileInput").files[0];
   const status = document.getElementById("uploadStatus");
   if(!f){ status.textContent = "Pilih file dulu"; return; }
 
+  status.textContent = "Mengonversi...";
+
+  let form = new FormData();
+  form.append("video", f);
+
   try {
-    status.textContent = "Membuat thumbnail...";
-    // 1) get a key from worker to keep video <-> thumb same
-    const nk = await fetch(WORKER_API + "/new-key");
-    const nkj = await nk.json();
-    if(!nkj.ok) { status.textContent = "Gagal dapat key"; return; }
-    const key = nkj.key;
+    const r = await fetch(REPLIT_CONVERTER, { method:"POST", body:form });
+    const html = await r.text();
+    const match = html.match(/href="(.*?)"/);
 
-    // 2) create thumbnail from local file (fast)
-    const thumbBlob = await createThumbnailBlob(f, 160, 90);
-
-    // 3) upload thumbnail to worker (thumbs/<key>.jpg)
-    status.textContent = "Mengupload thumbnail...";
-    const formThumb = new FormData();
-    formThumb.append("key", key);
-    // name it as <key>.jpg
-    formThumb.append("file", new File([thumbBlob], `${key}.jpg`, { type: "image/jpeg" }));
-
-    const rthumb = await fetch(WORKER_API + "/upload-thumbnail", { method: "POST", body: formThumb });
-    const jthumb = await rthumb.json();
-    if(!jthumb.ok){
-      status.textContent = "Gagal upload thumbnail: " + (jthumb.error || "");
+    if(!match){
+      status.textContent = "Convert gagal (tidak menemukan link)";
       return;
     }
 
-    // 4) Continue with converter flow (browser -> converter -> get converted blob)
-    status.textContent = "Mengonversi & mengupload video...";
-    let form = new FormData();
-    form.append("video", f);
+    const url = match[1];
+    const blob = await fetch(url).then(res=>res.blob());
 
-    const rconv = await fetch(REPLIT_CONVERTER, { method: "POST", body: form });
-
-    // converter returns HTML page with link; original working flow expects HTML -> parse link
-    const html = await rconv.text();
-    const match = html.match(/href="(.*?)"/);
-    if(!match){ status.textContent = "Convert gagal (tidak menemukan link)"; return; }
-    const convertedUrl = match[1];
-
-    // fetch converted blob
-    const convertedBlob = await fetch(convertedUrl).then(res => res.blob());
-
-    // 5) upload converted blob to worker with same key
     const form2 = new FormData();
-    form2.append("key", key);
-    form2.append("file", new File([convertedBlob], `${key}.mp4`, { type: convertedBlob.type || "video/mp4" }));
+    form2.append("file", new File([blob], Date.now()+".mp4", { type: blob.type || "video/mp4" }));
 
-    const rupload = await fetch(WORKER_API + "/upload", { method: "POST", body: form2 });
-    const jupload = await rupload.json();
-    if(!jupload.ok){ status.textContent = "Gagal upload video: " + (jupload.error || ""); return; }
+    const up = await fetch(WORKER_API + "/upload", { method:"POST", body:form2 });
+    const j = await up.json();
 
-    status.textContent = "Selesai: " + jupload.key;
-    loadFiles();
-  } catch (e) {
-    document.getElementById("uploadStatus").textContent = "ERROR: " + e;
+    if(j.ok){
+      status.textContent = "Upload selesai!";
+      loadFiles();
+    } else {
+      status.textContent = "Gagal upload: " + j.error;
+    }
+
+  } catch (e){
+    status.textContent = "ERROR: " + e;
   }
 };
 
+document.getElementById("refreshBtn").onclick = loadFiles;
+
 loadFiles();
 </script>
+
 </body>
 </html>
