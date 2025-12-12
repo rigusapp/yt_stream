@@ -167,7 +167,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 <select id="video_source" class="input">
     <option value="url">Video URL Manual</option>
     <option value="gdrive">Google Drive</option>
-    <option value="storage">Penyimpanan R2</option>
+    <option value="storage">Penyimpanan</option> <!-- diperbaiki -->
 </select>
 
 <div id="box_manual">
@@ -191,7 +191,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 <input id="inp_key" class="input">
 
 <div style="display:flex;gap:10px;margin-top:14px;">
-    <button id="btn_trigger" class="btn">Trigger Stream</button>
+    <button id="btn_trigger" class="btn">Stream Now</button> <!-- diganti -->
     <button id="btn_clear" class="btn ghost">Clear</button>
 </div>
 
@@ -203,14 +203,11 @@ document.addEventListener("DOMContentLoaded",()=>{
 <div id="log" class="debug"></div>
 </div>
 
-<div class="footer">Built for you — Professional SaaS.</div>
+<div class="footer">Built for you — Buana Media</div> <!-- diganti -->
 
 </div>
 
 <script>
-// =============================
-// Helper WIB
-// =============================
 function toISO_WIB(str){
     if(!str) return "";
     let [d,m,y] = str.split(" ")[0].split("/");
@@ -218,9 +215,6 @@ function toISO_WIB(str){
     return `${y}-${m}-${d}T${time}:00+07:00`;
 }
 
-// =============================
-// VIDEO SOURCE HANDLER
-// =============================
 const srcSelect = document.getElementById("video_source");
 const box_manual = document.getElementById("box_manual");
 const boxGDrive = document.getElementById("gdrive_box");
@@ -249,9 +243,6 @@ srcSelect.onchange = () => {
     }
 };
 
-// =============================
-// LOAD R2 LIST
-// =============================
 async function loadStorageVideos(){
     inputStorage.innerHTML = `<option>Memuat...</option>`;
     const r = await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/storage");
@@ -265,18 +256,12 @@ async function loadStorageVideos(){
     });
 }
 
-// =============================
-// Convert GDrive
-// =============================
 function convertDriveLink(url){
     const match = url.match(/\/d\/(.*?)\//);
     if(!match) return "";
     return `https://drive.google.com/uc?export=download&id=${match[1]}`;
 }
 
-// =============================
-// CLEAR FORM
-// =============================
 btn_clear.onclick = ()=>{
     inp_title.value = "";
     inp_desc.value = "";
@@ -288,9 +273,6 @@ btn_clear.onclick = ()=>{
     log.style.display = "none";
 };
 
-// =============================
-// Trigger Stream
-// =============================
 async function postJSON(url, body){
     const res = await fetch(url,{
         method:"POST",
@@ -349,9 +331,6 @@ btn_trigger.onclick = async ()=>{
     log.textContent = "Worker response: "+r.status+"\n"+r.text;
 };
 
-// =============================
-// Copy from jadwal
-// =============================
 (async ()=>{
     const url = new URL(location.href);
     const copyId = url.searchParams.get("copy_id");
