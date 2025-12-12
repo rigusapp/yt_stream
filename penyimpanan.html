@@ -75,18 +75,19 @@ th,td{
   color:#6b7280;
 }
 
-/* SUPER FAST THUMBNAIL */
+/* STATIC PREVIEW — SUPER FAST */
 .thumb-box{
-  width:80px;
-  height:50px;
-  background:#111827;      /* gelap */
+  width:100px;
+  height:60px;
+  background:#111827;
   display:flex;
   justify-content:center;
   align-items:center;
   border-radius:8px;
+  border:1px solid #444;
 }
 .thumb-box span{
-  font-size:22px;
+  font-size:26px;
   color:white;
   opacity:0.8;
 }
@@ -156,8 +157,8 @@ async function loadFiles(){
     tbody.innerHTML += `
       <tr>
         <td>
-          <div class="thumb-box" onclick="window.open('${videoUrl}', '_blank')">
-            <span>▶</span>
+          <div class="thumb-box">
+            <span>🎬</span>
           </div>
         </td>
         <td>${item.key}</td>
