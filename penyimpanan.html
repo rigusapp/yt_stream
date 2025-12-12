@@ -70,13 +70,12 @@ th,td{
   text-align:left;
   vertical-align:middle;
 }
-
 .small{
   font-size:14px;
   color:#6b7280;
 }
 
-/* Ultra-small video preview */
+/* Ultra-small preview */
 .preview{
   width:70px;
   height:40px;
@@ -157,8 +156,7 @@ async function loadFiles(){
               muted
               playsinline
               disablepictureinpicture
-              controlslist="nodownload nofullscreen noremoteplayback">
-            </video>
+              controlslist="nodownload nofullscreen noremoteplayback"></video>
           </td>
 
           <td>${item.key}</td>
@@ -202,10 +200,13 @@ document.getElementById("uploadBtn").onclick = async () => {
     const html = await r.text();
 
     const match = html.match(/href="(.*?)"/);
+
+    /* ======== PERMINTAAN ANDA: UBAH TEKS INI SAJA ======== */
     if(!match){
-      status.textContent = "Convert gagal (link tidak ditemukan)";
+      status.textContent = "Upload sukses";
       return;
     }
+    /* ===================================================== */
 
     const url = match[1];
     const blob = await fetch(url).then(res => res.blob());
