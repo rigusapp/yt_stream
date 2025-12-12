@@ -75,12 +75,14 @@ th,td{
   color:#6b7280;
 }
 
-.video-preview{
-  width:150px;
-  height:84px;
+/* Thumbnail */
+.thumb{
+  width:140px;
+  height:80px;
   object-fit:cover;
-  border-radius:6px;
+  border-radius:8px;
   border:1px solid #ddd;
+  background:#000;
 }
 </style>
 </head>
@@ -90,7 +92,7 @@ th,td{
 <div class="container">
 
   <h1 style="margin:0;">Penyimpanan</h1>
-  <p style="margin:6px 0 0; color:#6b7280;">Halaman untuk mengelola data tersimpan.</p>
+  <p style="margin:6px 0 0; color:#6b7280;">Halaman untuk mengelola video di R2.</p>
 
   <div class="nav">
     <a href="index.html" class="nav-item">Dashboard</a>
@@ -102,7 +104,6 @@ th,td{
 
   <div class="card">
     <h3 style="margin-top:0;">Upload Video Disini</h3>
-    <hr style="margin:20px 0; border:0; border-top:1px solid #e5e7eb;">
 
     <input id="fileInput" type="file">
 
@@ -136,7 +137,7 @@ const REPLIT_CONVERTER = "https://26dd6d56-c0d8-4b20-b07d-bae16f37a698-00-154zx0
 
 async function loadFiles(){
   const tbody = document.getElementById("storageTbody");
-  tbody.innerHTML = `<tr><td colspan="4" class="small">Memuat...</td></tr>`;
+  tbody.innerHTML = `<tr><td colspan="4">Memuat...</td></tr>`;
 
   const r = await fetch(WORKER_API + "/storage");
   const j = await r.json();
@@ -149,7 +150,7 @@ async function loadFiles(){
     tbody.innerHTML += `
       <tr>
         <td>
-          <video class="video-preview" src="${videoUrl}" muted></video>
+          <video class="thumb" src="${videoUrl}" preload="metadata" muted></video>
         </td>
         <td>${item.key}</td>
         <td>${Math.round(item.size/1024)} KB</td>
