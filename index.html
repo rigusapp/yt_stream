@@ -48,9 +48,7 @@ body{
     margin-top:24px;
 }
 label{
-    display:block;
     font-weight:600;
-    margin-top:12px;
     font-size:13px;
 }
 .input, select, textarea{
@@ -97,6 +95,18 @@ textarea{
     color:#6b7280;
     font-size:13px;
 }
+
+/* NEW LAYOUT IMPROVEMENTS */
+.flex-row{
+    display:flex;
+    gap:20px;
+    margin-top:12px;
+}
+.flex-col{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+}
 </style>
 </head>
 
@@ -123,51 +133,78 @@ document.addEventListener("DOMContentLoaded",()=>{
 });
 </script>
 
+<!-- ========================= -->
+<!--          FORM             -->
+<!-- ========================= -->
+
 <div class="card">
 
-<label>Title</label>
-<input id="inp_title" class="input">
+<!-- JUDUL + VISIBILITAS SEJAJAR -->
+<div class="flex-row">
+    <div class="flex-col">
+        <label>Judul</label>
+        <input id="inp_title" class="input">
+    </div>
 
-<label>Description</label>
+    <div class="flex-col">
+        <label>Visibilitas</label>
+        <select id="inp_vis" class="input">
+            <option value="public">Publik</option>
+            <option value="unlisted">Tidak Publik</option>
+            <option value="private">Pribadi</option>
+        </select>
+    </div>
+</div>
+
+<label style="margin-top:12px;">Description</label>
 <textarea id="inp_desc" class="input"></textarea>
 
-<label>Visibility</label>
-<select id="inp_vis" class="input">
-    <option value="public">Public</option>
-    <option value="unlisted">Unlisted</option>
-    <option value="private">Private</option>
-</select>
+<!-- TANGGAL + DURASI + LOOPING -->
+<div class="flex-row">
 
-<label>Tanggal & Jam Live (WIB)</label>
-<input id="inp_time" class="input" autocomplete="off" placeholder="11/12/2025 12:00">
+    <div class="flex-col">
+        <label>Tanggal & Jam Live (WIB)</label>
+        <input id="inp_time" class="input" autocomplete="off" placeholder="11/12/2025 12:00">
+    </div>
 
-<label>Durasi</label>
-<select id="inp_dur" class="input">
-    <option value="300">5 menit</option>
-    <option value="1800">30 menit</option>
-    <option value="3600" selected>1 Jam</option>
-    <option value="7200">2 Jam</option>
-    <option value="10800">3 Jam</option>
-    <option value="14400">4 Jam</option>
-    <option value="18000">5 Jam</option>
-    <option value="21600">6 Jam</option>
-    <option value="25200">7 Jam</option>
-    <option value="28800">8 Jam</option>
-    <option value="32400">9 Jam</option>
-    <option value="36000">10 Jam</option>
-    <option value="39600">11 Jam</option>
-    <option value="43200">12 Jam</option>
-</select>
+    <div class="flex-col">
+        <label>Durasi</label>
+        <select id="inp_dur" class="input">
+            <option value="300">5 menit</option>
+            <option value="1800">30 menit</option>
+            <option value="3600" selected>1 Jam</option>
+            <option value="7200">2 Jam</option>
+            <option value="10800">3 Jam</option>
+            <option value="14400">4 Jam</option>
+            <option value="18000">5 Jam</option>
+            <option value="21600">6 Jam</option>
+            <option value="25200">7 Jam</option>
+            <option value="28800">8 Jam</option>
+            <option value="32400">9 Jam</option>
+            <option value="36000">10 Jam</option>
+            <option value="39600">11 Jam</option>
+            <option value="43200">12 Jam</option>
+        </select>
+    </div>
 
-<label style="margin-top:10px;display:flex;align-items:center;gap:8px;">
-    <input type="checkbox" id="inp_loop"> Loop Video
-</label>
+    <div class="flex-col">
+        <label style="visibility:hidden;">Loop</label>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:10px;">
+            <input type="checkbox" id="inp_loop"> Loop Video
+        </div>
+    </div>
 
-<label>Sumber Video</label>
+</div>
+
+<!-- ========================= -->
+<!--      SUMBER VIDEO         -->
+<!-- ========================= -->
+
+<label style="margin-top:20px;">Sumber Video</label>
 <select id="video_source" class="input">
     <option value="url">Video URL Manual</option>
     <option value="gdrive">Google Drive</option>
-    <option value="storage">Penyimpanan</option> <!-- diperbaiki -->
+    <option value="storage">Penyimpanan</option>
 </select>
 
 <div id="box_manual">
@@ -187,15 +224,19 @@ document.addEventListener("DOMContentLoaded",()=>{
     </select>
 </div>
 
-<label>Stream Key</label>
+<label style="margin-top:12px;">Stream Key</label>
 <input id="inp_key" class="input">
 
 <div style="display:flex;gap:10px;margin-top:14px;">
-    <button id="btn_trigger" class="btn">Stream Now</button> <!-- diganti -->
+    <button id="btn_trigger" class="btn">Stream Now</button>
     <button id="btn_clear" class="btn ghost">Clear</button>
 </div>
 
 </div>
+
+<!-- ========================= -->
+<!--         LOG AREA          -->
+<!-- ========================= -->
 
 <div class="card">
 <h3>Preview & Log</h3>
@@ -203,9 +244,13 @@ document.addEventListener("DOMContentLoaded",()=>{
 <div id="log" class="debug"></div>
 </div>
 
-<div class="footer">Built for you — Buana Media</div> <!-- diganti -->
+<div class="footer">Built for you — Buana Media</div>
 
 </div>
+
+<!-- ============================= -->
+<!-- SCRIPTS ORIGINAL (TIDAK DIUBAH) -->
+<!-- ============================= -->
 
 <script>
 function toISO_WIB(str){
@@ -226,30 +271,20 @@ const inputStorage = document.getElementById("inp_storage");
 
 srcSelect.onchange = () => {
     const v = srcSelect.value;
-
     box_manual.style.display = "none";
     boxGDrive.style.display = "none";
     boxStorage.style.display = "none";
 
-    if(v === "url"){
-        box_manual.style.display = "block";
-    }
-    else if(v === "gdrive"){
-        boxGDrive.style.display = "block";
-    }
-    else if(v === "storage"){
-        boxStorage.style.display = "block";
-        loadStorageVideos();
-    }
+    if(v === "url") box_manual.style.display = "block";
+    else if(v === "gdrive") boxGDrive.style.display = "block";
+    else if(v === "storage"){ boxStorage.style.display = "block"; loadStorageVideos(); }
 };
 
 async function loadStorageVideos(){
     inputStorage.innerHTML = `<option>Memuat...</option>`;
     const r = await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/storage");
     const j = await r.json();
-
     inputStorage.innerHTML = `<option value="">-- Pilih Video --</option>`;
-
     j.list.forEach(item=>{
         const url = "https://yt-scheduler-api.rigus-apps.workers.dev/public/" + item.key;
         inputStorage.innerHTML += `<option value="${url}">${item.key}</option>`;
@@ -285,16 +320,9 @@ async function postJSON(url, body){
 btn_trigger.onclick = async ()=>{
 
     let finalVideo = "";
-
-    if(srcSelect.value === "url"){
-        finalVideo = inp_video.value.trim();
-    }
-    else if(srcSelect.value === "gdrive"){
-        finalVideo = convertDriveLink(inp_gdrive.value.trim());
-    }
-    else if(srcSelect.value === "storage"){
-        finalVideo = inputStorage.value.trim();
-    }
+    if(srcSelect.value === "url") finalVideo = inp_video.value.trim();
+    else if(srcSelect.value === "gdrive") finalVideo = convertDriveLink(inp_gdrive.value.trim());
+    else if(srcSelect.value === "storage") finalVideo = inputStorage.value.trim();
 
     const payloadData = {
         title: inp_title.value.trim(),
