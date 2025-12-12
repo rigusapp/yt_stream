@@ -36,7 +36,7 @@ body{
   color:#1f2937;
   padding-bottom:6px;
   border-bottom:2px solid transparent;
-  transition:all .15s ease;
+  transition:.15s ease;
 }
 .nav-item:hover{ color:#2563eb; }
 .nav-item.active{ color:#2563eb; border-color:#2563eb; }
@@ -68,10 +68,23 @@ th,td{
   padding:10px 8px;
   border-bottom:1px solid #e5e7eb;
   text-align:left;
+  vertical-align:middle;
 }
 .small{
   font-size:14px;
   color:#6b7280;
+}
+
+/* Ultra-small video preview */
+.preview{
+  width:70px;
+  height:40px;
+  object-fit:cover;
+  border-radius:4px;
+  background:#000;
+  border:1px solid #222;
+  pointer-events:none; /* tidak bisa diklik */
+  aspect-ratio:16/9;
 }
 </style>
 </head>
@@ -79,9 +92,8 @@ th,td{
 <body>
 
 <div class="container">
-
   <h1 style="margin:0;">Penyimpanan</h1>
-  <p style="margin:6px 0 0; color:#6b7280;">Halaman untuk mengelola data tersimpan.</p>
+  <p style="margin:6px 0 0; color:#6b7280;">Halaman untuk mengelola video di R2.</p>
 
   <div class="nav">
     <a href="index.html" class="nav-item">Dashboard</a>
@@ -93,10 +105,8 @@ th,td{
 
   <div class="card">
     <h3 style="margin-top:0;">Upload Video Disini</h3>
-    <hr style="margin:20px 0; border:0; border-top:1px solid #e5e7eb;">
 
     <input id="fileInput" type="file">
-
     <div style="display:flex; gap:10px; margin-top:10px;">
       <button id="uploadBtn" class="btn blue">Upload</button>
       <button id="refreshBtn" class="btn gray">Refresh</button>
@@ -107,16 +117,16 @@ th,td{
     <table>
       <thead>
         <tr>
+          <th>Preview</th>
           <th>Nama File</th>
           <th>Ukuran</th>
           <th>Aksi</th>
         </tr>
       </thead>
       <tbody id="storageTbody">
-        <tr><td colspan="3" class="small">Memuat...</td></tr>
+        <tr><td colspan="4" class="small">Memuat...</td></tr>
       </tbody>
     </table>
-
   </div>
 </div>
 
@@ -124,94 +134,93 @@ th,td{
 const WORKER_API = "https://yt-scheduler-api.rigus-apps.workers.dev";
 const REPLIT_CONVERTER = "https://26dd6d56-c0d8-4b20-b07d-bae16f37a698-00-154zx0u9lm7i4.sisko.replit.dev/convert";
 
-// =============================================
-// LOAD LIST VIDEO
-// =============================================
 async function loadFiles(){
   const tbody = document.getElementById("storageTbody");
-  tbody.innerHTML = `<tr><td colspan="3" class="small">Memuat...</td></tr>`;
+  tbody.innerHTML = `<tr><td colspan="4">Memuat...</td></tr>`;
 
   try {
     const r = await fetch(WORKER_API + "/storage");
     const j = await r.json();
 
-    if(!j.ok){
-      tbody.innerHTML = `<tr><td colspan="3" class="small">Gagal memuat</td></tr>`;
-      return;
-    }
-
     tbody.innerHTML = "";
 
     j.list.forEach(item=>{
-      const publicUrl = WORKER_API + "/public/" + item.key;
+      const videoUrl = WORKER_API + "/public/" + item.key;
 
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${item.key}</td>
-        <td>${Math.round(item.size/1024)} KB</td>
-        <td>
-          <button class="btn gray" onclick="copyLink('${publicUrl}')">Copy</button>
-          <button class="btn red" onclick="deleteFile('${item.key}')">Hapus</button>
-        </td>
+      tbody.innerHTML += `
+        <tr>
+          <td>
+            <video class="preview"
+              src="${videoUrl}"
+              preload="metadata"
+              muted
+              playsinline
+              disablepictureinpicture
+              controlslist="nodownload nofullscreen noremoteplayback">
+            </video>
+          </td>
+
+          <td>${item.key}</td>
+          <td>${Math.round(item.size/1024)} KB</td>
+
+          <td>
+            <button class="btn gray" onclick="navigator.clipboard.writeText('${videoUrl}')">Copy</button>
+            <button class="btn red" onclick="deleteFile('${item.key}')">Hapus</button>
+          </td>
+        </tr>
       `;
-      tbody.appendChild(tr);
     });
 
-  } catch (e){
-    tbody.innerHTML = `<tr><td colspan="3" class="small">Error: ${e}</td></tr>`;
+  } catch (e) {
+    tbody.innerHTML = `<tr><td colspan="4">Gagal memuat data</td></tr>`;
   }
 }
 
-// COPY URL
-function copyLink(url){
-  navigator.clipboard.writeText(url);
-  alert("Link disalin!");
-}
-
-// DELETE FILE
 async function deleteFile(key){
   if(!confirm("Hapus file ini?")) return;
-
-  const r = await fetch(WORKER_API + "/storage/" + key, { method:"DELETE" });
-  const j = await r.json();
-
-  if(j.ok) loadFiles();
-  else alert("Gagal menghapus");
+  await fetch(WORKER_API + "/storage/" + key, { method:"DELETE" });
+  loadFiles();
 }
 
-// =============================================
-// UPLOAD & CONVERT (VERSI ASLI)
-// =============================================
 document.getElementById("uploadBtn").onclick = async () => {
   const f = document.getElementById("fileInput").files[0];
   const status = document.getElementById("uploadStatus");
 
   if(!f){
-    status.textContent = "Pilih file terlebih dahulu!";
+    status.textContent = "Pilih file dulu!";
     return;
   }
 
-  status.textContent = "Mengonversi & upload ke R2...";
+  status.textContent = "Mengonversi...";
 
-  let form = new FormData();
+  const form = new FormData();
   form.append("video", f);
 
   try {
-    const r = await fetch(REPLIT_CONVERTER, {
-      method:"POST",
-      body:form
-    });
+    const r = await fetch(REPLIT_CONVERTER, { method:"POST", body:form });
+    const html = await r.text();
 
-    const j = await r.json();
-
-    if(!j.ok){
-      status.textContent = "Gagal: " + j.error;
+    const match = html.match(/href="(.*?)"/);
+    if(!match){
+      status.textContent = "Convert gagal (link tidak ditemukan)";
       return;
     }
 
-    status.textContent = "Upload selesai: " + j.key;
+    const url = match[1];
+    const blob = await fetch(url).then(res => res.blob());
 
-    loadFiles();
+    const form2 = new FormData();
+    form2.append("file", blob, Date.now() + ".mp4");
+
+    const r2 = await fetch(WORKER_API + "/upload", { method:"POST", body:form2 });
+    const j = await r2.json();
+
+    if(j.ok){
+      status.textContent = "Upload selesai!";
+      loadFiles();
+    } else {
+      status.textContent = "Upload gagal: " + j.error;
+    }
 
   } catch (e){
     status.textContent = "ERROR: " + e;
