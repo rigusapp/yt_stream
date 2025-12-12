@@ -1,99 +1,26 @@
+
 <!doctype html>
 <html lang="id">
 <head>
-<meta charset="utf-8"/>
-<title>Login — Buana Media</title>
+<meta charset="utf-8">
+<title>Login</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap" rel="stylesheet">
-
 <style>
-body{
-    margin:0;
-    font-family:'Inter',sans-serif;
-    background:#f4f7fb;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-}
-.box{
-    width:340px;
-    background:white;
-    padding:26px;
-    border-radius:12px;
-    box-shadow:0 8px 30px rgba(16,24,40,0.08);
-}
-h2{
-    margin:0 0 10px;
-}
-label{
-    display:block;
-    margin-top:12px;
-    font-weight:600;
-    font-size:14px;
-}
-.input{
-    width:100%;
-    padding:10px;
-    border-radius:8px;
-    border:1px solid #d4d4d4;
-    margin-top:6px;
-    font-size:14px;
-}
-.btn{
-    width:100%;
-    padding:12px;
-    background:#2563eb;
-    color:white;
-    font-weight:700;
-    border:0;
-    border-radius:8px;
-    margin-top:20px;
-    cursor:pointer;
-    font-size:15px;
-}
-.error{
-    color:#e11d48;
-    margin-top:10px;
-    font-size:13px;
-    display:none;
-}
+body { font-family: Arial; background:#f4f7fb; display:flex; justify-content:center; align-items:center; height:100vh; }
+.card { background:white; padding:30px; border-radius:10px; width:300px; box-shadow:0 4px 20px rgba(0,0,0,0.1); }
+input { width:100%; padding:10px; margin-top:10px; border-radius:6px; border:1px solid #ccc; }
+button { width:100%; padding:10px; margin-top:15px; background:#2563eb; color:white; border:0; border-radius:6px; cursor:pointer; }
+.error { color:red; margin-top:10px; }
 </style>
 </head>
 <body>
-
-<div class="box">
-    <h2>Login</h2>
-    <label>Username</label>
-    <input id="u" class="input" autocomplete="off">
-
-    <label>Password</label>
-    <input id="p" type="password" class="input">
-
-    <button class="btn" onclick="login()">Masuk</button>
-
-    <div id="err" class="error">Username atau password salah</div>
+<div class="card">
+<h2>Login</h2>
+<input id="u" placeholder="Username">
+<input id="p" type="password" placeholder="Password">
+<button onclick="login()">Masuk</button>
+<div id="err" class="error"></div>
 </div>
-
-<script>
-// Kredensial login
-const USER = "buanamedia";
-const PASS = "Agus12066911";
-
-// Proses login
-function login(){
-    const u = document.getElementById("u").value.trim();
-    const p = document.getElementById("p").value.trim();
-    const err = document.getElementById("err");
-
-    if(u === USER && p === PASS){
-        localStorage.setItem("auth_token", "OK");
-        location.href = "index.html";
-    } else {
-        err.style.display = "block";
-    }
-}
-</script>
-
+<script src="auth.js"></script>
 </body>
 </html>
