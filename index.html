@@ -48,7 +48,9 @@ body{
     margin-top:24px;
 }
 label{
+    display:block;
     font-weight:600;
+    margin-bottom:6px;
     font-size:13px;
 }
 .input, select, textarea{
@@ -96,16 +98,23 @@ textarea{
     font-size:13px;
 }
 
-/* NEW LAYOUT IMPROVEMENTS */
-.flex-row{
+/* --- Layout Improvements --- */
+.form-row{
     display:flex;
-    gap:20px;
-    margin-top:12px;
+    gap:24px;
+    margin-bottom:20px;
 }
-.flex-col{
+.form-col{
     flex:1;
     display:flex;
     flex-direction:column;
+}
+
+@media(max-width:700px){
+    .form-row{
+        flex-direction:column;
+        gap:12px;
+    }
 }
 </style>
 </head>
@@ -139,14 +148,14 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 <div class="card">
 
-<!-- JUDUL + VISIBILITAS SEJAJAR -->
-<div class="flex-row">
-    <div class="flex-col">
+<!-- Judul + Visibilitas -->
+<div class="form-row">
+    <div class="form-col">
         <label>Judul</label>
         <input id="inp_title" class="input">
     </div>
 
-    <div class="flex-col">
+    <div class="form-col">
         <label>Visibilitas</label>
         <select id="inp_vis" class="input">
             <option value="public">Publik</option>
@@ -156,18 +165,19 @@ document.addEventListener("DOMContentLoaded",()=>{
     </div>
 </div>
 
-<label style="margin-top:12px;">Description</label>
+<label>Description</label>
 <textarea id="inp_desc" class="input"></textarea>
 
-<!-- TANGGAL + DURASI + LOOPING -->
-<div class="flex-row">
-
-    <div class="flex-col">
+<!-- ========================= -->
+<!--  Tanggal + Durasi + Loop  -->
+<!-- ========================= -->
+<div class="form-row" style="margin-top:20px;">
+    <div class="form-col">
         <label>Tanggal & Jam Live (WIB)</label>
         <input id="inp_time" class="input" autocomplete="off" placeholder="11/12/2025 12:00">
     </div>
 
-    <div class="flex-col">
+    <div class="form-col">
         <label>Durasi</label>
         <select id="inp_dur" class="input">
             <option value="300">5 menit</option>
@@ -187,36 +197,38 @@ document.addEventListener("DOMContentLoaded",()=>{
         </select>
     </div>
 
-    <div class="flex-col">
-        <label style="visibility:hidden;">Loop</label>
-        <div style="display:flex;align-items:center;gap:8px;margin-top:10px;">
+    <div class="form-col" style="justify-content:flex-end;">
+        <label style="visibility:hidden;">Loop Video</label>
+        <label style="display:flex;align-items:center;gap:8px;">
             <input type="checkbox" id="inp_loop"> Loop Video
-        </div>
+        </label>
     </div>
-
 </div>
 
 <!-- ========================= -->
 <!--      SUMBER VIDEO         -->
 <!-- ========================= -->
 
-<label style="margin-top:20px;">Sumber Video</label>
+<label>Sumber Video</label>
 <select id="video_source" class="input">
     <option value="url">Video URL Manual</option>
     <option value="gdrive">Google Drive</option>
     <option value="storage">Penyimpanan</option>
 </select>
 
+<!-- Input Manual -->
 <div id="box_manual">
     <label>Video URL</label>
     <input id="inp_video" class="input" placeholder="https://website.com/video.mp4">
 </div>
 
+<!-- Google Drive -->
 <div id="gdrive_box" style="display:none;">
     <label>Google Drive Link</label>
     <input id="inp_gdrive" class="input" placeholder="https://drive.google.com/file/d/...">
 </div>
 
+<!-- R2 Storage -->
 <div id="storage_box" style="display:none;">
     <label>Pilih Video dari Penyimpanan</label>
     <select id="inp_storage" class="input">
@@ -224,7 +236,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     </select>
 </div>
 
-<label style="margin-top:12px;">Stream Key</label>
+<label>Stream Key</label>
 <input id="inp_key" class="input">
 
 <div style="display:flex;gap:10px;margin-top:14px;">
@@ -248,10 +260,6 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 </div>
 
-<!-- ============================= -->
-<!-- SCRIPTS ORIGINAL (TIDAK DIUBAH) -->
-<!-- ============================= -->
-
 <script>
 function toISO_WIB(str){
     if(!str) return "";
@@ -265,10 +273,6 @@ const box_manual = document.getElementById("box_manual");
 const boxGDrive = document.getElementById("gdrive_box");
 const boxStorage = document.getElementById("storage_box");
 
-const inputVideo = document.getElementById("inp_video");
-const inputGDrive = document.getElementById("inp_gdrive");
-const inputStorage = document.getElementById("inp_storage");
-
 srcSelect.onchange = () => {
     const v = srcSelect.value;
     box_manual.style.display = "none";
@@ -277,17 +281,21 @@ srcSelect.onchange = () => {
 
     if(v === "url") box_manual.style.display = "block";
     else if(v === "gdrive") boxGDrive.style.display = "block";
-    else if(v === "storage"){ boxStorage.style.display = "block"; loadStorageVideos(); }
+    else if(v === "storage") {
+        boxStorage.style.display = "block";
+        loadStorageVideos();
+    }
 };
 
 async function loadStorageVideos(){
-    inputStorage.innerHTML = `<option>Memuat...</option>`;
+    inp_storage.innerHTML = `<option>Memuat...</option>`;
     const r = await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/storage");
     const j = await r.json();
-    inputStorage.innerHTML = `<option value="">-- Pilih Video --</option>`;
+
+    inp_storage.innerHTML = `<option value="">-- Pilih Video --</option>`;
     j.list.forEach(item=>{
         const url = "https://yt-scheduler-api.rigus-apps.workers.dev/public/" + item.key;
-        inputStorage.innerHTML += `<option value="${url}">${item.key}</option>`;
+        inp_storage.innerHTML += `<option value="${url}">${item.key}</option>`;
     });
 }
 
@@ -322,7 +330,7 @@ btn_trigger.onclick = async ()=>{
     let finalVideo = "";
     if(srcSelect.value === "url") finalVideo = inp_video.value.trim();
     else if(srcSelect.value === "gdrive") finalVideo = convertDriveLink(inp_gdrive.value.trim());
-    else if(srcSelect.value === "storage") finalVideo = inputStorage.value.trim();
+    else if(srcSelect.value === "storage") finalVideo = inp_storage.value.trim();
 
     const payloadData = {
         title: inp_title.value.trim(),
@@ -359,27 +367,6 @@ btn_trigger.onclick = async ()=>{
     log.textContent = "Worker response: "+r.status+"\n"+r.text;
 };
 
-(async ()=>{
-    const url = new URL(location.href);
-    const copyId = url.searchParams.get("copy_id");
-    if(!copyId) return;
-
-    const res = await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule");
-    const j = await res.json();
-    const item = (j.list||[]).find(x=>x.id===copyId);
-    if(!item) return;
-
-    inp_title.value = item.title;
-    inp_desc.value = item.description;
-    inp_video.value = item.video_url;
-    inp_key.value = item.stream_key;
-    inp_dur.value = item.duration_seconds;
-    inp_loop.checked = item.looping;
-
-    const dt = new Date(item.start_time);
-    const t = `${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}/${dt.getFullYear()} ${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')}`;
-    inp_time.value = t;
-})();
 </script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
