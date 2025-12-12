@@ -36,7 +36,7 @@ body{
   color:#1f2937;
   padding-bottom:6px;
   border-bottom:2px solid transparent;
-  transition:all .15s ease;
+  transition:.15s ease;
 }
 .nav-item:hover{ color:#2563eb; }
 .nav-item.active{ color:#2563eb; border-color:#2563eb; }
@@ -122,7 +122,6 @@ th,td{
 
 <script>
 const WORKER_API = "https://yt-scheduler-api.rigus-apps.workers.dev";
-const REPLIT_CONVERTER = "https://26dd6d56-c0d8-4b20-b07d-bae16f37a698-00-154zx0u9lm7i4.sisko.replit.dev/convert";
 
 // =============================================
 // LOAD LIST VIDEO
@@ -184,7 +183,8 @@ async function deleteFile(key){
 }
 
 // =============================================
-// UPLOAD: Convert → Upload ke Worker → Simpan di R2
+// UPLOAD: Browser → Worker → Converter → Worker → R2
+// (Versi FULL sesuai worker.js final)
 // =============================================
 document.getElementById("uploadBtn").onclick = async () => {
   const f = document.getElementById("fileInput").files[0];
@@ -195,40 +195,26 @@ document.getElementById("uploadBtn").onclick = async () => {
     return;
   }
 
-  status.textContent = "Mengonversi file...";
+  status.textContent = "Mengupload & mengonversi...";
 
   let form = new FormData();
-  form.append("video", f);
+  form.append("file", f);
 
   try {
-    // 1. Upload ke converter (hasil berupa BLOB)
-    const r = await fetch(REPLIT_CONVERTER, {
+    // 1. Kirim ke Worker (Worker yang mengirim ke Converter)
+    const r = await fetch(WORKER_API + "/upload", {
       method:"POST",
       body: form
     });
 
-    const blob = await r.blob(); // hasil convert
+    const j = await r.json();
 
-    // 2. Kirim ke Worker sebagai FILE asli
-    let form2 = new FormData();
-    form2.append("file", new File([blob], f.name, { type: blob.type }));
-
-    status.textContent = "Mengupload ke R2...";
-
-    const r2 = await fetch(WORKER_API + "/upload", {
-      method:"POST",
-      body: form2
-    });
-
-    const j2 = await r2.json();
-
-    if(!j2.ok){
-      status.textContent = "Gagal upload: " + j2.error;
+    if(!j.ok){
+      status.textContent = "Gagal upload: " + j.error;
       return;
     }
 
-    status.textContent = "Upload selesai: " + j2.key;
-
+    status.textContent = "Upload selesai: " + j.key;
     loadFiles();
 
   } catch (e){
@@ -243,4 +229,3 @@ loadFiles();
 
 </body>
 </html>
-
