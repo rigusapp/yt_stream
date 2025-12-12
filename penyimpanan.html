@@ -40,6 +40,7 @@ body{
 }
 .nav-item:hover{ color:#2563eb; }
 .nav-item.active{ color:#2563eb; border-color:#2563eb; }
+
 .card{
   background:white;
   padding:20px;
@@ -57,6 +58,7 @@ body{
 .btn.blue{ background:#2563eb; color:white; }
 .btn.red{ background:#e11d48; color:white; }
 .btn.gray{ background:#e5e7eb; color:#1f2937; }
+
 table{
   width:100%;
   border-collapse:collapse;
@@ -182,7 +184,7 @@ async function deleteFile(key){
 }
 
 // =============================================
-// UPLOAD & CONVERT
+// UPLOAD: Convert → Upload ke Worker → Simpan di R2
 // =============================================
 document.getElementById("uploadBtn").onclick = async () => {
   const f = document.getElementById("fileInput").files[0];
@@ -193,27 +195,41 @@ document.getElementById("uploadBtn").onclick = async () => {
     return;
   }
 
-  status.textContent = "Mengonversi & upload ke R2...";
+  status.textContent = "Mengonversi file...";
 
   let form = new FormData();
   form.append("video", f);
 
   try {
+    // 1. Upload ke converter (hasil berupa BLOB)
     const r = await fetch(REPLIT_CONVERTER, {
       method:"POST",
-      body:form
+      body: form
     });
 
-    const j = await r.json();
+    const blob = await r.blob(); // hasil convert
 
-    if(!j.ok){
-      status.textContent = "Gagal: " + j.error;
+    // 2. Kirim ke Worker sebagai FILE asli
+    let form2 = new FormData();
+    form2.append("file", new File([blob], f.name, { type: blob.type }));
+
+    status.textContent = "Mengupload ke R2...";
+
+    const r2 = await fetch(WORKER_API + "/upload", {
+      method:"POST",
+      body: form2
+    });
+
+    const j2 = await r2.json();
+
+    if(!j2.ok){
+      status.textContent = "Gagal upload: " + j2.error;
       return;
     }
 
-    status.textContent = "Upload selesai: " + j.key;
+    status.textContent = "Upload selesai: " + j2.key;
 
-    loadFiles(); // refresh list otomatis
+    loadFiles();
 
   } catch (e){
     status.textContent = "ERROR: " + e;
@@ -227,3 +243,4 @@ loadFiles();
 
 </body>
 </html>
+
