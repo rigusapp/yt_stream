@@ -13,22 +13,18 @@ body{
     margin:0;padding:0;
     color:#0f172a;
 }
-
-/* ==== CONTAINER LEBIH RAPI ==== */
 .container{
-    max-width:900px; 
-    margin:32px auto;
-    padding:26px;
+    max-width:980px;
+    margin:36px auto;
+    padding:28px;
     background:white;
-    border-radius:14px;
-    box-shadow:0 8px 28px rgba(16,24,40,0.06);
+    border-radius:12px;
+    box-shadow:0 8px 30px rgba(16,24,40,0.06);
 }
-
-/* ==== NAVBAR ==== */
 .nav{
     margin-top:20px;
     display:flex;
-    gap:26px;
+    gap:30px;
     border-bottom:1px solid #e5e7eb;
     padding-bottom:12px;
 }
@@ -44,51 +40,36 @@ body{
 .nav-item:hover{color:#2563eb;}
 .nav-item.active{color:#2563eb;border-color:#2563eb;}
 
-/* ==== CARD FORM ==== */
 .card{
     background:white;
-    padding:22px;
-    border-radius:12px;
+    padding:20px;
+    border-radius:10px;
     border:1px solid #e5e7eb;
     margin-top:24px;
 }
-
-/* ==== FORM ==== */
 label{
     display:block;
     font-weight:600;
-    margin-top:14px;
+    margin-top:12px;
     font-size:13px;
 }
-
 .input, select, textarea{
     width:100%;
-    padding:11px 12px;
-    border-radius:10px;
-    border:1px solid #d1d5db;
+    padding:10px;
+    border-radius:8px;
+    border:1px solid #e5e7eb;
     font-size:14px;
     background:white;
-    transition:border .2s;
-    box-sizing:border-box;
 }
-
-.input:focus, select:focus, textarea:focus{
-    border-color:#2563eb;
-    outline:none;
-    box-shadow:0 0 0 3px rgba(37,99,235,0.15);
-}
-
 textarea{
-    min-height:120px;
+    min-height:110px;
     resize:vertical;
 }
-
-/* ==== BUTTON ==== */
 .btn{
     display:inline-flex;
     align-items:center;
     gap:10px;
-    padding:10px 16px;
+    padding:10px 14px;
     background:#2563eb;
     color:white;
     border-radius:10px;
@@ -101,8 +82,6 @@ textarea{
     color:#2563eb;
     border:1px solid #dbeafe;
 }
-
-/* ==== LOG AREA ==== */
 .debug{
     background:#0b1220;
     color:#bfe7b0;
@@ -113,28 +92,10 @@ textarea{
     display:none;
     margin-top:12px;
 }
-
-/* ==== FOOTER ==== */
 .footer{
     margin-top:24px;
     color:#6b7280;
     font-size:13px;
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width:600px){
-    .container{
-        padding:18px;
-        max-width:94%;
-    }
-    .nav{
-        flex-wrap:wrap;
-        gap:14px;
-    }
-    .btn{
-        width:100%;
-        justify-content:center;
-    }
 }
 </style>
 </head>
@@ -143,9 +104,7 @@ textarea{
 <div class="container">
 
 <h1>YT Stream — Professional</h1>
-<p style="margin:6px 0 0;color:#6b7280;">
-    Dashboard profesional untuk livestream YouTube
-</p>
+<p style="margin:6px 0 0;color:#6b7280;">Dashboard profesional untuk livestream YouTube</p>
 
 <div class="nav">
     <a href="index.html" class="nav-item active">Dashboard</a>
@@ -164,10 +123,6 @@ document.addEventListener("DOMContentLoaded",()=>{
 });
 </script>
 
-<!-- ========================= -->
-<!--          FORM             -->
-<!-- ========================= -->
-
 <div class="card">
 
 <label>Title</label>
@@ -184,7 +139,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 </select>
 
 <label>Tanggal & Jam Live (WIB)</label>
-<input id="inp_time" class="input" autocomplete="off">
+<input id="inp_time" class="input" autocomplete="off" placeholder="11/12/2025 12:00">
 
 <label>Durasi</label>
 <select id="inp_dur" class="input">
@@ -212,40 +167,35 @@ document.addEventListener("DOMContentLoaded",()=>{
 <select id="video_source" class="input">
     <option value="url">Video URL Manual</option>
     <option value="gdrive">Google Drive</option>
-    <option value="storage">Penyimpanan</option>
+    <option value="storage">Penyimpanan R2</option>
 </select>
 
-<!-- Manual -->
 <div id="box_manual">
     <label>Video URL</label>
     <input id="inp_video" class="input" placeholder="https://website.com/video.mp4">
 </div>
 
-<!-- Google Drive -->
 <div id="gdrive_box" style="display:none;">
     <label>Google Drive Link</label>
-    <input id="inp_gdrive" class="input">
+    <input id="inp_gdrive" class="input" placeholder="https://drive.google.com/file/d/...">
 </div>
 
-<!-- Storage -->
 <div id="storage_box" style="display:none;">
-    <label>Pilih Video</label>
-    <select id="inp_storage" class="input"></select>
+    <label>Pilih Video dari Penyimpanan</label>
+    <select id="inp_storage" class="input">
+        <option value="">Memuat...</option>
+    </select>
 </div>
 
 <label>Stream Key</label>
 <input id="inp_key" class="input">
 
-<div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
-    <button id="btn_trigger" class="btn">Stream Now</button>
+<div style="display:flex;gap:10px;margin-top:14px;">
+    <button id="btn_trigger" class="btn">Trigger Stream</button>
     <button id="btn_clear" class="btn ghost">Clear</button>
 </div>
 
 </div>
-
-<!-- ========================= -->
-<!--         LOG AREA          -->
-<!-- ========================= -->
 
 <div class="card">
 <h3>Preview & Log</h3>
@@ -253,9 +203,177 @@ document.addEventListener("DOMContentLoaded",()=>{
 <div id="log" class="debug"></div>
 </div>
 
-<div class="footer">Built for you — Buana Media</div>
+<div class="footer">Built for you — Professional SaaS.</div>
 
 </div>
+
+<script>
+// =============================
+// Helper WIB
+// =============================
+function toISO_WIB(str){
+    if(!str) return "";
+    let [d,m,y] = str.split(" ")[0].split("/");
+    let time = str.split(" ")[1];
+    return `${y}-${m}-${d}T${time}:00+07:00`;
+}
+
+// =============================
+// VIDEO SOURCE HANDLER
+// =============================
+const srcSelect = document.getElementById("video_source");
+const box_manual = document.getElementById("box_manual");
+const boxGDrive = document.getElementById("gdrive_box");
+const boxStorage = document.getElementById("storage_box");
+
+const inputVideo = document.getElementById("inp_video");
+const inputGDrive = document.getElementById("inp_gdrive");
+const inputStorage = document.getElementById("inp_storage");
+
+srcSelect.onchange = () => {
+    const v = srcSelect.value;
+
+    box_manual.style.display = "none";
+    boxGDrive.style.display = "none";
+    boxStorage.style.display = "none";
+
+    if(v === "url"){
+        box_manual.style.display = "block";
+    }
+    else if(v === "gdrive"){
+        boxGDrive.style.display = "block";
+    }
+    else if(v === "storage"){
+        boxStorage.style.display = "block";
+        loadStorageVideos();
+    }
+};
+
+// =============================
+// LOAD R2 LIST
+// =============================
+async function loadStorageVideos(){
+    inputStorage.innerHTML = `<option>Memuat...</option>`;
+    const r = await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/storage");
+    const j = await r.json();
+
+    inputStorage.innerHTML = `<option value="">-- Pilih Video --</option>`;
+
+    j.list.forEach(item=>{
+        const url = "https://yt-scheduler-api.rigus-apps.workers.dev/public/" + item.key;
+        inputStorage.innerHTML += `<option value="${url}">${item.key}</option>`;
+    });
+}
+
+// =============================
+// Convert GDrive
+// =============================
+function convertDriveLink(url){
+    const match = url.match(/\/d\/(.*?)\//);
+    if(!match) return "";
+    return `https://drive.google.com/uc?export=download&id=${match[1]}`;
+}
+
+// =============================
+// CLEAR FORM
+// =============================
+btn_clear.onclick = ()=>{
+    inp_title.value = "";
+    inp_desc.value = "";
+    inp_video.value = "";
+    inp_key.value = "";
+    inp_vis.value = "public";
+    inp_gdrive.value = "";
+    payload.style.display = "none";
+    log.style.display = "none";
+};
+
+// =============================
+// Trigger Stream
+// =============================
+async function postJSON(url, body){
+    const res = await fetch(url,{
+        method:"POST",
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(body)
+    });
+    return {ok:res.ok,status:res.status,text:await res.text()};
+}
+
+btn_trigger.onclick = async ()=>{
+
+    let finalVideo = "";
+
+    if(srcSelect.value === "url"){
+        finalVideo = inp_video.value.trim();
+    }
+    else if(srcSelect.value === "gdrive"){
+        finalVideo = convertDriveLink(inp_gdrive.value.trim());
+    }
+    else if(srcSelect.value === "storage"){
+        finalVideo = inputStorage.value.trim();
+    }
+
+    const payloadData = {
+        title: inp_title.value.trim(),
+        description: inp_desc.value.trim(),
+        visibility: inp_vis.value,
+        video_url: finalVideo,
+        stream_key: inp_key.value.trim(),
+        start_time: toISO_WIB(inp_time.value),
+        duration_seconds: Number(inp_dur.value),
+        looping: inp_loop.checked,
+        rtmp_url:"rtmp://a.rtmp.youtube.com/live2"
+    };
+
+    payload.style.display = "block";
+    payload.textContent = JSON.stringify(
+        {...payloadData, stream_key:"*****MASKED*****"},
+        null,2
+    );
+
+    log.style.display = "block";
+    log.textContent = "Sending...";
+
+    await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule",{
+        method:"POST",
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(payloadData)
+    });
+
+    const r = await postJSON(
+        "https://ytstream-proxy.rigus-apps.workers.dev/",
+        { event_type:"stream_trigger", client_payload:payloadData }
+    );
+
+    log.textContent = "Worker response: "+r.status+"\n"+r.text;
+};
+
+// =============================
+// Copy from jadwal
+// =============================
+(async ()=>{
+    const url = new URL(location.href);
+    const copyId = url.searchParams.get("copy_id");
+    if(!copyId) return;
+
+    const res = await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule");
+    const j = await res.json();
+    const item = (j.list||[]).find(x=>x.id===copyId);
+    if(!item) return;
+
+    inp_title.value = item.title;
+    inp_desc.value = item.description;
+    inp_video.value = item.video_url;
+    inp_key.value = item.stream_key;
+    inp_dur.value = item.duration_seconds;
+    inp_loop.checked = item.looping;
+
+    const dt = new Date(item.start_time);
+    const t = `${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}/${dt.getFullYear()} ${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')}`;
+    inp_time.value = t;
+})();
+</script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
