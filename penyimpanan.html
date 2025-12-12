@@ -75,10 +75,10 @@ th,td{
   color:#6b7280;
 }
 
-/* Preview kecil lebih cepat */
+/* Ultra-small preview */
 .preview{
-  width:90px;
-  height:50px;
+  width:70px;
+  height:40px;
   object-fit:cover;
   border-radius:4px;
   background:#000;
@@ -153,14 +153,12 @@ async function loadFiles(){
   j.list.forEach(item=>{
     const videoUrl = WORKER_API + "/public/" + item.key;
 
-    tbody.innerHTML += `
+    tbody.innerinnerHTML += `
       <tr>
         <td>
           <video class="preview"
             src="${videoUrl}"
-
             preload="metadata"
-
             muted
             playsinline
             disablepictureinpicture
@@ -180,13 +178,11 @@ async function loadFiles(){
   });
 }
 
-
 async function deleteFile(key){
   if(!confirm("Hapus file ini?")) return;
   await fetch(WORKER_API + "/storage/" + key, { method:"DELETE" });
   loadFiles();
 }
-
 
 document.getElementById("uploadBtn").onclick = async () => {
   const f = document.getElementById("fileInput").files[0];
@@ -229,7 +225,6 @@ document.getElementById("uploadBtn").onclick = async () => {
     status.textContent = "ERROR: " + e;
   }
 };
-
 
 document.getElementById("refreshBtn").onclick = loadFiles;
 
