@@ -75,14 +75,20 @@ th,td{
   color:#6b7280;
 }
 
-/* Thumbnail */
-.thumb{
-  width:140px;
-  height:80px;
-  object-fit:cover;
+/* SUPER FAST THUMBNAIL */
+.thumb-box{
+  width:80px;
+  height:50px;
+  background:#111827;      /* gelap */
+  display:flex;
+  justify-content:center;
+  align-items:center;
   border-radius:8px;
-  border:1px solid #ddd;
-  background:#000;
+}
+.thumb-box span{
+  font-size:22px;
+  color:white;
+  opacity:0.8;
 }
 </style>
 </head>
@@ -150,7 +156,9 @@ async function loadFiles(){
     tbody.innerHTML += `
       <tr>
         <td>
-          <video class="thumb" src="${videoUrl}" preload="metadata" muted></video>
+          <div class="thumb-box" onclick="window.open('${videoUrl}', '_blank')">
+            <span>▶</span>
+          </div>
         </td>
         <td>${item.key}</td>
         <td>${Math.round(item.size/1024)} KB</td>
