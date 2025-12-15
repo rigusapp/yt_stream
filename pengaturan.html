@@ -124,6 +124,17 @@ async function changePassword(){
 
   msg.textContent = "Password berhasil diubah";
 }
+
+fetch("https://yt-scheduler-api.rigus-apps.workers.dev/auth/password",{
+  method:"POST",
+  headers:{ "Content-Type":"application/json" },
+  body:JSON.stringify({
+    oldPass: "Steve123",
+    newPass: "PasswordBaru"
+  })
+});
+
+  
 </script>
 
 
