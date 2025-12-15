@@ -1,67 +1,69 @@
-const WORKER_URL = "https://yt-scheduler-api.rigus-apps.workers.dev/";
+const SCHEDULER = "https://yt-scheduler-api.rigus-apps.workers.dev";
+const PROXY = "https://ytstream-proxy.rigus-apps.workers.dev";
 
 // Proteksi login
 if(localStorage.getItem("auth") !== "1"){
   location.href = "index.html";
 }
 
-// Start Live
-async function startLive(){
-  const payload = {
-    title: document.getElementById("title").value,
-    video_url: document.getElementById("video_url").value,
-    stream_key: document.getElementById("stream_key").value,
-    duration_seconds: Number(document.getElementById("duration").value),
-    created_at: new Date().toISOString()
+// Date picker
+flatpickr("#inp_time",{enableTime:true,dateFormat:"d/m/Y H:i",time_24hr:true});
+
+// Utils
+function toISO_WIB(str){
+  if(!str) return "";
+  const [d,m,y] = str.split(" ")[0].split("/");
+  const time = str.split(" ")[1];
+  return `${y}-${m}-${d}T${time}:00+07:00`;
+}
+
+// Clear
+btn_clear.onclick = ()=>{
+  inp_title.value="";
+  inp_desc.value="";
+  inp_video.value="";
+  inp_key.value="";
+};
+
+// Trigger live
+btn_trigger.onclick = async ()=>{
+  const payloadData = {
+    title: inp_title.value,
+    description: inp_desc.value,
+    visibility: inp_vis.value,
+    video_url: inp_video.value,
+    stream_key: inp_key.value,
+    start_time: toISO_WIB(inp_time.value),
+    duration_seconds: Number(inp_dur.value),
+    looping: inp_loop.checked
   };
 
-  if(!payload.video_url || !payload.stream_key){
-    alert("Video URL dan Stream Key wajib diisi");
-    return;
-  }
+  payload.style.display="block";
+  payload.textContent = JSON.stringify(
+    {...payloadData, stream_key:"*****"},
+    null,2
+  );
 
-  await fetch(WORKER_URL + "/add", {
+  log.style.display="block";
+  log.textContent="Sending...";
+
+  await fetch(SCHEDULER+"/schedule",{
     method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify(payload)
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(payloadData)
   });
 
-  alert("Live berhasil dikirim ke scheduler");
-  loadList();
-}
-
-// Load list
-async function loadList(){
-  const res = await fetch(WORKER_URL + "/list");
-  const data = await res.json();
-
-  const tbody = document.getElementById("list");
-  tbody.innerHTML = "";
-
-  data.forEach(item=>{
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${item.title || "-"}</td>
-      <td>${Math.round(item.duration_seconds/3600)} jam</td>
-      <td>
-        <button class="danger" onclick="hapus('${item.id}')">Hapus</button>
-      </td>
-    `;
-    tbody.appendChild(tr);
+  const r = await fetch(PROXY,{
+    method:"POST",
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({event_type:"stream_trigger",client_payload:payloadData})
   });
-}
 
-// Hapus
-async function hapus(id){
-  if(!confirm("Hapus live ini?")) return;
-  await fetch(WORKER_URL + "/delete/" + id, { method:"DELETE" });
-  loadList();
-}
+  log.textContent = "Response: "+r.status;
+};
 
 // Logout
 function logout(){
   localStorage.removeItem("auth");
-  location.href = "index.html";
+  location.href="index.html";
 }
-
-loadList();
