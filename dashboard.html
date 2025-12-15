@@ -2,71 +2,110 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<title>Dashboard – YouTube Scheduler</title>
+<title>Dashboard Live</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
 body{
-  font-family: Arial, sans-serif;
+  font-family: Arial;
   background:#f4f7fb;
-  margin:0;
-  padding:30px;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  padding-top:40px;
 }
-.container{
-  max-width:900px;
-  margin:auto;
+
+.card{
   background:white;
-  padding:25px;
-  border-radius:12px;
-  box-shadow:0 8px 30px rgba(0,0,0,.08);
+  padding:30px;
+  border-radius:10px;
+  width:420px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.1);
 }
-h2{margin-top:0}
-label{display:block;margin-top:12px;font-weight:bold}
-input,select,textarea{
+
+h2{
+  margin-top:0;
+  text-align:center;
+}
+
+label{
+  display:block;
+  margin-top:14px;
+  font-weight:bold;
+  font-size:14px;
+}
+
+input, select{
   width:100%;
   padding:10px;
   margin-top:6px;
   border-radius:6px;
   border:1px solid #ccc;
 }
+
 button{
-  margin-top:15px;
-  padding:10px 16px;
-  border:0;
-  border-radius:6px;
+  width:100%;
+  padding:10px;
+  margin-top:18px;
   background:#2563eb;
   color:white;
+  border:0;
+  border-radius:6px;
   cursor:pointer;
+  font-size:15px;
 }
-button.danger{background:#ef4444}
+
+button.secondary{
+  background:#6b7280;
+}
+
+button.danger{
+  background:#ef4444;
+}
+
+hr{
+  margin:25px 0;
+  border:none;
+  border-top:1px solid #eee;
+}
+
+.small{
+  font-size:13px;
+  color:#666;
+  margin-top:6px;
+  text-align:center;
+}
+
 table{
   width:100%;
   border-collapse:collapse;
-  margin-top:20px;
+  margin-top:10px;
 }
-th,td{
-  border-bottom:1px solid #eee;
-  padding:10px;
-  text-align:left;
-}
-.small{color:#666;font-size:13px}
-</style>
 
+th, td{
+  text-align:left;
+  padding:8px 4px;
+  border-bottom:1px solid #eee;
+  font-size:13px;
+}
+</style>
 </head>
+
 <body>
 
-<div class="container">
-  <h2>YouTube Live Scheduler</h2>
-  <p class="small">Trigger live streaming ke Cloudflare Worker</p>
+<div class="card">
+  <h2>YouTube Live</h2>
+  <div class="small">Trigger live streaming via Cloudflare Worker</div>
 
   <label>Judul Live</label>
-  <input id="title">
+  <input id="title" placeholder="Judul live YouTube">
 
   <label>URL Video (MP4)</label>
-  <input id="video_url" placeholder="https://...mp4">
+  <input id="video_url" placeholder="https://example.com/video.mp4">
 
   <label>Stream Key YouTube</label>
-  <input id="stream_key">
+  <input id="stream_key" placeholder="xxxx-xxxx-xxxx">
 
   <label>Durasi Live</label>
   <select id="duration">
@@ -78,24 +117,24 @@ th,td{
     <option value="43200">12 Jam</option>
   </select>
 
-  <button onclick="startLive()">▶ Start Live Sekarang</button>
+  <button onclick="startLive()">▶ Mulai Live</button>
 
-  <hr style="margin:30px 0">
+  <hr>
 
-  <h3>Daftar Live Terjadwal</h3>
+  <h3 style="margin:0">Live Terjadwal</h3>
 
   <table>
     <thead>
       <tr>
         <th>Judul</th>
         <th>Durasi</th>
-        <th>Aksi</th>
+        <th></th>
       </tr>
     </thead>
     <tbody id="list"></tbody>
   </table>
 
-  <button class="danger" onclick="logout()">Logout</button>
+  <button class="secondary" onclick="logout()">Logout</button>
 </div>
 
 <script src="dashboard.js"></script>
