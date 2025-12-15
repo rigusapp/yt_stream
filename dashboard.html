@@ -274,6 +274,51 @@ flatpickr("#inp_time",{
 });
 </script>
 
+<!-- ========================= -->
+<!--         INI BARU          -->
+<!-- ========================= -->
+<script>
+(async function handleCopy(){
+  const params = new URLSearchParams(location.search);
+  const copyId = params.get("copy_id");
+  if(!copyId) return;
 
+  try {
+    const API = "https://yt-scheduler-api.rigus-apps.workers.dev";
+    const r = await fetch(API + "/schedule");
+    const j = await r.json();
+
+    if(!j.ok) return;
+
+    const item = j.list.find(x => x.id === copyId);
+    if(!item) return;
+
+    // === ISI FORM ===
+    inp_title.value = item.title || "";
+    inp_desc.value = item.description || "";
+    inp_vis.value = item.visibility || "public";
+    inp_key.value = item.stream_key || "";
+    inp_dur.value = item.duration_seconds || 3600;
+    inp_loop.checked = !!item.looping;
+
+    // video source
+    video_source.value = "url";
+    box_manual.style.display = "block";
+    inp_video.value = item.video_url || "";
+
+    // waktu dikosongkan (biar user pilih ulang)
+    inp_time.value = "";
+
+    // bersihkan URL
+    history.replaceState({}, "", "dashboard.html");
+
+  } catch(e){
+    console.error("Copy failed:", e);
+  }
+})();
+</script>
+
+    
+    
 </body>
 </html>
