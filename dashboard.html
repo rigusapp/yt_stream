@@ -1,10 +1,6 @@
 <!doctype html>
 <html lang="id">
 <head>
-
-<!-- HANYA INI YANG DITAMBAHKAN -->
-<script src="auth.js"></script>
-
 <meta charset="utf-8"/>
 <title>YT Stream — Professional</title>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
@@ -13,6 +9,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
 
 <style>
+/* === CSS ANDA (TIDAK DIUBAH) === */
 body{font-family:'Inter',sans-serif;background:#f4f7fb;margin:0;color:#0f172a}
 .container{max-width:980px;margin:36px auto;padding:28px;background:white;border-radius:12px;box-shadow:0 8px 30px rgba(16,24,40,.06)}
 .nav{margin-top:20px;display:flex;gap:30px;border-bottom:1px solid #e5e7eb;padding-bottom:12px}
@@ -44,12 +41,6 @@ textarea{min-height:110px}
     <a href="jadwal.html" class="nav-item">Jadwal Live</a>
     <a href="monitoring.html" class="nav-item">Monitoring</a>
     <a href="pengaturan.html" class="nav-item">Pengaturan</a>
-
-    <!-- HANYA BARIS INI YANG BARU -->
-    <a href="#" onclick="logout()" class="nav-item"
-       style="margin-left:auto;color:#e11d48;">
-       Logout
-    </a>
 </div>
 
 <script>
@@ -60,6 +51,10 @@ document.addEventListener("DOMContentLoaded",()=>{
     });
 });
 </script>
+  
+<!-- ========================= -->
+<!--          FORM             -->
+<!-- ========================= -->
 
 <div class="card">
 
@@ -81,6 +76,10 @@ document.addEventListener("DOMContentLoaded",()=>{
 <label>Description</label>
 <textarea id="inp_desc" class="input"></textarea>
 
+<!-- ========================= -->
+<!--  Tanggal + Durasi + Loop  -->
+<!-- ========================= -->
+  
 <div class="form-row">
   <div class="form-col">
     <label>Tanggal & Jam Live (WIB)</label>
@@ -104,6 +103,10 @@ document.addEventListener("DOMContentLoaded",()=>{
   </div>
 </div>
 
+<!-- ========================= -->
+<!--      SUMBER VIDEO         -->
+<!-- ========================= -->
+
 <label>Sumber Video</label>
 <select id="video_source" class="input">
     <option value="url">Video URL Manual</option>
@@ -111,19 +114,24 @@ document.addEventListener("DOMContentLoaded",()=>{
     <option value="storage">Penyimpanan</option>
 </select>
 
+<!-- Input Manual -->
 <div id="box_manual">
     <label>Video URL</label>
-    <input id="inp_video" class="input">
+    <input id="inp_video" class="input" placeholder="https://website.com/video.mp4">
 </div>
 
+<!-- Google Drive -->
 <div id="gdrive_box" style="display:none;">
     <label>Google Drive Link</label>
-    <input id="inp_gdrive" class="input">
+    <input id="inp_gdrive" class="input" placeholder="https://drive.google.com/file/d/...">
 </div>
 
+<!-- R2 Storage -->
 <div id="storage_box" style="display:none;">
     <label>Pilih Video dari Penyimpanan</label>
-    <select id="inp_storage" class="input"></select>
+    <select id="inp_storage" class="input">
+        <option value="">Memuat...</option>
+    </select>
 </div>
 
 <label>Stream Key</label>
@@ -136,6 +144,10 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 </div>
 
+<!-- ========================= -->
+<!--         LOG AREA          -->
+<!-- ========================= -->
+
 <div class="card">
 <h3>Preview & Log</h3>
 <pre id="payload" class="debug"></pre>
@@ -146,6 +158,115 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 </div>
 
+<script>
+function toISO_WIB(str){
+    if(!str) return "";
+    let [d,m,y] = str.split(" ")[0].split("/");
+    let time = str.split(" ")[1];
+    return `${y}-${m}-${d}T${time}:00+07:00`;
+}
+
+const srcSelect = document.getElementById("video_source");
+const box_manual = document.getElementById("box_manual");
+const boxGDrive = document.getElementById("gdrive_box");
+const boxStorage = document.getElementById("storage_box");
+
+srcSelect.onchange = () => {
+    const v = srcSelect.value;
+    box_manual.style.display = "none";
+    boxGDrive.style.display = "none";
+    boxStorage.style.display = "none";
+
+    if(v === "url") box_manual.style.display = "block";
+    else if(v === "gdrive") boxGDrive.style.display = "block";
+    else if(v === "storage") {
+        boxStorage.style.display = "block";
+        loadStorageVideos();
+    }
+};
+
+async function loadStorageVideos(){
+    inp_storage.innerHTML = `<option>Memuat...</option>`;
+    const r = await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/storage");
+    const j = await r.json();
+
+    inp_storage.innerHTML = `<option value="">-- Pilih Video --</option>`;
+    j.list.forEach(item=>{
+        const url = "https://yt-scheduler-api.rigus-apps.workers.dev/public/" + item.key;
+        inp_storage.innerHTML += `<option value="${url}">${item.key}</option>`;
+    });
+}
+
+function convertDriveLink(url){
+    const match = url.match(/\/d\/(.*?)\//);
+    if(!match) return "";
+    return `https://drive.google.com/uc?export=download&id=${match[1]}`;
+}
+
+btn_clear.onclick = ()=>{
+    inp_title.value = "";
+    inp_desc.value = "";
+    inp_video.value = "";
+    inp_key.value = "";
+    inp_vis.value = "public";
+    inp_gdrive.value = "";
+    payload.style.display = "none";
+    log.style.display = "none";
+};
+
+async function postJSON(url, body){
+    const res = await fetch(url,{
+        method:"POST",
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(body)
+    });
+    return {ok:res.ok,status:res.status,text:await res.text()};
+}
+
+btn_trigger.onclick = async ()=>{
+
+    let finalVideo = "";
+    if(srcSelect.value === "url") finalVideo = inp_video.value.trim();
+    else if(srcSelect.value === "gdrive") finalVideo = convertDriveLink(inp_gdrive.value.trim());
+    else if(srcSelect.value === "storage") finalVideo = inp_storage.value.trim();
+
+    const payloadData = {
+        title: inp_title.value.trim(),
+        description: inp_desc.value.trim(),
+        visibility: inp_vis.value,
+        video_url: finalVideo,
+        stream_key: inp_key.value.trim(),
+        start_time: toISO_WIB(inp_time.value),
+        duration_seconds: Number(inp_dur.value),
+        looping: inp_loop.checked,
+        rtmp_url:"rtmp://a.rtmp.youtube.com/live2"
+    };
+
+    payload.style.display = "block";
+    payload.textContent = JSON.stringify(
+        {...payloadData, stream_key:"*****MASKED*****"},
+        null,2
+    );
+
+    log.style.display = "block";
+    log.textContent = "Sending...";
+
+    await fetch("https://yt-scheduler-api.rigus-apps.workers.dev/schedule",{
+        method:"POST",
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(payloadData)
+    });
+
+    const r = await postJSON(
+        "https://ytstream-proxy.rigus-apps.workers.dev/",
+        { event_type:"stream_trigger", client_payload:payloadData }
+    );
+
+    log.textContent = "Worker response: "+r.status+"\n"+r.text;
+};
+
+</script>
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
@@ -155,7 +276,5 @@ flatpickr("#inp_time",{
     time_24hr:true
 });
 </script>
-
 </body>
 </html>
-
