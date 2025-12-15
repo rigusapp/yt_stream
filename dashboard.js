@@ -1,12 +1,11 @@
-// ====== CONFIG ======
 const WORKER_URL = "https://yt-scheduler-api.rigus-apps.workers.dev/";
 
-// ====== AUTH CHECK ======
-if (localStorage.getItem("auth") !== "1") {
+// Proteksi login
+if(localStorage.getItem("auth") !== "1"){
   location.href = "index.html";
 }
 
-// ====== START LIVE ======
+// Start Live
 async function startLive(){
   const payload = {
     title: document.getElementById("title").value,
@@ -17,22 +16,21 @@ async function startLive(){
   };
 
   if(!payload.video_url || !payload.stream_key){
-    alert("Video URL & Stream Key wajib diisi");
+    alert("Video URL dan Stream Key wajib diisi");
     return;
   }
 
-  const res = await fetch(WORKER_URL + "/add", {
+  await fetch(WORKER_URL + "/add", {
     method:"POST",
     headers:{ "Content-Type":"application/json" },
     body: JSON.stringify(payload)
   });
 
-  const json = await res.json();
-  alert("Live dikirim ke Worker");
+  alert("Live berhasil dikirim ke scheduler");
   loadList();
 }
 
-// ====== LOAD LIST ======
+// Load list
 async function loadList(){
   const res = await fetch(WORKER_URL + "/list");
   const data = await res.json();
@@ -42,7 +40,6 @@ async function loadList(){
 
   data.forEach(item=>{
     const tr = document.createElement("tr");
-
     tr.innerHTML = `
       <td>${item.title || "-"}</td>
       <td>${Math.round(item.duration_seconds/3600)} jam</td>
@@ -50,23 +47,18 @@ async function loadList(){
         <button class="danger" onclick="hapus('${item.id}')">Hapus</button>
       </td>
     `;
-
     tbody.appendChild(tr);
   });
 }
 
-// ====== DELETE ======
+// Hapus
 async function hapus(id){
   if(!confirm("Hapus live ini?")) return;
-
-  await fetch(WORKER_URL + "/delete/" + id, {
-    method:"DELETE"
-  });
-
+  await fetch(WORKER_URL + "/delete/" + id, { method:"DELETE" });
   loadList();
 }
 
-// ====== LOGOUT ======
+// Logout
 function logout(){
   localStorage.removeItem("auth");
   location.href = "index.html";
