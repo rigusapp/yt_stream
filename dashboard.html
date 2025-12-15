@@ -263,20 +263,15 @@ btn_trigger.onclick = async ()=>{
 </script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
 flatpickr("#inp_time",{
-  enableTime:true,
-  dateFormat:"d/m/Y H:i",
-  time_24hr:true,
-  onChange: function(selectedDates, dateStr, instance){
-    if(selectedDates.length){
-      const now = new Date();
-      instance.setTime(now.getHours(), now.getMinutes(), false);
-    }
-  }
-});
+    enableTime:true,
+    dateFormat:"d/m/Y H:i",
+    time_24hr:true
 
-</script>
+});
 
 
 </body>
