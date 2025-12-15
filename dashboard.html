@@ -8,6 +8,9 @@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
 
+<!-- TAMBAHAN SAJA -->
+<script src="auth.js"></script>
+
 <style>
 /* === CSS ANDA (TIDAK DIUBAH) === */
 body{font-family:'Inter',sans-serif;background:#f4f7fb;margin:0;color:#0f172a}
@@ -41,6 +44,10 @@ textarea{min-height:110px}
     <a href="jadwal.html" class="nav-item">Jadwal Live</a>
     <a href="monitoring.html" class="nav-item">Monitoring</a>
     <a href="pengaturan.html" class="nav-item">Pengaturan</a>
+
+    <!-- TAMBAHAN SAJA -->
+    <a href="#" onclick="logout()" class="nav-item"
+       style="margin-left:auto;color:#e11d48;">Logout</a>
 </div>
 
 <script>
@@ -51,7 +58,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     });
 });
 </script>
-  
+
 <!-- ========================= -->
 <!--          FORM             -->
 <!-- ========================= -->
@@ -76,10 +83,6 @@ document.addEventListener("DOMContentLoaded",()=>{
 <label>Description</label>
 <textarea id="inp_desc" class="input"></textarea>
 
-<!-- ========================= -->
-<!--  Tanggal + Durasi + Loop  -->
-<!-- ========================= -->
-  
 <div class="form-row">
   <div class="form-col">
     <label>Tanggal & Jam Live (WIB)</label>
@@ -103,10 +106,6 @@ document.addEventListener("DOMContentLoaded",()=>{
   </div>
 </div>
 
-<!-- ========================= -->
-<!--      SUMBER VIDEO         -->
-<!-- ========================= -->
-
 <label>Sumber Video</label>
 <select id="video_source" class="input">
     <option value="url">Video URL Manual</option>
@@ -114,19 +113,16 @@ document.addEventListener("DOMContentLoaded",()=>{
     <option value="storage">Penyimpanan</option>
 </select>
 
-<!-- Input Manual -->
 <div id="box_manual">
     <label>Video URL</label>
     <input id="inp_video" class="input" placeholder="https://website.com/video.mp4">
 </div>
 
-<!-- Google Drive -->
 <div id="gdrive_box" style="display:none;">
     <label>Google Drive Link</label>
     <input id="inp_gdrive" class="input" placeholder="https://drive.google.com/file/d/...">
 </div>
 
-<!-- R2 Storage -->
 <div id="storage_box" style="display:none;">
     <label>Pilih Video dari Penyimpanan</label>
     <select id="inp_storage" class="input">
@@ -264,7 +260,6 @@ btn_trigger.onclick = async ()=>{
 
     log.textContent = "Worker response: "+r.status+"\n"+r.text;
 };
-
 </script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
@@ -276,5 +271,6 @@ flatpickr("#inp_time",{
     time_24hr:true
 });
 </script>
+
 </body>
 </html>
