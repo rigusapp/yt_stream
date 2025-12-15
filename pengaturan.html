@@ -62,8 +62,6 @@ body{
   border:0;
 }
 .btn.blue{ background:#2563eb; color:white; }
-.error{ color:#e11d48; }
-.success{ color:#16a34a; }
 .small{ font-size:14px; color:#6b7280; }
 </style>
 </head>
@@ -72,7 +70,7 @@ body{
 <div class="container">
 
 <h1 style="margin:0;">Pengaturan</h1>
-<p style="margin:6px 0 0; color:#6b7280;">Ubah password akun Anda.</p>
+<p style="margin:6px 0 0; color:#6b7280;">Ubah password login di perangkat ini.</p>
 
 <div class="nav">
   <a href="dashboard.html" class="nav-item">Dashboard</a>
@@ -97,37 +95,39 @@ body{
 
   <button class="btn blue" onclick="changePassword()">Simpan Password</button>
 
-  <div id="msg" style="margin-top:10px;"></div>
+  <div id="msg" class="small" style="margin-top:10px;"></div>
 </div>
 
 </div>
 
 <script>
 function changePassword(){
-  const oldP = document.getElementById("oldPass").value;
-  const newP = document.getElementById("newPass").value;
+  const oldP = oldPass.value.trim();
+  const newP = newPass.value.trim();
   const msg = document.getElementById("msg");
 
-  const currentPass = localStorage.getItem("password") || "Steve123";
+  // Password default (sesuai auth.js)
+  const currentPass = localStorage.getItem("local_password") || "Steve123";
 
   if(oldP !== currentPass){
-    msg.innerHTML = "<span style='color:red'>Password lama salah</span>";
+    msg.innerHTML = "<span style='color:#e11d48'>Password lama salah</span>";
     return;
   }
 
   if(!newP){
-    msg.innerHTML = "<span style='color:red'>Password baru tidak boleh kosong</span>";
+    msg.innerHTML = "<span style='color:#e11d48'>Password baru tidak boleh kosong</span>";
     return;
   }
 
-  localStorage.setItem("password", newP);
-  msg.innerHTML = "<span style='color:green'>Password berhasil diubah</span>";
+  localStorage.setItem("local_password", newP);
 
-  document.getElementById("oldPass").value = "";
-  document.getElementById("newPass").value = "";
+  msg.innerHTML =
+    "<span style='color:#16a34a'>Password berhasil diubah (hanya di perangkat ini)</span>";
+
+  oldPass.value = "";
+  newPass.value = "";
 }
 </script>
-
 
 </body>
 </html>
