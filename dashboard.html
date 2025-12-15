@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Dashboard – YouTube Scheduler</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+  font-family: Arial, sans-serif;
+  background:#f4f7fb;
+  margin:0;
+  padding:30px;
+}
+.container{
+  max-width:900px;
+  margin:auto;
+  background:white;
+  padding:25px;
+  border-radius:12px;
+  box-shadow:0 8px 30px rgba(0,0,0,.08);
+}
+h2{margin-top:0}
+label{display:block;margin-top:12px;font-weight:bold}
+input,select,textarea{
+  width:100%;
+  padding:10px;
+  margin-top:6px;
+  border-radius:6px;
+  border:1px solid #ccc;
+}
+button{
+  margin-top:15px;
+  padding:10px 16px;
+  border:0;
+  border-radius:6px;
+  background:#2563eb;
+  color:white;
+  cursor:pointer;
+}
+button.danger{background:#ef4444}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:20px;
+}
+th,td{
+  border-bottom:1px solid #eee;
+  padding:10px;
+  text-align:left;
+}
+.small{color:#666;font-size:13px}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+  <h2>YouTube Live Scheduler</h2>
+  <p class="small">Trigger live streaming ke Cloudflare Worker</p>
+
+  <label>Judul Live</label>
+  <input id="title">
+
+  <label>URL Video (MP4)</label>
+  <input id="video_url" placeholder="https://...mp4">
+
+  <label>Stream Key YouTube</label>
+  <input id="stream_key">
+
+  <label>Durasi Live</label>
+  <select id="duration">
+    <option value="1800">30 Menit</option>
+    <option value="3600">1 Jam</option>
+    <option value="7200">2 Jam</option>
+    <option value="14400">4 Jam</option>
+    <option value="21600">6 Jam</option>
+    <option value="43200">12 Jam</option>
+  </select>
+
+  <button onclick="startLive()">▶ Start Live Sekarang</button>
+
+  <hr style="margin:30px 0">
+
+  <h3>Daftar Live Terjadwal</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Judul</th>
+        <th>Durasi</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody id="list"></tbody>
+  </table>
+
+  <button class="danger" onclick="logout()">Logout</button>
+</div>
+
+<script src="dashboard.js"></script>
+</body>
+</html>
