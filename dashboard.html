@@ -265,27 +265,17 @@ btn_trigger.onclick = async ()=>{
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
 <script>
 flatpickr("#inp_time",{
-    enableTime: true,
-    dateFormat: "d/m/Y H:i",
-    time_24hr: true,
-
-    // ⬇️ TIDAK mengisi tanggal
-    defaultDate: null,
-
-    // ⬇️ Jam otomatis = jam sekarang
-    defaultHour: new Date().getHours(),
-    defaultMinute: new Date().getMinutes(),
-
-    // ⬇️ Setiap kali picker dibuka, jam di-refresh ke waktu sekarang
-    onOpen: function(selectedDates, dateStr, instance){
-        const now = new Date();
-        instance.setDate(
-            instance.selectedDates[0] || now,
-            false
-        );
-        instance.setTime(now.getHours(), now.getMinutes());
+  enableTime:true,
+  dateFormat:"d/m/Y H:i",
+  time_24hr:true,
+  onChange: function(selectedDates, dateStr, instance){
+    if(selectedDates.length){
+      const now = new Date();
+      instance.setTime(now.getHours(), now.getMinutes(), false);
     }
+  }
 });
+
 </script>
 
 
