@@ -1,142 +1,113 @@
 <!doctype html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
-<title>Dashboard Live</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8"/>
+<title>YT Stream — Professional</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
 
 <style>
-body{
-  font-family: Arial;
-  background:#f4f7fb;
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
-  padding-top:40px;
-}
-
-.card{
-  background:white;
-  padding:30px;
-  border-radius:10px;
-  width:420px;
-  box-shadow:0 4px 20px rgba(0,0,0,0.1);
-}
-
-h2{
-  margin-top:0;
-  text-align:center;
-}
-
-label{
-  display:block;
-  margin-top:14px;
-  font-weight:bold;
-  font-size:14px;
-}
-
-input, select{
-  width:100%;
-  padding:10px;
-  margin-top:6px;
-  border-radius:6px;
-  border:1px solid #ccc;
-}
-
-button{
-  width:100%;
-  padding:10px;
-  margin-top:18px;
-  background:#2563eb;
-  color:white;
-  border:0;
-  border-radius:6px;
-  cursor:pointer;
-  font-size:15px;
-}
-
-button.secondary{
-  background:#6b7280;
-}
-
-button.danger{
-  background:#ef4444;
-}
-
-hr{
-  margin:25px 0;
-  border:none;
-  border-top:1px solid #eee;
-}
-
-.small{
-  font-size:13px;
-  color:#666;
-  margin-top:6px;
-  text-align:center;
-}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:10px;
-}
-
-th, td{
-  text-align:left;
-  padding:8px 4px;
-  border-bottom:1px solid #eee;
-  font-size:13px;
-}
+/* === CSS ANDA (TIDAK DIUBAH) === */
+body{font-family:'Inter',sans-serif;background:#f4f7fb;margin:0;color:#0f172a}
+.container{max-width:980px;margin:36px auto;padding:28px;background:white;border-radius:12px;box-shadow:0 8px 30px rgba(16,24,40,.06)}
+.nav{margin-top:20px;display:flex;gap:30px;border-bottom:1px solid #e5e7eb;padding-bottom:12px}
+.nav-item{font-size:15px;font-weight:600;text-decoration:none;color:#1f2937;padding-bottom:6px;border-bottom:2px solid transparent}
+.nav-item.active{color:#2563eb;border-color:#2563eb}
+.card{background:white;padding:20px;border-radius:10px;border:1px solid #e5e7eb;margin-top:24px}
+label{display:block;font-weight:600;margin-bottom:6px;font-size:13px}
+.input,select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #e5e7eb}
+textarea{min-height:110px}
+.btn{padding:10px 14px;background:#2563eb;color:white;border-radius:10px;border:0;font-weight:700;cursor:pointer}
+.btn.ghost{background:transparent;color:#2563eb;border:1px solid #dbeafe}
+.debug{background:#0b1220;color:#bfe7b0;padding:12px;border-radius:8px;font-family:monospace;display:none}
+.footer{margin-top:24px;color:#6b7280;font-size:13px}
+.form-row{display:flex;gap:24px;margin-bottom:20px}
+.form-col{flex:1;display:flex;flex-direction:column}
+@media(max-width:700px){.form-row{flex-direction:column}}
 </style>
 </head>
 
 <body>
+<div class="container">
 
-<div class="card">
-  <h2>YouTube Live</h2>
-  <div class="small">Trigger live streaming via Cloudflare Worker</div>
+<h1>YT Stream — Professional</h1>
+<p style="color:#6b7280">Dashboard profesional untuk livestream YouTube</p>
 
-  <label>Judul Live</label>
-  <input id="title" placeholder="Judul live YouTube">
-
-  <label>URL Video (MP4)</label>
-  <input id="video_url" placeholder="https://example.com/video.mp4">
-
-  <label>Stream Key YouTube</label>
-  <input id="stream_key" placeholder="xxxx-xxxx-xxxx">
-
-  <label>Durasi Live</label>
-  <select id="duration">
-    <option value="1800">30 Menit</option>
-    <option value="3600">1 Jam</option>
-    <option value="7200">2 Jam</option>
-    <option value="14400">4 Jam</option>
-    <option value="21600">6 Jam</option>
-    <option value="43200">12 Jam</option>
-  </select>
-
-  <button onclick="startLive()">▶ Mulai Live</button>
-
-  <hr>
-
-  <h3 style="margin:0">Live Terjadwal</h3>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Judul</th>
-        <th>Durasi</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody id="list"></tbody>
-  </table>
-
-  <button class="secondary" onclick="logout()">Logout</button>
+<div class="nav">
+  <a class="nav-item active">Dashboard</a>
+  <a class="nav-item">Penyimpanan</a>
+  <a class="nav-item">Jadwal Live</a>
+  <a class="nav-item">Monitoring</a>
+  <a class="nav-item">Pengaturan</a>
+  <a class="nav-item" style="margin-left:auto;color:#ef4444;cursor:pointer" onclick="logout()">Logout</a>
 </div>
 
+<!-- FORM -->
+<div class="card">
+
+<div class="form-row">
+  <div class="form-col">
+    <label>Judul</label>
+    <input id="inp_title" class="input">
+  </div>
+  <div class="form-col">
+    <label>Visibilitas</label>
+    <select id="inp_vis" class="input">
+      <option value="public">Publik</option>
+      <option value="unlisted">Tidak Publik</option>
+      <option value="private">Pribadi</option>
+    </select>
+  </div>
+</div>
+
+<label>Description</label>
+<textarea id="inp_desc" class="input"></textarea>
+
+<div class="form-row">
+  <div class="form-col">
+    <label>Tanggal & Jam Live (WIB)</label>
+    <input id="inp_time" class="input">
+  </div>
+  <div class="form-col">
+    <label>Durasi</label>
+    <select id="inp_dur" class="input">
+      <option value="3600">1 Jam</option>
+      <option value="7200">2 Jam</option>
+      <option value="14400">4 Jam</option>
+      <option value="21600">6 Jam</option>
+      <option value="43200">12 Jam</option>
+    </select>
+  </div>
+  <div class="form-col" style="justify-content:flex-end">
+    <label><input type="checkbox" id="inp_loop"> Loop Video</label>
+  </div>
+</div>
+
+<label>Video URL</label>
+<input id="inp_video" class="input">
+
+<label>Stream Key</label>
+<input id="inp_key" class="input">
+
+<div style="display:flex;gap:10px;margin-top:14px">
+  <button id="btn_trigger" class="btn">Stream Now</button>
+  <button id="btn_clear" class="btn ghost">Clear</button>
+</div>
+
+</div>
+
+<div class="card">
+  <h3>Preview & Log</h3>
+  <pre id="payload" class="debug"></pre>
+  <div id="log" class="debug"></div>
+</div>
+
+<div class="footer">Built for you — Buana Media</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="dashboard.js"></script>
 </body>
 </html>
