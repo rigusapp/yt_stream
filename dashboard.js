@@ -1,5 +1,5 @@
 // ====== CONFIG ======
-const WORKER_URL = "https://YOUR-WORKER.workers.dev";
+const WORKER_URL = "https://yt-scheduler-api.rigus-apps.workers.dev/";
 
 // ====== AUTH CHECK ======
 if (localStorage.getItem("auth") !== "1") {
