@@ -29,20 +29,34 @@
 // ===============================
 // LOGIN (SINGLE USER)
 // ===============================
-function login() {
-  const u = document.getElementById("u")?.value || "";
-  const p = document.getElementById("p")?.value || "";
+async function login(){
+  const u = document.getElementById("u").value;
+  const p = document.getElementById("p").value;
+  const err = document.getElementById("err");
 
-  const savedPass = localStorage.getItem("password") || "Steve123";
-
-  if (u === "admin" && p === savedPass) {
-    localStorage.setItem("auth", "1");
-    location.href = "dashboard.html";
-  } else {
-    const err = document.getElementById("err");
-    if (err) err.textContent = "Username atau password salah";
+  if(!u || !p){
+    err.textContent = "Username dan password wajib diisi";
+    return;
   }
+
+  const r = await fetch(
+    "https://yt-scheduler-api.rigus-apps.workers.dev/auth/login",
+    {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify({ username:u, password:p })
+    }
+  );
+
+  if(!r.ok){
+    err.textContent = "Username atau password salah";
+    return;
+  }
+
+  localStorage.setItem("auth","1");
+  location.href = "dashboard.html";
 }
+
 
 
 // ===============================
