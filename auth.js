@@ -27,20 +27,15 @@
 })();
 
 // ===============================
-// LOGIN
+// LOGIN (SINGLE USER)
 // ===============================
 function login() {
   const u = document.getElementById("u")?.value || "";
   const p = document.getElementById("p")?.value || "";
 
-  if (!u || !p) {
-    const err = document.getElementById("err");
-    if (err) err.textContent = "Username dan password wajib diisi";
-    return;
-  }
+  const savedPass = localStorage.getItem("password") || "Steve123";
 
-  // LOGIN SEMENTARA (STATIS)
-  if (u === "admin" && p === "Steve123") {
+  if (u === "admin" && p === savedPass) {
     localStorage.setItem("auth", "1");
     location.href = "dashboard.html";
   } else {
@@ -48,6 +43,7 @@ function login() {
     if (err) err.textContent = "Username atau password salah";
   }
 }
+
 
 // ===============================
 // LOGOUT
