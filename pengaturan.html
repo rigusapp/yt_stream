@@ -103,38 +103,29 @@ body{
 </div>
 
 <script>
-async function changePassword(){
-  const oldPass = document.getElementById("old").value;
-  const newPass = document.getElementById("new").value;
+function changePassword(){
+  const oldP = document.getElementById("oldPass").value;
+  const newP = document.getElementById("newPass").value;
   const msg = document.getElementById("msg");
 
-  const r = await fetch(
-    "https://yt-scheduler-api.rigus-apps.workers.dev/auth/password",
-    {
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({ oldPass, newPass })
-    }
-  );
+  const currentPass = localStorage.getItem("password") || "Steve123";
 
-  if(!r.ok){
-    msg.textContent = "Password lama salah";
+  if(oldP !== currentPass){
+    msg.innerHTML = "<span style='color:red'>Password lama salah</span>";
     return;
   }
 
-  msg.textContent = "Password berhasil diubah";
+  if(!newP){
+    msg.innerHTML = "<span style='color:red'>Password baru tidak boleh kosong</span>";
+    return;
+  }
+
+  localStorage.setItem("password", newP);
+  msg.innerHTML = "<span style='color:green'>Password berhasil diubah</span>";
+
+  document.getElementById("oldPass").value = "";
+  document.getElementById("newPass").value = "";
 }
-
-fetch("https://yt-scheduler-api.rigus-apps.workers.dev/auth/password",{
-  method:"POST",
-  headers:{ "Content-Type":"application/json" },
-  body:JSON.stringify({
-    oldPass: "Steve123",
-    newPass: "PasswordBaru"
-  })
-});
-
-  
 </script>
 
 
