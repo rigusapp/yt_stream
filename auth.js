@@ -1,5 +1,5 @@
 // ===============================
-// AUTH GUARD (GLOBAL)
+// AUTH GUARD (CLIENT SIDE)
 // ===============================
 (function () {
   const protectedPages = [
@@ -12,13 +12,14 @@
 
   const current = location.pathname.split("/").pop();
 
+  // Proteksi halaman dashboard
   if (protectedPages.includes(current)) {
     if (localStorage.getItem("auth") !== "1") {
       location.href = "index.html";
     }
   }
 
-  // Jika sudah login, jangan tampilkan login page lagi
+  // Jika sudah login, jangan kembali ke login page
   if (current === "" || current === "index.html") {
     if (localStorage.getItem("auth") === "1") {
       location.href = "dashboard.html";
@@ -27,23 +28,26 @@
 })();
 
 // ===============================
-// LOGIN (SINGLE USER)
+// LOGIN (STATIS / OFFLINE)
 // ===============================
 function login() {
   const u = document.getElementById("u")?.value || "";
   const p = document.getElementById("p")?.value || "";
+  const err = document.getElementById("err");
 
-  const savedPass = localStorage.getItem("password") || "Steve123";
+  if (!u || !p) {
+    if (err) err.textContent = "Username dan password wajib diisi";
+    return;
+  }
 
-  if (u === "admin" && p === savedPass) {
+  // LOGIN DEFAULT (SEBELUM SINKRON)
+  if (u === "admin" && p === "Steve123") {
     localStorage.setItem("auth", "1");
     location.href = "dashboard.html";
   } else {
-    const err = document.getElementById("err");
     if (err) err.textContent = "Username atau password salah";
   }
 }
-
 
 // ===============================
 // LOGOUT
