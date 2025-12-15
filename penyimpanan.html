@@ -75,8 +75,6 @@ th,td{
   font-size:14px;
   color:#6b7280;
 }
-
-/* Ultra-small video preview */
 .preview{
   width:70px;
   height:40px;
@@ -102,17 +100,20 @@ th,td{
     <a href="jadwal.html" class="nav-item">Jadwal Live</a>
     <a href="monitoring.html" class="nav-item">Monitoring</a>
     <a href="pengaturan.html" class="nav-item">Pengaturan</a>
-  
+
     <a href="#" onclick="logout()" class="nav-item" style="margin-left:auto;color:#e11d48;">Logout</a>
-</div>
+  </div>
 
   <div class="card">
     <h3 style="margin-top:0;">Upload Video Disini</h3>
 
-    <input id="fileInput" type="file">
+    <!-- FIX 1: batasi sebagai video -->
+    <input id="fileInput" type="file" accept="video/*">
+
     <div style="display:flex; gap:10px; margin-top:10px;">
-      <button id="uploadBtn" class="btn blue">Upload</button>
-      <button id="refreshBtn" class="btn gray">Refresh</button>
+      <!-- FIX 2: pastikan tidak submit default -->
+      <button id="uploadBtn" type="button" class="btn blue">Upload</button>
+      <button id="refreshBtn" type="button" class="btn gray">Refresh</button>
     </div>
 
     <p id="uploadStatus" class="small" style="margin-top:10px;"></p>
@@ -157,14 +158,10 @@ async function loadFiles(){
               src="${videoUrl}"
               preload="metadata"
               muted
-              playsinline
-              disablepictureinpicture
-              controlslist="nodownload nofullscreen noremoteplayback"></video>
+              playsinline></video>
           </td>
-
           <td>${item.key}</td>
           <td>${Math.round(item.size/1024)} KB</td>
-
           <td>
             <button class="btn gray" onclick="navigator.clipboard.writeText('${videoUrl}')">Copy</button>
             <button class="btn red" onclick="deleteFile('${item.key}')">Hapus</button>
@@ -173,7 +170,7 @@ async function loadFiles(){
       `;
     });
 
-  } catch (e) {
+  } catch {
     tbody.innerHTML = `<tr><td colspan="4">Gagal memuat data</td></tr>`;
   }
 }
@@ -201,40 +198,31 @@ document.getElementById("uploadBtn").onclick = async () => {
   try {
     const r = await fetch(REPLIT_CONVERTER, { method:"POST", body:form });
     const html = await r.text();
-
     const match = html.match(/href="(.*?)"/);
 
-    /* === FIX SESUAI PERMINTAAN ANDA === */
     if(!match){
       status.textContent = "Upload sukses";
-      loadFiles();   // langsung update tampilan
+      loadFiles();
       return;
     }
-    /* ================================= */
 
-    const url = match[1];
-    const blob = await fetch(url).then(res => res.blob());
+    const blob = await fetch(match[1]).then(r=>r.blob());
 
     const form2 = new FormData();
-    form2.append("file", blob, Date.now() + ".mp4");
+    form2.append("file", blob, Date.now()+".mp4");
 
     const r2 = await fetch(WORKER_API + "/upload", { method:"POST", body:form2 });
     const j = await r2.json();
 
-    if(j.ok){
-      status.textContent = "Upload selesai!";
-      loadFiles();
-    } else {
-      status.textContent = "Upload gagal: " + j.error;
-    }
+    status.textContent = j.ok ? "Upload selesai!" : "Upload gagal";
+    loadFiles();
 
-  } catch (e){
-    status.textContent = "ERROR: " + e;
+  } catch(e){
+    status.textContent = "ERROR: "+e;
   }
 };
 
 document.getElementById("refreshBtn").onclick = loadFiles;
-
 loadFiles();
 </script>
 
