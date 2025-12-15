@@ -38,7 +38,8 @@ body{
   padding-bottom:6px;
   border-bottom:2px solid transparent;
 }
-.nav-item.active{color:#2563eb;border-color:#2563eb}
+.nav-item.active{ color:#2563eb; border-color:#2563eb; }
+
 .card{
   background:white;
   padding:20px;
@@ -60,18 +61,18 @@ body{
   cursor:pointer;
   border:0;
 }
-.btn.blue{background:#2563eb;color:white}
-.small{font-size:14px;color:#6b7280}
-.error{color:#e11d48}
-.success{color:#16a34a}
+.btn.blue{ background:#2563eb; color:white; }
+.error{ color:#e11d48; }
+.success{ color:#16a34a; }
+.small{ font-size:14px; color:#6b7280; }
 </style>
 </head>
 
 <body>
 <div class="container">
 
-<h1>Pengaturan</h1>
-<p class="small">Atur preferensi dan akun pengguna.</p>
+<h1 style="margin:0;">Pengaturan</h1>
+<p style="margin:6px 0 0; color:#6b7280;">Ubah password akun Anda.</p>
 
 <div class="nav">
   <a href="dashboard.html" class="nav-item">Dashboard</a>
@@ -83,102 +84,57 @@ body{
 </div>
 
 <!-- ============================= -->
-<!-- TAMBAH USER -->
-<!-- ============================= -->
-<div class="card">
-  <h3>Tambah User</h3>
-
-  Username
-  <input id="addUser" class="input" placeholder="username">
-
-  Password
-  <input id="addPass" type="password" class="input" placeholder="password">
-
-  <button class="btn blue" onclick="addUser()">Tambah User</button>
-  <div id="addMsg"></div>
-</div>
-
-<!-- ============================= -->
 <!-- GANTI PASSWORD -->
 <!-- ============================= -->
 <div class="card">
-  <h3>Ganti Password User</h3>
-
-  Pilih User
-  <select id="selUser" class="input"></select>
+  <h3 style="margin-top:0;">Ganti Password</h3>
 
   Password Lama
-  <input id="oldPass" type="password" class="input">
+  <input id="oldPass" type="password" class="input" placeholder="Password lama">
 
   Password Baru
-  <input id="newPass" type="password" class="input">
+  <input id="newPass" type="password" class="input" placeholder="Password baru">
 
-  <button class="btn blue" onclick="changePassword()">Ganti Password</button>
-  <div id="passMsg"></div>
+  <button class="btn blue" onclick="changePassword()">Simpan Password</button>
+
+  <div id="msg" style="margin-top:10px;"></div>
 </div>
 
 </div>
 
 <script>
-function loadUsers(){
-  const users = JSON.parse(localStorage.getItem("users") || "[]");
-  selUser.innerHTML = "";
-  users.forEach(u=>{
-    selUser.innerHTML += `<option value="${u.username}">${u.username}</option>`;
-  });
-}
-
-function addUser(){
-  const users = JSON.parse(localStorage.getItem("users") || "[]");
-  const u = addUserInput.value.trim();
-  const p = addPassInput.value;
-
-  if(!u || !p){
-    addMsg.innerHTML = "<div class='error'>Data tidak lengkap</div>";
-    return;
-  }
-
-  if(users.find(x=>x.username===u)){
-    addMsg.innerHTML = "<div class='error'>User sudah ada</div>";
-    return;
-  }
-
-  users.push({username:u,password:p});
-  localStorage.setItem("users",JSON.stringify(users));
-  addMsg.innerHTML = "<div class='success'>User ditambahkan</div>";
-  addUserInput.value="";
-  addPassInput.value="";
-  loadUsers();
-}
-
 function changePassword(){
+  const auth = JSON.parse(localStorage.getItem("auth") || "{}");
   const users = JSON.parse(localStorage.getItem("users") || "[]");
-  const u = selUser.value;
-  const oldP = oldPass.value;
-  const newP = newPass.value;
 
-  const user = users.find(x=>x.username===u);
-  if(!user || user.password!==oldP){
-    passMsg.innerHTML = "<div class='error'>Password lama salah</div>";
+  const oldP = document.getElementById("oldPass").value;
+  const newP = document.getElementById("newPass").value;
+  const msg = document.getElementById("msg");
+
+  const user = users.find(u => u.username === auth.username);
+
+  if(!user){
+    msg.innerHTML = "<div class='error'>User tidak ditemukan</div>";
+    return;
+  }
+
+  if(user.password !== oldP){
+    msg.innerHTML = "<div class='error'>Password lama salah</div>";
+    return;
+  }
+
+  if(!newP){
+    msg.innerHTML = "<div class='error'>Password baru tidak boleh kosong</div>";
     return;
   }
 
   user.password = newP;
-  localStorage.setItem("users",JSON.stringify(users));
-  passMsg.innerHTML = "<div class='success'>Password berhasil diganti</div>";
-  oldPass.value="";
-  newPass.value="";
+  localStorage.setItem("users", JSON.stringify(users));
+
+  msg.innerHTML = "<div class='success'>Password berhasil diperbarui</div>";
+  document.getElementById("oldPass").value = "";
+  document.getElementById("newPass").value = "";
 }
-
-const addUserInput = document.getElementById("addUser");
-const addPassInput = document.getElementById("addPass");
-const selUser = document.getElementById("selUser");
-const oldPass = document.getElementById("oldPass");
-const newPass = document.getElementById("newPass");
-const addMsg = document.getElementById("addMsg");
-const passMsg = document.getElementById("passMsg");
-
-loadUsers();
 </script>
 
 </body>
