@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="id">
 <head>
-<script src="auth.js"></script>
+<script src='auth.js'></script>
 <meta charset="utf-8">
 <title>Pengaturan</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,6 +15,7 @@ body{
   padding:0;
   color:#0f172a;
 }
+
 .container{
   max-width:980px;
   margin:36px auto;
@@ -23,13 +24,17 @@ body{
   border-radius:12px;
   box-shadow:0 8px 30px rgba(16,24,40,0.06);
 }
+
+/* NAV FIX */
 .nav{
   margin-top:20px;
   display:flex;
   gap:30px;
   border-bottom:1px solid #e5e7eb;
   padding-bottom:12px;
+  margin-bottom:0 !important;
 }
+
 .nav-item{
   font-size:15px;
   font-weight:600;
@@ -37,8 +42,14 @@ body{
   color:#1f2937;
   padding-bottom:6px;
   border-bottom:2px solid transparent;
+  transition:.15s;
 }
-.nav-item.active{ color:#2563eb; border-color:#2563eb; }
+
+.nav-item:hover{ color:#2563eb; }
+.nav-item.active{
+  color:#2563eb;
+  border-color:#2563eb;
+}
 
 .card{
   background:white;
@@ -47,6 +58,7 @@ body{
   border:1px solid #e5e7eb;
   margin-top:24px;
 }
+
 .input{
   width:100%;
   padding:10px;
@@ -54,80 +66,67 @@ body{
   border:1px solid #e5e7eb;
   border-radius:8px;
 }
+
 .btn{
-  padding:8px 16px;
+  padding:10px 16px;
   border-radius:8px;
+  border:0;
   font-weight:600;
   cursor:pointer;
-  border:0;
 }
+
 .btn.blue{ background:#2563eb; color:white; }
-.error{ color:#e11d48; }
-.success{ color:#16a34a; }
 .small{ font-size:14px; color:#6b7280; }
 </style>
 </head>
 
 <body>
+
 <div class="container">
 
-<h1 style="margin:0;">Pengaturan</h1>
-<p style="margin:6px 0 0; color:#6b7280;">Ubah password akun Anda.</p>
+  <h1 style="margin:0;">Pengaturan</h1>
+  <p style="margin:6px 0 0; color:#6b7280;">Atur preferensi dan konfigurasi aplikasi.</p>
 
-<div class="nav">
-  <a href="dashboard.html" class="nav-item">Dashboard</a>
-  <a href="penyimpanan.html" class="nav-item">Penyimpanan</a>
-  <a href="jadwal.html" class="nav-item">Jadwal Live</a>
-  <a href="monitoring.html" class="nav-item">Monitoring</a>
-  <a href="pengaturan.html" class="nav-item active">Pengaturan</a>
-  <a href="#" onclick="logout()" class="nav-item" style="margin-left:auto;color:#e11d48;">Logout</a>
+  <!-- NAV -->
+  <div class="nav">
+    <a href="dashboard.html" class="nav-item">Dashboard</a>
+    <a href="penyimpanan.html" class="nav-item">Penyimpanan</a>
+    <a href="jadwal.html" class="nav-item">Jadwal Live</a>
+    <a href="monitoring.html" class="nav-item">Monitoring</a>
+    <a href="pengaturan.html" class="nav-item">Pengaturan</a>
+
+    <a href="#" onclick="logout()" class="nav-item" style="margin-left:auto;color:#e11d48;">Logout</a>
+  </div>
+
+  <!-- AUTO ACTIVE -->
+  <script>
+  document.addEventListener("DOMContentLoaded", ()=>{
+    const current = location.pathname.split("/").pop();
+    document.querySelectorAll(".nav-item").forEach(nav=>{
+      if(nav.getAttribute("href") === current){
+        nav.classList.add("active");
+      }
+    });
+  });
+  </script>
+
+  <div class="card">
+    <h3 style="margin-top:0;">Ganti Password</h3>
+
+    <label>Password Lama</label>
+    <input type="password" class="input" placeholder="Password lama">
+
+    <label>Password Baru</label>
+    <input type="password" class="input" placeholder="Password baru">
+
+    <button class="btn blue">Simpan Password</button>
+
+    <p class="small" style="margin-top:12px;">
+      Perubahan password hanya berlaku di perangkat ini.
+    </p>
+  </div>
+
 </div>
-
-<!-- ============================= -->
-<!-- GANTI PASSWORD -->
-<!-- ============================= -->
-<div class="card">
-  <h3 style="margin-top:0;">Ganti Password</h3>
-
-  Password Lama
-  <input id="oldPass" type="password" class="input" placeholder="Password lama">
-
-  Password Baru
-  <input id="newPass" type="password" class="input" placeholder="Password baru">
-
-  <button class="btn blue" onclick="changePassword()">Simpan Password</button>
-
-  <div id="msg" style="margin-top:10px;"></div>
-</div>
-
-</div>
-
-<script>
-function changePassword(){
-  const oldP = document.getElementById("oldPass").value;
-  const newP = document.getElementById("newPass").value;
-  const msg = document.getElementById("msg");
-
-  const currentPass = localStorage.getItem("password") || "Steve123";
-
-  if(oldP !== currentPass){
-    msg.innerHTML = "<span style='color:red'>Password lama salah</span>";
-    return;
-  }
-
-  if(!newP){
-    msg.innerHTML = "<span style='color:red'>Password baru tidak boleh kosong</span>";
-    return;
-  }
-
-  localStorage.setItem("password", newP);
-  msg.innerHTML = "<span style='color:green'>Password berhasil diubah</span>";
-
-  document.getElementById("oldPass").value = "";
-  document.getElementById("newPass").value = "";
-}
-</script>
-
 
 </body>
 </html>
