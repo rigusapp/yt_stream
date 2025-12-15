@@ -47,24 +47,24 @@ export default {
        SCHEDULE
     =============================== */
     if (url.pathname === "/schedule" && req.method === "GET") {
-      const list = await env.KV.get("schedules", { type: "json" }) || [];
+      const list = await env.KV_SCHEDULE.get("schedules", { type: "json" }) || [];
       return json({ ok: true, list });
     }
 
     if (url.pathname === "/schedule" && req.method === "POST") {
       const data = await req.json();
-      const list = await env.KV.get("schedules", { type: "json" }) || [];
+      const list = await env.KV_SCHEDULE.get("schedules", { type: "json" }) || [];
       data.id = crypto.randomUUID();
       list.push(data);
-      await env.KV.put("schedules", JSON.stringify(list));
+      await env.KV_SCHEDULE.put("schedules", JSON.stringify(list));
       return json({ ok: true, id: data.id });
     }
 
     if (url.pathname.startsWith("/schedule/") && req.method === "DELETE") {
       const id = url.pathname.split("/").pop();
-      let list = await env.KV.get("schedules", { type: "json" }) || [];
+      let list = await env.KV_SCHEDULE.get("schedules", { type: "json" }) || [];
       list = list.filter(x => x.id !== id);
-      await env.KV.put("schedules", JSON.stringify(list));
+      await env.KV_SCHEDULE.put("schedules", JSON.stringify(list));
       return json({ ok: true });
     }
 
@@ -72,7 +72,7 @@ export default {
        STORAGE LIST
     =============================== */
     if (url.pathname === "/storage" && req.method === "GET") {
-      const objects = await env.R2.list();
+      const objects = await env.R2_BUCKET.list();
       return json({
         ok: true,
         list: objects.objects.map(o => ({
@@ -83,14 +83,14 @@ export default {
     }
 
     /* ===============================
-       UPLOAD FILE
+       UPLOAD
     =============================== */
     if (url.pathname === "/upload" && req.method === "POST") {
       const form = await req.formData();
       const file = form.get("file");
       if (!file) return json({ ok: false }, 400);
 
-      await env.R2.put(file.name, file.stream());
+      await env.R2_BUCKET.put(file.name, file.stream());
       return json({ ok: true });
     }
 
@@ -99,21 +99,15 @@ export default {
     =============================== */
     if (url.pathname.startsWith("/public/")) {
       const key = url.pathname.replace("/public/", "");
-      const obj = await env.R2.get(key);
+      const obj = await env.R2_BUCKET.get(key);
       if (!obj) return new Response("Not found", { status: 404 });
       return new Response(obj.body);
     }
 
-    /* ===============================
-       DEFAULT
-    =============================== */
     return json({ ok: false, error: "Invalid route" }, 404);
   }
 };
 
-/* ===============================
-   HELPER
-=============================== */
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
