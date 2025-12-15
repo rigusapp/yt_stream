@@ -104,38 +104,30 @@ body{
 
 <script>
 function changePassword(){
-  const auth = JSON.parse(localStorage.getItem("auth") || "{}");
-  const users = JSON.parse(localStorage.getItem("users") || "[]");
-
   const oldP = document.getElementById("oldPass").value;
   const newP = document.getElementById("newPass").value;
   const msg = document.getElementById("msg");
 
-  const user = users.find(u => u.username === auth.username);
+  const currentPass = localStorage.getItem("password") || "Steve123";
 
-  if(!user){
-    msg.innerHTML = "<div class='error'>User tidak ditemukan</div>";
-    return;
-  }
-
-  if(user.password !== oldP){
-    msg.innerHTML = "<div class='error'>Password lama salah</div>";
+  if(oldP !== currentPass){
+    msg.innerHTML = "<span style='color:red'>Password lama salah</span>";
     return;
   }
 
   if(!newP){
-    msg.innerHTML = "<div class='error'>Password baru tidak boleh kosong</div>";
+    msg.innerHTML = "<span style='color:red'>Password baru tidak boleh kosong</span>";
     return;
   }
 
-  user.password = newP;
-  localStorage.setItem("users", JSON.stringify(users));
+  localStorage.setItem("password", newP);
+  msg.innerHTML = "<span style='color:green'>Password berhasil diubah</span>";
 
-  msg.innerHTML = "<div class='success'>Password berhasil diperbarui</div>";
   document.getElementById("oldPass").value = "";
   document.getElementById("newPass").value = "";
 }
 </script>
+
 
 </body>
 </html>
