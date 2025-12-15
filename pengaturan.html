@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="id">
 <head>
-<script src='auth.js'></script>
+<script src="auth.js"></script>
 <meta charset="utf-8">
 <title>Pengaturan</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -38,7 +38,7 @@ body{
   padding-bottom:6px;
   border-bottom:2px solid transparent;
 }
-.nav-item.active{ color:#2563eb; border-color:#2563eb; }
+.nav-item.active{color:#2563eb;border-color:#2563eb}
 .card{
   background:white;
   padding:20px;
@@ -60,18 +60,18 @@ body{
   cursor:pointer;
   border:0;
 }
-.btn.blue{ background:#2563eb; color:white; }
-.small{ font-size:14px; color:#6b7280; }
-.error{ color:#e11d48; font-size:14px; }
-.success{ color:#16a34a; font-size:14px; }
+.btn.blue{background:#2563eb;color:white}
+.small{font-size:14px;color:#6b7280}
+.error{color:#e11d48}
+.success{color:#16a34a}
 </style>
 </head>
 
 <body>
 <div class="container">
 
-<h1 style="margin:0;">Pengaturan</h1>
-<p style="margin:6px 0 0; color:#6b7280;">Atur preferensi dan konfigurasi aplikasi.</p>
+<h1>Pengaturan</h1>
+<p class="small">Atur preferensi dan akun pengguna.</p>
 
 <div class="nav">
   <a href="dashboard.html" class="nav-item">Dashboard</a>
@@ -82,58 +82,103 @@ body{
   <a href="#" onclick="logout()" class="nav-item" style="margin-left:auto;color:#e11d48;">Logout</a>
 </div>
 
-
-<!-- ✅ CARD BARU: AKUN -->
+<!-- ============================= -->
+<!-- TAMBAH USER -->
+<!-- ============================= -->
 <div class="card">
-  <h3 style="margin-top:0;">Akun & Keamanan</h3>
+  <h3>Tambah User</h3>
 
-  Username Baru
-  <input id="newUser" class="input" placeholder="Username baru">
+  Username
+  <input id="addUser" class="input" placeholder="username">
+
+  Password
+  <input id="addPass" type="password" class="input" placeholder="password">
+
+  <button class="btn blue" onclick="addUser()">Tambah User</button>
+  <div id="addMsg"></div>
+</div>
+
+<!-- ============================= -->
+<!-- GANTI PASSWORD -->
+<!-- ============================= -->
+<div class="card">
+  <h3>Ganti Password User</h3>
+
+  Pilih User
+  <select id="selUser" class="input"></select>
 
   Password Lama
-  <input id="oldPass" type="password" class="input" placeholder="Password lama">
+  <input id="oldPass" type="password" class="input">
 
   Password Baru
-  <input id="newPass" type="password" class="input" placeholder="Password baru">
+  <input id="newPass" type="password" class="input">
 
-  <button class="btn blue" onclick="saveAccount()">Simpan Perubahan</button>
-
-  <div id="msg" style="margin-top:10px;"></div>
+  <button class="btn blue" onclick="changePassword()">Ganti Password</button>
+  <div id="passMsg"></div>
 </div>
 
 </div>
 
 <script>
-function saveAccount(){
-  const auth = JSON.parse(localStorage.getItem("auth") || "{}");
-  const newUser = newUserInput.value.trim();
-  const oldPass = oldPassInput.value;
-  const newPass = newPassInput.value;
-  const msg = document.getElementById("msg");
-
-  if(oldPass !== auth.password){
-    msg.innerHTML = '<div class="error">Password lama salah</div>';
-    return;
-  }
-
-  if(!newUser || !newPass){
-    msg.innerHTML = '<div class="error">Username dan password tidak boleh kosong</div>';
-    return;
-  }
-
-  auth.username = newUser;
-  auth.password = newPass;
-
-  localStorage.setItem("auth", JSON.stringify(auth));
-  msg.innerHTML = '<div class="success">Akun berhasil diperbarui</div>';
-
-  oldPassInput.value = "";
-  newPassInput.value = "";
+function loadUsers(){
+  const users = JSON.parse(localStorage.getItem("users") || "[]");
+  selUser.innerHTML = "";
+  users.forEach(u=>{
+    selUser.innerHTML += `<option value="${u.username}">${u.username}</option>`;
+  });
 }
 
-const newUserInput = document.getElementById("newUser");
-const oldPassInput = document.getElementById("oldPass");
-const newPassInput = document.getElementById("newPass");
+function addUser(){
+  const users = JSON.parse(localStorage.getItem("users") || "[]");
+  const u = addUserInput.value.trim();
+  const p = addPassInput.value;
+
+  if(!u || !p){
+    addMsg.innerHTML = "<div class='error'>Data tidak lengkap</div>";
+    return;
+  }
+
+  if(users.find(x=>x.username===u)){
+    addMsg.innerHTML = "<div class='error'>User sudah ada</div>";
+    return;
+  }
+
+  users.push({username:u,password:p});
+  localStorage.setItem("users",JSON.stringify(users));
+  addMsg.innerHTML = "<div class='success'>User ditambahkan</div>";
+  addUserInput.value="";
+  addPassInput.value="";
+  loadUsers();
+}
+
+function changePassword(){
+  const users = JSON.parse(localStorage.getItem("users") || "[]");
+  const u = selUser.value;
+  const oldP = oldPass.value;
+  const newP = newPass.value;
+
+  const user = users.find(x=>x.username===u);
+  if(!user || user.password!==oldP){
+    passMsg.innerHTML = "<div class='error'>Password lama salah</div>";
+    return;
+  }
+
+  user.password = newP;
+  localStorage.setItem("users",JSON.stringify(users));
+  passMsg.innerHTML = "<div class='success'>Password berhasil diganti</div>";
+  oldPass.value="";
+  newPass.value="";
+}
+
+const addUserInput = document.getElementById("addUser");
+const addPassInput = document.getElementById("addPass");
+const selUser = document.getElementById("selUser");
+const oldPass = document.getElementById("oldPass");
+const newPass = document.getElementById("newPass");
+const addMsg = document.getElementById("addMsg");
+const passMsg = document.getElementById("passMsg");
+
+loadUsers();
 </script>
 
 </body>
